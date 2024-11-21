@@ -1,0 +1,82 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" 
+          xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core"
+          xmlns:l="sap.ui.layout"
+          controllerName="zmmsubcontract.controller.singleC">
+    <Page title="Single GRN Upload">
+        <VBox class="sapUiSmallMargin">        
+<f:SimpleForm id="SimpleFormChange354"
+                editable="true"
+                layout="ResponsiveGridLayout"
+                title="Enter GRN(Details)"
+                labelSpanXL="3"
+                labelSpanL="3"
+                labelSpanM="3"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="4"
+                emptySpanL="4"
+                emptySpanM="4"
+                emptySpanS="0"
+                columnsXL="1"
+                columnsL="1"
+                columnsM="1"
+                singleContainerFullSize="false" >
+                               <f:content>
+                    <Label text="Customer" />
+                    <!-- <Select id="category" selectedKey="{temp>/payloadData/CATEGORY}"> -->
+                    <Select id="cusid" selectedKey="{local>/newProduct/KUNRG}" change="onChange"  >
+                        <items>
+                            <core:Item text="CUST-01" key="1"/>
+                            <core:Item text="CUST-02" key="2"/>
+                            <core:Item text="CUST-03" key="3"/>
+                        </items>
+                    </Select>
+
+            <!-- <Label text="DateTime in Input" /> -->
+			<Input visible="false" id="dtInput" placeholder="{/dtPattern}" value="{
+				path: '/dtValue',
+				type: 'sap.ui.model.type.DateTime'}" />
+
+            <Label text="Date/Time" />
+			<Text  text="{
+				path: '/dtValue',
+				type: 'sap.ui.model.type.DateTime',
+				formatOptions: {
+					style: 'medium'
+					}
+			}" />
+
+<Label text="Billing Document"/>
+<Input id="idDesc" value="{local>/grnData/VBELN}"  > </Input>
+
+<Label text="Part Number"/>
+<Input id="idPart" value="{local>/grnData/MATNR}" showValueHelp="true" valueHelpRequest="onSupplierF4" change="onChangePart" modelContextChange="onContext" >
+<layoutData>
+<l:GridData span="XL1 L2 M2 S4"/>
+</layoutData>
+</Input>
+
+<Label text="GRN Customer No"/>
+<Input id="idmatnr" value="{local>/newProduct/ZGRNNO_CUSTOMER}" submit="onMat" />
+<!-- <Button tooltip="Load Freq used Material" icon="sap-icon://money-bills" press="onFreq" /> -->
+
+<Label text="GRN Quantity" />
+<Input id="idMenge" value="{local>/grnData/GRNQTY}" submit="onSubmit">
+<layoutData>
+<l:GridData span="XL1 L2 M2 S4"/>
+</layoutData>
+</Input>
+
+                </f:content>
+            </f:SimpleForm>
+        </VBox>
+
+        <footer>
+            <Toolbar >
+                <ToolbarSpacer ></ToolbarSpacer>
+                <Button id="idSaveS" icon="sap-icon://save" press="onSave" text="Save" type="Accept"></Button>                                
+            </Toolbar>
+        </footer>
+
+    </Page>
+</mvc:View>                    

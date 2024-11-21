@@ -1,0 +1,29 @@
+{
+    "VCAP_SERVICES": {
+      "xsuaa": [
+        {
+          "name": "sfd-xsuaa",
+          "credentials": {
+            "tenantmode": "dedicated",
+            "sburl": "https://internal-xsuaa.authentication.in30.hana.ondemand.com",
+            "subaccountid": "9e4a6162-2f00-45b7-9e8c-ef977e7140de",
+            "credential-type": "instance-secret",
+            "clientid": "sb-zsfl_scm_auth!t10709",
+            "xsappname": "zsfl_scm_auth!t10709",
+            "clientsecret": "hcvAcBdADkuefS9LP9h0p4W7ZtQ=",
+            "serviceInstanceId": "04b138b4-3f23-424f-b7cc-5ff10ea0d3af",
+            "url": "https://sfl-mm-dev-mvtyst9g.authentication.in30.hana.ondemand.com",
+            "uaadomain": "authentication.in30.hana.ondemand.com",
+            "verificationkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArdxt3boeehJn3FBzcYdC\nx+CIMFkpwZP99xHHJg16xgcYjS46KS9lFo6WWEW8rMeiInHuN2D7vIF6W4In24qs\nPHyHfl7324UhkVc5ZZr86PL31lMMGDfFVGwiAuQUADMiTnBwMaXnu6EADkSbMPsz\n0XB/f6s6IT4kEn/VcR7yuxjGbP+gpL51g/9QnwJB5B66xG0woZUCgoCTWzpTZ3dx\nka9hg75lV9mUnCBskbI76ihOE2+YKtOWPIbi8eLh72Jco71/nEiX+pnmXGo1kATX\nHiF7U//wh4kyfoUVK7wZqJJwTx43RxZl99AJ9wjTiJKDCaId1D21AC9ljQlEMdqv\nTQIDAQAB\n-----END PUBLIC KEY-----",
+            "apiurl": "https://api.authentication.in30.hana.ondemand.com",
+            "identityzone": "sfl-mm-dev-mvtyst9g",
+            "identityzoneid": "9e4a6162-2f00-45b7-9e8c-ef977e7140de",
+            "tenantid": "9e4a6162-2f00-45b7-9e8c-ef977e7140de",
+            "zoneid": "9e4a6162-2f00-45b7-9e8c-ef977e7140de"
+          }
+        }
+      ]
+    }
+  }
+
+  

@@ -1,0 +1,9 @@
+{
+    "items": [
+    { "key": "item1", "text": "Vendor Login" },
+    { "key": "item2", "text": "Change password" },
+    { "key": "item3", "text": "Approve Vendor" },
+    { "key": "item3", "text": "Vendor status" },
+    { "key": "item3", "text": "Certificate details" }             
+]    
+}

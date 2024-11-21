@@ -1,0 +1,9 @@
+{
+    "items": [
+    { "key": "item1", "text": "Supplier PO" },
+    { "key": "item2", "text": "Subcontract DA" },
+    { "key": "item2", "text": "ASN details" },
+    { "key": "item2", "text": "Rejection details" },
+    { "key": "item2", "text": "CR/DR " }           
+]    
+}

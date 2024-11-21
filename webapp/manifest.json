@@ -1,0 +1,471 @@
+{
+  "_version": "1.59.0",
+  "sap.app": {
+    "id": "zmmsubcontract",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:lrop",
+      "version": "1.14.2",
+      "toolsId": "f8cba24c-0425-4d0e-9863-195f98458fdc"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/sap/opu/odata/sap/ZMM_SUBCON_DA_SRV/",
+        "type": "OData",
+        "settings": {
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      },
+      "asncrtService": {
+        "uri": "/sap/opu/odata/sap/ZMM_SUBCON_ASN_CR_SRV/",
+        "type": "OData",
+        "settings": {
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      },
+      "emailService": {
+        "uri": "/sap/opu/odata/sap/ZMM_SUBCON_VENDORS_SRV/",
+        "type": "OData",
+        "settings": {
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      },
+      "poservice": {
+        "uri": "/sap/opu/odata/sap/YMM_SUPPLIER_PO_SRV/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "defaultBindingMode": "TwoWay"
+        }
+      },
+      "pdf": {
+        "uri": "/sap/opu/odata/sap/YMM_SUPPLIER_PO_PDF_SRV/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "defaultBindingMode": "TwoWay",
+          "odataVersion": "2.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.126.1",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ushell": {},
+        "sap.f": {},
+        "sap.ui.comp": {},
+        "sap.ui.generic.app": {},
+        "sap.suite.ui.generic.template": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "zmmsubcontract.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "useBatch": false,
+          "json": true,
+          "defaultOperationMode": "Server",
+          "loadMetadataAsync": true,
+          "metadataUrlParams": {
+            "sap-value-list": "none"
+          }
+        }
+      },
+      "asncrt": {
+        "dataSource": "asncrtService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "metadataUrlParams": {
+            "sap-value-list": "none"
+          }
+        }
+      },
+      "email": {
+        "dataSource": "emailService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
+          "metadataUrlParams": {
+            "sap-value-list": "none"
+          }
+        }
+      },
+      "local": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/welcome.json",
+        "preload": true
+      },
+      "home": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/homedata.json",
+        "preload": true
+      },
+      "SupSer": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/SupSerData.json",
+        "preload": true
+      },
+      "SubSer": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/SubSerData.json",
+        "preload": true
+      },
+      "VenOnb": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/VenOnbData.json",
+        "preload": true
+      },
+      "qis": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/QisData.json",
+        "preload": true
+      },
+      "TrnVen": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/TranVenData.json",
+        "preload": true
+      },
+      "CrDr": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/CrDbData.json",
+        "preload": true
+      },
+      "ncr": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/NonCofData.json",
+        "preload": true
+      },
+      "SupRat": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/SupRatData.json",
+        "preload": true
+      },
+      "circ": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/CirculData.json",
+        "preload": true
+      },
+      "dash": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "uri": "model/mockData/DashData.json",
+        "preload": true
+      },
+      "userModel": {
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {},
+        "preload": true
+      },
+      "poservice": {
+        "dataSource": "poservice",
+        "type": "sap.ui.model.odata.v2.ODataModel",
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "json": true,
+          "useBatch": false,
+          "serviceUrl": "/sap/opu/odata/sap/YMM_SUPPLIER_PO_SRV/"
+        }
+      },
+      "pdf": {
+        "dataSource": "pdf",
+        "type": "sap.ui.model.odata.v2.ODataModel",
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "useBatch": true
+        }
+      },
+      "@i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "async": true,
+        "viewPath": "zmmsubcontract.view",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "clearControlAggregation": false
+      },
+      "routes": [
+        {
+          "name": "RouteView1",
+          "pattern": ":?query:",
+          "target": [
+            "mainHead"
+          ]
+        },
+        {
+          "name": "Main",
+          "pattern": "Main",
+          "target": [
+            "optimus",
+            "prime"
+          ]
+        },
+        {
+          "name": "subconDA",
+          "pattern": "scdsrep",
+          "target": [
+            "scdarep"
+          ]
+        },
+        {
+          "name": "unAuth",
+          "pattern": "unauthorized",
+          "target": [
+            "unauthorized"
+          ]
+        },
+        {
+          "name": "subconASNcr",
+          "pattern": "subconASNcr",
+          "target": [
+            "asncr"
+          ]
+        },
+        {
+          "name": "RegASN",
+          "pattern": "RegASN",
+          "target": [
+            "RegASN"
+          ]
+        },
+        {
+          "name": "asnrep",
+          "pattern": "asnrep",
+          "target": [
+            "asnREP"
+          ]
+        },
+        {
+          "name": "asnstat",
+          "pattern": "asnstatus",
+          "target": [
+            "asnSTAT"
+          ]
+        },
+        {
+          "name": "asndel",
+          "pattern": "asndel",
+          "target": [
+            "asnDEL"
+          ]
+        },
+        {
+          "name": "asnprint",
+          "pattern": "asnprint",
+          "target": [
+            "asnPRN"
+          ]
+        },
+        {
+          "name": "subcon",
+          "pattern": "subcon",
+          "target": [
+            "subhead"
+          ]
+        },
+        {
+          "name": "PoSchedule",
+          "pattern": "PoSchedule",
+          "target": [
+            "PoSched"
+          ]
+        },
+        {
+          "name": "SupAsnCrt",
+          "pattern": "SupAsnCrt",
+          "target": [
+            "SupcrtAsn"
+          ]
+        },
+        {
+          "name": "Asn",
+          "pattern": "Asn",
+          "target": [
+            "Asn"
+          ]
+        },
+        {
+          "name": "SupASNRep",
+          "pattern": "SupASNRep",
+          "target": [
+            "SupASNRep"
+          ]
+        },
+        {
+          "name": "SupASNDel",
+          "pattern": "SupASNDel",
+          "target": [
+            "SupASNDel"
+          ]
+        }                                            
+      ],
+      "targets": {
+        "mainHead": {
+          "viewType": "XML",
+          "controlAggregation": "pages",
+          "viewId": "idwel",
+          "viewName": "subcon"
+        },
+        "asncr": {
+          "viewType": "XML",
+          "controlAggregation": "pages",
+          "viewId": "idasncr",
+          "viewName": "asncrt"
+        },
+        "subhead": {
+          "viewType": "XML",
+          "controlAggregation": "pages",
+          "viewId": "idsubHead",
+          "viewName": "subcon"
+        },
+        "scdarep": {
+          "viewName": "subconDA",
+          "viewId": "idView2",
+          "controlAggregation": "pages"
+        },
+        "RegASN": {
+          "viewName": "RegularASN",
+          "viewId": "idReg",
+          "controlAggregation": "pages"
+        },
+        "asnREP": {
+          "viewName": "asnrep",
+          "viewId": "idasnRep",
+          "controlAggregation": "pages"
+        },
+        "asnSTAT": {
+          "viewName": "asnstatus",
+          "viewId": "idasnStat",
+          "controlAggregation": "pages"
+        },
+        "asnDEL": {
+          "viewName": "asndel",
+          "viewId": "idasnDel",
+          "controlAggregation": "pages"
+        },
+        "asnPRN": {
+          "viewName": "asnprint",
+          "viewId": "idasnPrn",
+          "controlAggregation": "pages"
+        },
+        "unauthorized": {
+          "viewType": "XML",
+          "controlAggregation": "pages",
+          "viewId": "idUnauth",
+          "viewName": "unauth"
+        },
+        "PoSched": {
+          "viewType": "XML",
+          "controlAggregation": "pages",
+          "viewId": "idSched",
+          "viewName": "List"
+        },
+        "SupcrtAsn": {
+          "viewType": "XML",
+          "controlAggregation": "pages",
+          "viewId": "idSupAsn",
+          "viewName": "Detail"
+        },
+        "Asn": {
+          "viewType": "XML",
+          "controlAggregation": "pages",
+          "viewId": "idAsn",
+          "viewName": "Asn"
+        },
+        "SupASNRep": {
+          "viewType": "XML",
+          "controlAggregation": "pages",
+          "viewId": "idAsnRep",
+          "viewName": "Asnrep"
+        },
+        "SupASNDel": {
+          "viewType": "XML",
+          "controlAggregation": "pages",
+          "viewId": "idAsnDel",
+          "viewName": "Asndel"
+        }                                       
+      }
+    },
+    "rootView": {
+      "viewName": "zmmsubcontract.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    }
+  }
+}
