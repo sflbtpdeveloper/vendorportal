@@ -360,6 +360,7 @@ sap.ui.define([
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
         },
+        
         fetchASNReport: async function (email) {
             debugger;
              const that = this; // Preserve the reference to the controller

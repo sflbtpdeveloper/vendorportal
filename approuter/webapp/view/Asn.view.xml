@@ -122,7 +122,7 @@
                     value="{path: 'data>/string', type: 'sap.ui.model.type.String'}"
                     editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
                     showEmptyIndicator="true"
-                    required="true"
+                    required="false"
                 />
                 <m:Label
                     id="_IDGenLabel6"
