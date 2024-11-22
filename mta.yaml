@@ -58,11 +58,7 @@ modules:
       - name: node_api
     parameters:
       disk-quota: 1G
-      memory: 1G 
-      routes:
-        - route: approuter-scm.cfapps.in30.hana.ondemand.com
-        - route: sflvps.sfl.co.in # Your custom domain route
-      host: sflvps          
+      memory: 1G       
 resources:
   - name: sfd-destination
     type: org.cloudfoundry.managed-service
