@@ -1,0 +1,23 @@
+{
+    "init_data": {
+        "subaccount": {
+            "existing_destinations_policy": "ignore",
+            "destinations": [
+                {
+                    "Name": "SFD",
+                    "Type": "HTTP",
+                    "Description": "SFL HANA DEV",
+                    "URL": "http://hanadevappnew.sfl.co.in:8001",
+                    "ProxyType": "OnPremise",
+                    "Authentication": "BasicAuthentication",
+                    "sap-client": "999",
+                    "User": "TVSABAP2",
+                    "WebIDEUsage": "odata_abap,dev_abap",
+                    "WebIDEEnabled": true,
+                    "HTML5.DynamicDestination": true,
+                    "product.name": "SAP S/4HANA"
+                }
+            ]
+        }
+    }
+}

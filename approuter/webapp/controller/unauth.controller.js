@@ -1,0 +1,2 @@
+sap.ui.define(["zmmsubcontract/controller/BaseController"],function(t){"use strict";return t.extend("zmmsubcontract.controller.asndel",{onInit:function(){t.prototype.onInit.apply(this)}})});
+//# sourceMappingURL=unauth.controller.js.map

@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/mvc/Controller","sap/ui/model/json/JSONModel"],function(e,o){"use strict";return e.extend("zmmsubcontract.controller.BaseController",{reuseCode:function(){},onInit:function(){debugger;this.oRouter=this.getOwnerComponent().getRouter();var e=this.getOwnerComponent().getModel();sap.ui.getCore().setModel(e)}})});
+//# sourceMappingURL=BaseController.js.map

@@ -1,0 +1,10 @@
+{
+    "items": [
+    { "key": "item1", "text": "Add/remove vehicles" },
+    { "key": "item2", "text": "Prepare Trip sheet" },
+    { "key": "item3", "text": "Change/Delete trip sheet" },   
+    { "key": "item4", "text": "Acknowledge Trip sheet" },   
+    { "key": "item5", "text": "Trip sheet status" },   
+    { "key": "item6", "text": "Generate Invoice" }          
+]    
+}

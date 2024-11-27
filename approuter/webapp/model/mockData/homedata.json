@@ -1,0 +1,7 @@
+{
+    "items": [
+    { "key": "item1", "text": "About SFL" },
+    { "key": "item2", "text": "Supplier Feedback" },
+    { "key": "item3", "text": "Notifications" }        
+]    
+}
