@@ -99,13 +99,13 @@ sap.ui.define([
             this.byId("SVENDOR").setValue("");
         },
 
-        onToggleButtonPress: function (oEvent) {
+        onToggleButtonPress: async function (oEvent) {
             debugger;
             var aErrors = [];
             var oToggleButton = oEvent.getSource();
             var bPressed = oToggleButton.getPressed();
 
-            if (bPressed) {
+            // if (bPressed) {
                 var inputs = {
                     sDcno: this.byId("DCNO").getValue(),
                     sDcdate: this.byId("DCDATE").getValue(),
@@ -145,7 +145,7 @@ sap.ui.define([
                         return;
                     }
                 });
-            }
+            // }
         },
 
         validateLineItem: function (oSelectedData, index) {
@@ -357,7 +357,7 @@ sap.ui.define([
             };
 
             // List of keys to ignore
-            var ignoredKeys = ["sLrno", "sLrdate", "sEta"];
+            var ignoredKeys = ["sLrno", "sLrdate", "sEta", "sTname"];
 
             // Validate required fields
             for (var key in inputs) {
