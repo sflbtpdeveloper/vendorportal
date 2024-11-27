@@ -59,9 +59,8 @@ modules:
     parameters:
       disk-quota: 1G
       memory: 1G    
-      host: sflvps  # Hostname for custom domain
-      domains:        
-        - sfl.co.in  # Custom domain  
+      host: ${HOST_NAME}  # Hostname for custom domain
+      domains: ${CUSTOM_DOMAIN} # Custom domain  
 
 
 resources:
