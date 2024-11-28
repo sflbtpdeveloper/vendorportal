@@ -40,16 +40,13 @@
   "oauth2-configuration": {
     "redirect-uris": [
       "https://sflvps.sfl.co.in/login/callback",
-      "https://sflvps.sfl.co.in/*"      
-      
+      "https://sflvps.sfl.co.in/*",
+      "https://sflvpsqas.sfl.co.in/*",
+      "https://sflvpsdev.sfl.co.in/*",
+      "https://approuter-sfl-mm-dev.cfapps.in30.hana.ondemand.com/login/callback",
+      "https://approuter-sfl-mm-dev.cfapps.in30.hana.ondemand.com/*",
+      "https://sundram-fasteners-ltd-sfl-mm-qas-er5duqek-qas-approuter-scm.cfapps.in30.hana.ondemand.com",
+      "https://sfl-mm-qas-er5duqek.authentication.in30.hana.ondemand.com/*"      
     ]
-  },
-"oauth-clients": [
-  {
-    "name": "sb-getuserinfo",
-    "redirect-uris": [
-      "https://sflvps.sfl.co.in/login/callback"
-    ]
-  }
-]    
+  }  
 }
