@@ -59,9 +59,9 @@ modules:
     parameters:
       disk-quota: 1G
       memory: 1G    
-      host: ${HOSTNAME}  # Dynamic Hostname
+      host: "${HOSTNAME}"  # Dynamic Hostname
       domains:
-        - sfl.co.in      # Dynamic Domain    
+        - "${DOMAIN}"      # Dynamic Domain    
 
 
 resources:
