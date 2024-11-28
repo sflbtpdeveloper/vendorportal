@@ -1,5 +1,5 @@
 general:
-  buildTool: "mta"
+  buildTool: "mta"  
 service:
   buildToolVersion: "MBTJ17N18"
   stages:
@@ -56,7 +56,7 @@ stages:
           # Display variables for verification
           echo "Deploying to environment: $ENVIRONMENT"
           echo "Using hostname: $HOSTNAME"
-          echo "Using domain: $DOMAIN"
+          echo "Using domain: $DOMAIN"   
 
           # Deploy using the modified mta.yaml
           mbt build -p cf
