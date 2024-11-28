@@ -1,11 +1,56 @@
+env:
+  # Dynamically set ENV based on the cfSpace value
+  ENV: |
+    (( if eq .cfSpace "DEV" then "DEV" else
+       if eq .cfSpace "QAS" then "QAS" else
+       if eq .cfSpace "PROD" then "PROD" else "UNKNOWN" ))
+general:
+  buildTool: "mta"
+service:
+  buildToolVersion: "MBTJ17N18"
+  stages:
+    Release:
+      cfCredentialsId: "cf"
+stages:
+  Build:
+    mavenExecuteStaticCodeChecks: false
+    npmExecuteLint: false
+  Acceptance:
+    cloudFoundryDeploy: false
+    npmExecuteEndToEndTests: false
+  Malware Scan:
+    malwareExecuteScan: false
+  Release:
+    tmsExport: false
+    tmsUpload: true
+    cfApiEndpoint: "https://api.cf.in30.hana.ondemand.com"
+    cfOrg: "Sundram Fasteners Ltd_sfl-mm-dev-mvtyst9g"
+    cfSpace: "DEV"
+    deployType: "standard"
+    cloudFoundryDeploy: true
+  Additional Unit Tests:
+    npmExecuteScripts: false
+  Compliance:
+    sonarExecuteScan: false
 steps:
-  - name: deploy
-    type: cfDeploy
+  - name: Log Environment Variable
+    type: shell
+    script: |
+      echo "Deployment environment: ${env.ENV}"
+
+  - name: cloudFoundryDeploy
+    mtaDeployParameters: "-f --version-rule ALL"
     parameters:
       deployVariables:
         HOSTNAME: |
           (( if eq .env "DEV" then "sflvps" else
              if eq .env "QAS" then "sflvps_qas" else
              if eq .env "PROD" then "sflvps_prd" else "" ))
-        DOMAIN: sfl.co.in
+        DOMAIN: "sfl.co.in"
+        
+  - name: tmsUpload
+    nodeName: "qas"
+    credentialsId: "tms-key"
 
+  - name: artifactPrepareVersion
+    versioningType: "cloud_noTag"
