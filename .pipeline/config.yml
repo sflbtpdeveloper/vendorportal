@@ -1,4 +1,3 @@
----
 general:
   buildTool: "mta"
 service:
@@ -20,33 +19,44 @@ stages:
     tmsUpload: true
     cfApiEndpoint: "https://api.cf.in30.hana.ondemand.com"
     cfOrg: "Sundram Fasteners Ltd_sfl-mm-dev-mvtyst9g"
-    cfSpace: "DEV"
+    cfSpace: "DEV"  # This value should be set dynamically based on the pipeline run
     deployType: "standard"
     cloudFoundryDeploy: true
   Additional Unit Tests:
     npmExecuteScripts: false
   Compliance:
     sonarExecuteScan: false
-  BuildProject:  # New stage for building the project
+  BuildProject:
     steps:
       - name: Build Project
         script: |
           mvn clean install
-  Deploy:  # New stage for deploying to SAP BTP
+  Deploy:
     steps:
       - name: Deploy to SAP BTP
         script: |
-          # Replace placeholder values with environment-specific values
-          if [ "$ENVIRONMENT" == "dev" ]; then
-            HOSTNAME="sflvpsdev"
-            DOMAIN="sfl.co.in"
-          elif [ "$ENVIRONMENT" == "qas" ]; then
-            HOSTNAME="sflvpsqas"
-            DOMAIN="sfl.co.in"
-          elif [ "$ENVIRONMENT" == "prod" ]; then
-            HOSTNAME="sflvps"
-            DOMAIN="sfl.co.in"
+          # Dynamically set environment variables based on the cfSpace value
+          if [ "$cfSpace" == "DEV" ]; then
+            export ENVIRONMENT="dev"
+            export HOSTNAME="sflvpsdev"
+            export DOMAIN="sfl.co.in"
+          elif [ "$cfSpace" == "QAS" ]; then
+            export ENVIRONMENT="qas"
+            export HOSTNAME="sflvpsqas"
+            export DOMAIN="sfl.co.in"
+          elif [ "$cfSpace" == "PROD" ]; then
+            export ENVIRONMENT="prod"
+            export HOSTNAME="sflvps"
+            export DOMAIN="sfl.co.in"
+          else
+            echo "Unknown cfSpace: $cfSpace"
+            exit 1
           fi
+
+          # Display variables for verification
+          echo "Deploying to environment: $ENVIRONMENT"
+          echo "Using hostname: $HOSTNAME"
+          echo "Using domain: $DOMAIN"
 
           # Deploy using the modified mta.yaml
           mbt build -p cf
