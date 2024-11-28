@@ -1,0 +1,61 @@
+---
+general:
+  buildTool: "mta"
+service:
+  buildToolVersion: "MBTJ17N18"
+  stages:
+    Release:
+      cfCredentialsId: "cf"
+stages:
+  Build:
+    mavenExecuteStaticCodeChecks: false
+    npmExecuteLint: false
+  Acceptance:
+    cloudFoundryDeploy: false
+    npmExecuteEndToEndTests: false
+  Malware Scan:
+    malwareExecuteScan: false
+  Release:
+    tmsExport: false
+    tmsUpload: true
+    cfApiEndpoint: "https://api.cf.in30.hana.ondemand.com"
+    cfOrg: "Sundram Fasteners Ltd_sfl-mm-dev-mvtyst9g"
+    cfSpace: "DEV"
+    deployType: "standard"
+    cloudFoundryDeploy: true
+  Additional Unit Tests:
+    npmExecuteScripts: false
+  Compliance:
+    sonarExecuteScan: false
+  BuildProject:  # New stage for building the project
+    steps:
+      - name: Build Project
+        script: |
+          mvn clean install
+  Deploy:  # New stage for deploying to SAP BTP
+    steps:
+      - name: Deploy to SAP BTP
+        script: |
+          # Replace placeholder values with environment-specific values
+          if [ "$ENVIRONMENT" == "dev" ]; then
+            HOSTNAME="sflvpsdev"
+            DOMAIN="sfl.co.in"
+          elif [ "$ENVIRONMENT" == "qas" ]; then
+            HOSTNAME="sflvpsqas"
+            DOMAIN="sfl.co.in"
+          elif [ "$ENVIRONMENT" == "prod" ]; then
+            HOSTNAME="sflvps"
+            DOMAIN="sfl.co.in"
+          fi
+
+          # Deploy using the modified mta.yaml
+          mbt build -p cf
+          cf deploy ./mta_archives/your-app.mtar --hostname $HOSTNAME --domain $DOMAIN
+steps:
+  cloudFoundryDeploy:
+    mtaDeployParameters: "-f --version-rule ALL"
+  tmsUpload:
+    nodeName: "qas"
+    credentialsId: "tms-key"
+  artifactPrepareVersion:
+    versioningType: "cloud_noTag"

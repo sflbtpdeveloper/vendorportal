@@ -59,9 +59,10 @@ modules:
     parameters:
       disk-quota: 1G
       memory: 1G    
-      host: "${HOSTNAME}"  # Dynamic Hostname
-      domains:
-        - "${DOMAIN}"      # Dynamic Domain    
+      host: ${HOSTNAME}  # Hostname for custom domain
+      domains:        
+        - ${DOMAIN}  # Custom domain  
+  
 
 
 resources:
