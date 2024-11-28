@@ -59,6 +59,8 @@ modules:
     parameters:
       disk-quota: 1G
       memory: 1G    
+      hostname: ~${HOSTNAME}
+      domain: ~${DOMAIN}      
 
 
 resources:
