@@ -1,1 +1,11 @@
-.pipeline/config.yml File
+steps:
+  - name: deploy
+    type: cfDeploy
+    parameters:
+      deployVariables:
+        HOSTNAME: |
+          (( if eq .env "DEV" then "sflvps" else
+             if eq .env "QAS" then "sflvps_qas" else
+             if eq .env "PROD" then "sflvps_prd" else "" ))
+        DOMAIN: sfl.co.in
+

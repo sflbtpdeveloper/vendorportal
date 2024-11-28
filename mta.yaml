@@ -59,9 +59,10 @@ modules:
     parameters:
       disk-quota: 1G
       memory: 1G    
-      host: ${HOST_NAME}
+      host: ${HOSTNAME}  # Dynamic Hostname
       domains:
-        - ${CUSTOM_DOMAIN} 
+        - sfl.co.in      # Dynamic Domain    
+
 
 resources:
   - name: sfd-destination
