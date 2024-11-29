@@ -30,7 +30,7 @@ modules:
   - name: ui5
     #-----------------------------------------------------------------
     type: html5
-    path: ./webapp # Path to your UI5 app
+    path: ./webapp # Path to your UI5 app  
     requires:
       - name: sfd-xsuaa
       - name: node_api
@@ -39,7 +39,7 @@ modules:
       builder: custom
       commands:
         - npm install
-        - ui5 build --dest ../approuter/webapp
+        - ui5 build --dest ../approuter/webapp  
       timeout: 20m
       supported-platforms: []
 
@@ -59,9 +59,9 @@ modules:
     parameters:
       disk-quota: 1G
       memory: 1G    
-      host: sflvpsqas  # Hostname for custom domain
+      host: sflvpsqas  # Hostname for custom domain    removed route and checking
       domains:        
-        - sfl.co.in  # Custom domain 
+        - sfl.co.in  # Custom domain    
 
 
 resources:
