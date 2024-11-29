@@ -46,7 +46,8 @@
       "https://approuter-sfl-mm-dev.cfapps.in30.hana.ondemand.com/login/callback",
       "https://approuter-sfl-mm-dev.cfapps.in30.hana.ondemand.com/*",
       "https://sundram-fasteners-ltd-sfl-mm-qas-er5duqek-qas-approuter-scm.cfapps.in30.hana.ondemand.com",
-      "https://sfl-mm-qas-er5duqek.authentication.in30.hana.ondemand.com/*"      
+      "https://sfl-mm-qas-er5duqek.authentication.in30.hana.ondemand.com/*",      
+      "https://sfl-mm-dev-mvtyst9g.authentication.in30.hana.ondemand.com/*"
     ]
   }  
 }
