@@ -109,7 +109,7 @@ sap.ui.define([
                 var inputs = {
                     sDcno: this.byId("DCNO").getValue(),
                     sDcdate: this.byId("DCDATE").getValue(),
-                    sPacks: this.byId("PACKS").getValue(),
+                    sPacks: String(this.byId("PACKS").getValue()),
                     sLrno: this.byId("LRNO").getValue(),
                     sLrdate: this.byId("LRDATE").getValue(),
                     sTname: this.byId("TNAME").getValue(),

@@ -413,7 +413,7 @@ sap.ui.define([
                 const errorMessage = oErr.responseJSON?.error?.innererror?.errordetails?.[0]?.message || "Unknown error occurred";
 
                 // Show error message
-                MessageBox.error(errorMessage);
+                // MessageBox.error(errorMessage);
             }
         },
         onChangeMat: function (oEvent) {

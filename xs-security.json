@@ -50,7 +50,8 @@
       "https://sfl-mm-qas-er5duqek.authentication.in30.hana.ondemand.com/*",      
       "https://sfl-mm-dev-mvtyst9g.authentication.in30.hana.ondemand.com/*",
       "https://sfl-mm-qas-er5duqek.authentication.in30.hana.ondemand.com/login/callback",
-      "https://sfl-mm-qas-er5duqek.authentication.in30.hana.ondemand.com"      
+      "https://sfl-mm-qas-er5duqek.authentication.in30.hana.ondemand.com",
+      "https://sflvpsdev.sfl.co.in/login/callback"      
     ]
   }  
 }

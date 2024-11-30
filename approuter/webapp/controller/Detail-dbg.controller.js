@@ -26,14 +26,14 @@ sap.ui.define([
                         user: parsedData.user,
                         scopes: parsedData.scopes
                     });
-            }            
-                            
+            }
+
         },
         onBeforeRendering: function () {
             if (this.oRouter) {
                 // Detach PatternMatched before re-rendering
                 this.oRouter.getRoute("SupAsnCrt").detachPatternMatched(this._onObjectMatched, this);
-            }           
+            }
         },
 
         onAfterRendering: function () {
@@ -167,6 +167,30 @@ sap.ui.define([
                     return oItem.getBindingContext("detailModel").getObject(); // Modify as needed to get relevant properties
                 });
 
+                //29112024
+                // Extract PO and PO Line Item values from the first item
+                var oFirstContext = aSelectedItems[0].getBindingContext("detailModel");
+                var sFirstPO = oFirstContext.getProperty("Ebeln"); // Replace "PO" with your actual property name
+                var sFirstPOLineItem = oFirstContext.getProperty("Ebelp"); // Replace "POLineItem" with your actual property name            
+
+
+                var bAllSame = aSelectedItems.every(function (oItem) {
+                    var oContext = oItem.getBindingContext("detailModel");
+                    if (oContext) {
+                        var sPO = oContext.getProperty("Ebeln");
+                        var sPOLineItem = oContext.getProperty("Ebelp");
+                        return sPO === sFirstPO && sPOLineItem === sFirstPOLineItem;
+                    }
+                    return false;
+                });
+
+                if (!bAllSame) {
+                    // Trigger error message if PO or PO Line Item values differ
+                    MessageBox.error("Please select records with the same PO and PO Line Item.");
+                    return;
+                }
+                //29112024
+
                 debugger;
 
                 // Create a JSON model to hold the fetched data
@@ -189,37 +213,37 @@ sap.ui.define([
         },
         fetchDetail: async function (email) {
             debugger;
-             const that = this; // Preserve the reference to the controller
- 
-             sap.ui.core.BusyIndicator.show();
-             try {
-                 // Make a request to your custom Node.js backend to get the CSRF token and DA list
-                 const response = await $.ajax({
-                     url: "/nodeapp/supplierPODetail",     // Your custom backend route
-                     method: "GET",              // Use GET since you're retrieving data         
-                     contentType: "application/json",
-                     data: { email: email }   // Send the email as a query parameter
-                 });
-                 // Success handling
-                 sap.ui.core.BusyIndicator.hide();  // Hide the busy indicator on success
-                 
-                 // Process the response to get the tokens and DA list                
-                 const supplierPODetailData = response;        // Extract DA list data
-                 debugger;
-                 // Handle the DA list (e.g., bind to a model or display in a view)
-                 const oJsonModel = new sap.ui.model.json.JSONModel(supplierPODetailData);
-                 that.getView().setModel(oJsonModel, "detailModel");                 
- 
-             } catch (oErr) {
-                 sap.ui.core.BusyIndicator.hide();
-                 console.error("Error fetching DA List:", oErr);
-                 // If the error response contains a message, display it in the MessageBox
-                 const errorMessage = oErr.responseJSON?.error?.innererror?.errordetails?.[0]?.message || "Unknown error occurred";
- 
-                 // Show error message
-                 MessageBox.error(errorMessage);
-             }
-         }        
+            const that = this; // Preserve the reference to the controller
+
+            sap.ui.core.BusyIndicator.show();
+            try {
+                // Make a request to your custom Node.js backend to get the CSRF token and DA list
+                const response = await $.ajax({
+                    url: "/nodeapp/supplierPODetail",     // Your custom backend route
+                    method: "GET",              // Use GET since you're retrieving data         
+                    contentType: "application/json",
+                    data: { email: email }   // Send the email as a query parameter
+                });
+                // Success handling
+                sap.ui.core.BusyIndicator.hide();  // Hide the busy indicator on success
+
+                // Process the response to get the tokens and DA list                
+                const supplierPODetailData = response;        // Extract DA list data
+                debugger;
+                // Handle the DA list (e.g., bind to a model or display in a view)
+                const oJsonModel = new sap.ui.model.json.JSONModel(supplierPODetailData);
+                that.getView().setModel(oJsonModel, "detailModel");
+
+            } catch (oErr) {
+                sap.ui.core.BusyIndicator.hide();
+                console.error("Error fetching DA List:", oErr);
+                // If the error response contains a message, display it in the MessageBox
+                const errorMessage = oErr.responseJSON?.error?.innererror?.errordetails?.[0]?.message || "Unknown error occurred";
+
+                // Show error message
+                MessageBox.error(errorMessage);
+            }
+        }
 
     });
 });
