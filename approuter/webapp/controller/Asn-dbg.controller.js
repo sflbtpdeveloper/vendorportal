@@ -21,7 +21,7 @@ sap.ui.define([
 
         onInit: function () {
             BaseController.prototype.onInit.apply(this);
-            console.log("Asn Controller Initialized");
+            console.log("Asn Controller Initialized");            
             this._loadSelectData();
 
             var oRouter = this.getOwnerComponent().getRouter();
@@ -87,16 +87,16 @@ sap.ui.define([
             this.getView().setModel(oModel, "asnItems");
             this.byId("_IDGenTable1").bindRows({ path: "asnItems>/results" });
 
-            this.byId("ETA").setValue(""); // Clear ETA input field
-            this.byId("mySelect").setSelectedKey(""); // Clear the selected key
-            this.byId("DCNO").setValue("");
-            this.byId("DCDATE").setValue("");
-            this.byId("PACKS").setValue("");
-            this.byId("LRNO").setValue("");
-            this.byId("LRDATE").setValue("");
-            this.byId("TNAME").setValue("");
-            this.byId("VEHNO").setValue("");
-            this.byId("SVENDOR").setValue("");
+            this.getView().byId("ETA").setValue(""); // Clear ETA input field
+            this.getView().byId("mySelect").setSelectedKey(""); // Clear the selected key
+            this.getView().byId("DCNO").setValue("");
+            this.getView().byId("DCDATE").setValue("");
+            this.getView().byId("PACKS").setValue("");
+            this.getView().byId("LRNO").setValue("");
+            this.getView().byId("LRDATE").setValue("");
+            this.getView().byId("TNAME").setValue("");
+            this.getView().byId("VEHNO").setValue("");
+            this.getView().byId("SVENDOR").setValue("");
         },
 
         onToggleButtonPress: async function (oEvent) {
@@ -225,7 +225,7 @@ sap.ui.define([
                         MessageBox.success("ASN Number Created:" + asnNumber, {
                             onClose: function () {
                                 debugger;
-                                history.go(-1);
+                                history.go(-1);                             
                                 //    oController.oRouter.navTo("SupAsnCrt", {},false);                            
                             }.bind(this)
                         });
@@ -337,6 +337,14 @@ sap.ui.define([
                 // Optionally, set focus back to the DCDATE input field
                 this.byId("DCDATE").setValue(""); // Clear the invalid date
                 return; // Exit the function if validation fails
+            }
+
+            var packs = inputs.sPacks;
+            var regex = /^[+-]?\d+$/;
+            if (!regex.test(packs)) {
+                // If validation fails, show an error message
+                MessageBox.error("Please enter a pack number without decimals.");
+                return;
             }
 
             // Validate Confirmatory Vendor if switch is on

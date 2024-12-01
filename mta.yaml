@@ -58,10 +58,10 @@ modules:
       - name: node_api
     parameters:
       disk-quota: 1G
-      memory: 1G    
-      host: sflvps  # Hostname for custom domain    removed route and checking
+      memory: 1G   
+      host: sflvpsdev  # Hostname for custom domain    removed route and checking
       domains:        
-        - sfl.co.in  # Custom domain    
+        - sfl.co.in  # Custom domain           
 
 
 resources:

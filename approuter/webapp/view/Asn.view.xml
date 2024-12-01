@@ -108,7 +108,7 @@
                 />
                 <mdc:Field
                     id="PACKS"
-                    value="{path: 'data>/string', type: 'sap.ui.model.type.Integer'}"
+                    value="{path: 'data>/string', type: 'sap.ui.model.type.String'}"
                     editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
                     showEmptyIndicator="true"
                     required="true"
