@@ -656,5 +656,23 @@ sap.ui.define([
                 oInput.setValueStateText("Invalid Vehicle Number format");
             }
         },        
+        onDCNOValidation: function (oEvent) {
+            // Get the input value
+            var sValue = oEvent.getParameter("value");
+        
+            // Get the Input control to display an error state if needed
+            var oInput = oEvent.getSource();
+        
+            // Check if the input length is greater than 16
+            if (sValue.length > 16) {
+                // Set the value state to Error
+                oInput.setValueState("Error");
+                oInput.setValueStateText("Only 16 characters allowed");
+                oInput.setValue("");
+            } else {
+                // Reset the value state if the length is valid
+                oInput.setValueState("None");
+            }
+        }        
     });
 });

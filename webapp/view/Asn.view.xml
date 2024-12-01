@@ -81,6 +81,7 @@
                     editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
                     showEmptyIndicator="true"
                     required="true"
+                    liveChange=".onDCNOValidation"
                 />
                 <m:Label
                     id="_IDGenLabel2"
