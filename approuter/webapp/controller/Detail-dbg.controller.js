@@ -179,14 +179,14 @@ sap.ui.define([
                     if (oContext) {
                         var sPO = oContext.getProperty("Ebeln");
                         var sPOLineItem = oContext.getProperty("Ebelp");
-                        return sPO === sFirstPO && sPOLineItem === sFirstPOLineItem;
+                        return sPO === sFirstPO;
                     }
                     return false;
                 });
 
                 if (!bAllSame) {
                     // Trigger error message if PO or PO Line Item values differ
-                    MessageBox.error("Please select records with the same PO and PO Line Item.");
+                    MessageBox.error("Please select records with the same PO Number.");
                     return;
                 }
                 //29112024
@@ -244,6 +244,5 @@ sap.ui.define([
                 MessageBox.error(errorMessage);
             }
         }
-
     });
 });

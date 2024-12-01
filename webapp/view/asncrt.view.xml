@@ -176,6 +176,7 @@
                             id="idVhNo"
                             value="{local>/asnData/Vechileno}"
                             required="true"
+                            liveChange=".onVehicleValidation"
                         />
 
                         <Label text="Expected Delivery Date" />

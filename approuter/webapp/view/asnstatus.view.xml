@@ -141,7 +141,7 @@
                             <ObjectIdentifier title="{path: 'asnrepModel>Dcdat',  formatter: '.formatDate'}" />
                             <Text text="{asnrepModel>Asnqty}" />
                             <!-- <Text text="{asnrepModel>Jobstat}" width="100%"/> -->
-                            <Image src="{path: 'asnrepModel>Jobstat', formatter:'.jobstatff'}" width="30px"  />
+                            <Image src="{path: 'asnrepModel>Grstatus', formatter:'.jobstatff'}" width="30px"  />
                             <!-- <Text text="{asnrepModel>Asnstatus}" width="100%" /> -->
 
 						<!-- <ObjectStatus

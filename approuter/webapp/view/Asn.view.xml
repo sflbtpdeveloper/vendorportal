@@ -134,6 +134,7 @@
                     editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
                     showEmptyIndicator="true"
                     required="true"
+                    change="onDcDateChange"
                 />
                 <m:Label
                     id="_IDGenLabel8"

@@ -185,26 +185,8 @@ sap.ui.define([
                 return;
             }
 
-
-            //vehicle Number validation            
-            var aVFilters = [];
-            if (sVhNo) {
-                var oFilter = new sap.ui.model.Filter("VehNo", sap.ui.model.FilterOperator.EQ, sVhNo);  // Assuming "Vehno" is the field name in your entity set
-                aVFilters.push(oFilter);
-            }
-
-            // Read data from the OData service
-            // var oModel = this.getOwnerComponent().getModel();
-            var oModel = this.getOwnerComponent().getModel("poservice");
-            var that = this;
-            let bVehicleValid = await this._validateVehicleNumber(oModel, aVFilters);
-            if (!bVehicleValid) {
-                return; // Stop further execution
-            }
-
             this._userModel = this.getOwnerComponent().getModel("userModel");
-            let sEmail = this._userModel.oData.email
-            // let sEmail = "muthuramesh31@gmail.com"
+            let sEmail = this._userModel.oData.email            
 
             let aFilters = [
                 new sap.ui.model.Filter("Email", sap.ui.model.FilterOperator.EQ, sEmail),
@@ -220,7 +202,7 @@ sap.ui.define([
                     sap.ui.core.BusyIndicator.hide();
                     // Check if any records are returned from the OData service
                     if (oData.results && oData.results.length > 0) {
-                        // If records exist, show a warning message
+                        // If records exist, show a warning messages
                         MessageBox.warning("The DC number " + sDcno + " with date " + sDcdate + " already exists.");
                     } else {
                         // If no records are found, you can proceed with further logic here
@@ -236,24 +218,24 @@ sap.ui.define([
                 }
             });
         },
-        _validateVehicleNumber: function (oModel, aFilters) {
-            return new Promise(function (resolve) {
-                oModel.read("/VehicleNumberSet", {
-                    filters: aFilters,
-                    success: function (oData) {
-                        if (oData.results.length === 1) {
-                            MessageBox.error(oData.results[0].Message);
-                            resolve(false); // Validation failed
-                        } else {
-                            resolve(true); // Validation passed
-                        }
-                    },
-                    error: function () {
-                        resolve(false); // Error occurred, treat as invalid
-                    }
-                });
-            });
-        },
+        // _validateVehicleNumber: function (oModel, aFilters) {
+        //     return new Promise(function (resolve) {
+        //         oModel.read("/VehicleNumberSet", {
+        //             filters: aFilters,
+        //             success: function (oData) {
+        //                 if (oData.results.length === 1) {
+        //                     MessageBox.error(oData.results[0].Message);
+        //                     resolve(false); // Validation failed
+        //                 } else {
+        //                     resolve(true); // Validation passed
+        //                 }
+        //             },
+        //             error: function () {
+        //                 resolve(false); // Error occurred, treat as invalid
+        //             }
+        //         });
+        //     });
+        // },
         _createASNRecord: async function () {
             let oModel = this.getOwnerComponent().getModel("asncrt");
             this.getView().setModel(oModel);
@@ -320,9 +302,9 @@ sap.ui.define([
             var oRadioButtonGroup = this.byId("idRadioGroup");
             var iSelectedIndex = oRadioButtonGroup.getSelectedIndex();
             if (iSelectedIndex === 0) {
-                oPayload.Jobstat = "C";
+                oPayload.Grstatus = "C";
             } else if (iSelectedIndex === 1) {
-                oPayload.Jobstat = "N";
+                oPayload.Grstatus = "N";
             }
 
             aData.push(oPayload);
@@ -654,6 +636,25 @@ sap.ui.define([
                 // Clear the error state if input is valid
                 oInput.setValueState("None");
             }
-        }
+        },
+        onVehicleValidation: function (oEvent) {
+            // Get the entered value
+            var sVhNo = oEvent.getParameter("value");
+        
+            // Define the regex pattern for validation
+            var oRegex = /^[A-Z]{2}\d{2}[A-Z]{2}\d{4}$/;
+        
+            // Get the input control for displaying error state
+            var oInput = oEvent.getSource();
+        
+            if (oRegex.test(sVhNo)) {
+                // If valid, remove error state
+                oInput.setValueState("None");
+            } else {
+                // If invalid, set error state and message
+                oInput.setValueState("Error");
+                oInput.setValueStateText("Invalid Vehicle Number format");
+            }
+        },        
     });
 });

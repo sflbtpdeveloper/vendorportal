@@ -21,7 +21,7 @@ sap.ui.define([
 
         onInit: function () {
             BaseController.prototype.onInit.apply(this);
-            console.log("Asn Controller Initialized");            
+            console.log("Asn Controller Initialized");
             this._loadSelectData();
 
             var oRouter = this.getOwnerComponent().getRouter();
@@ -87,7 +87,10 @@ sap.ui.define([
             this.getView().setModel(oModel, "asnItems");
             this.byId("_IDGenTable1").bindRows({ path: "asnItems>/results" });
 
+            this.sSelectedKey = null;
+
             this.getView().byId("ETA").setValue(""); // Clear ETA input field
+            // this.getView().getModel("dropModel").setProperty("/selectedKey", ""); // Clear the selected key in the model
             this.getView().byId("mySelect").setSelectedKey(""); // Clear the selected key
             this.getView().byId("DCNO").setValue("");
             this.getView().byId("DCDATE").setValue("");
@@ -106,45 +109,51 @@ sap.ui.define([
             var bPressed = oToggleButton.getPressed();
 
             // if (bPressed) {
-                var inputs = {
-                    sDcno: this.byId("DCNO").getValue(),
-                    sDcdate: this.byId("DCDATE").getValue(),
-                    sPacks: String(this.byId("PACKS").getValue()),
-                    sLrno: this.byId("LRNO").getValue(),
-                    sLrdate: this.byId("LRDATE").getValue(),
-                    sTname: this.byId("TNAME").getValue(),
-                    sVehno: this.byId("VEHNO").getValue(),
-                    sBtype: this.sSelectedKey,
-                    sEta: this.byId("ETA").getValue(),
-                };
+            var inputs = {
+                sDcno: this.byId("DCNO").getValue(),
+                sDcdate: this.byId("DCDATE").getValue(),
+                sPacks: String(this.byId("PACKS").getValue()),
+                sLrno: this.byId("LRNO").getValue(),
+                sLrdate: this.byId("LRDATE").getValue(),
+                sTname: this.byId("TNAME").getValue(),
+                sVehno: this.byId("VEHNO").getValue(),
+                sBtype: this.sSelectedKey,
+                sEta: this.byId("ETA").getValue(),
+            };
 
-                var aFilters = [];
-                if (inputs.sVehno) {
-                    var oFilter = new sap.ui.model.Filter("VehNo", sap.ui.model.FilterOperator.EQ, inputs.sVehno);  // Assuming "Vehno" is the field name in your entity set
-                    aFilters.push(oFilter);
-                }
+            if (!inputs.sLrdate) {
+                // Set a dummy date (e.g., "1970-01-01" or any other valid date)
+                inputs.sLrdate = new Date(0);  // This represents "1970-01-01T00:00:00.000Z"
+                // console.log("Using dummy date:", sLrdate);
+            }
 
-                // Read data from the OData service
-                // var oModel = this.getOwnerComponent().getModel();
-                var oModel = this.getOwnerComponent().getModel("poservice");
-                var that = this;
+            var aFilters = [];
+            if (inputs.sVehno) {
+                var oFilter = new sap.ui.model.Filter("VehNo", sap.ui.model.FilterOperator.EQ, inputs.sVehno);  // Assuming "Vehno" is the field name in your entity set
+                aFilters.push(oFilter);
+            }
 
-                oModel.read("/VehicleNumberSet", {
-                    filters: aFilters,
-                    success: function (oData, response) {
-                        // Perform validation on the response
-                        if (oData.results.length === 1) {
-                            MessageBox.error(oData.results[0].Message);
-                            return; // Exit if the vehicle number is not valid
-                        }
+            // Read data from the OData service
+            // var oModel = this.getOwnerComponent().getModel();
+            var oModel = this.getOwnerComponent().getModel("poservice");
+            var that = this;
 
-                        // 2. If the vehicle number is valid, proceed with creating the ASN (POST operation)
-                        that._createASN(inputs);  // Call the function to create ASN with the valid inputs
-                    },
-                    error: function (oError) {
-                        return;
+            oModel.read("/VehicleNumberSet", {
+                filters: aFilters,
+                success: function (oData, response) {
+                    // Perform validation on the response
+                    if (oData.results.length === 1) {
+                        MessageBox.error(oData.results[0].Message);
+                        return; // Exit if the vehicle number is not valid
                     }
-                });
+
+                    // 2. If the vehicle number is valid, proceed with creating the ASN (POST operation)
+                    that._createASN(inputs);  // Call the function to create ASN with the valid inputs
+                },
+                error: function (oError) {
+                    return;
+                }
+            });
             // }
         },
 
@@ -221,11 +230,12 @@ sap.ui.define([
                     var oController = this; // Store the reference to 'this'  
                     if (asnNumber === "duplicate") { // Replace this condition with your actual logic to determine duplication
                         MessageBox.error("DC number already available in the Financial Year.", { duration: 2000 });
+                        return;
                     } else
                         MessageBox.success("ASN Number Created:" + asnNumber, {
                             onClose: function () {
                                 debugger;
-                                history.go(-1);                             
+                                history.go(-1);
                                 //    oController.oRouter.navTo("SupAsnCrt", {},false);                            
                             }.bind(this)
                         });
@@ -282,6 +292,7 @@ sap.ui.define([
             this.byId("VEHNO").setValue("");
             this.byId("SVENDOR").setValue("");
             this.byId("ETA").setValue("");
+            // this.getView().getModel("dropModel").setProperty("/selectedKey", ""); // Clear the selected key in the model
             this.byId("mySelect").setSelectedKey(""); // Clear dropdown selection
             this.byId("SVENDOR").setValue("")
         },
@@ -318,7 +329,30 @@ sap.ui.define([
                 MessageBox.error(errorMessage);
             }
         },
-        
+
+        onDcDateChange: function (oEvent) {
+            // Get the DCDATE value and convert it to a Date object
+            var oDcDate = oEvent.getSource();
+            // var sdc = this.byId("DCDATE").getValue();
+            var sdc = oDcDate.getValue();
+            var dcDate = new Date(sdc);
+            var currentDate = new Date();
+
+            // Reset the time of both dates to avoid time discrepancies during comparison
+            dcDate.setHours(0, 0, 0, 0);
+            currentDate.setHours(0, 0, 0, 0);
+
+            // Check if the DCDATE is a future date
+            if (dcDate > currentDate) {
+                // DCDATE is in the future, show an error message
+                MessageBox.error('Invoice date cannot be a future date');
+                return;
+                // Optionally, set focus back to the DCDATE input field
+                this.byId("DCDATE").setValue(""); // Clear the invalid date
+                return; // Exit the function if validation fails
+            }
+        },
+
         _createASN: function (inputs) {
             var aErrors = [];
             // Get the DCDATE value and convert it to a Date object
