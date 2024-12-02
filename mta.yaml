@@ -59,7 +59,7 @@ modules:
     parameters:
       disk-quota: 1G
       memory: 1G   
-      host: sflvpsqas  # Hostname for custom domain    removed route and checking
+      host: sflvps  # Hostname for custom domain    removed route and checking
       domains:        
         - sfl.co.in  # Custom domain           
 
