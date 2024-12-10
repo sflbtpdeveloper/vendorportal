@@ -331,11 +331,45 @@ sap.ui.define([
             }
             return sValue;
 
+        },        
+        isGrnoNonEmpty: function (grno) {
+            // Check if Grno is not empty, undefined, or nulls
+            return grno && grno.trim() !== "";
+        },            
+        PayText: function (paystat) {            
+            if (paystat === "P") {
+                return "Completed"; // Positive state
+            } else if (paystat === "NP") {
+                return "Pending"; // Negative state
+            }
+            return " "; // Default state
+        },        
+        PayState: function (paystat) {            
+            if (paystat === "P") {
+                return "Success"; // Positive state
+            } else if (paystat === "NP") {
+                return "Error"; // Negative state
+            }
+            return "None"; // Default state
         },
+        PayIcon: function (paystat) {
+            if (paystat === "P") {
+                return "sap-icon://accept"; // Checkmark for payment made
+            } else if (paystat === "NP") {
+                return "sap-icon://decline"; // Cross for payment not made
+            }
+            return ""; // No icon for other cases
+        },                
+        conditionalText: function (value) {
+            // Check for default values and return empty if they match
+            if (value === "0000000000" || value === "0000" || !value) {
+                return ""; // Return empty string if the value is invalid
+            }
+            return value; // Return the actual value
+        },        
         fetchASNStatus: async function (email) {
             debugger;
              const that = this; // Preserve the reference to the controller
- 
              sap.ui.core.BusyIndicator.show();
              try {
                  // Make a request to your custom Node.js backend to get the CSRF token and DA list

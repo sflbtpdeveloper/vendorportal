@@ -100,6 +100,8 @@ sap.ui.define([
             this.getView().byId("TNAME").setValue("");
             this.getView().byId("VEHNO").setValue("");
             this.getView().byId("SVENDOR").setValue("");
+            this.getView().byId("invoiceFileName").setText('');
+            this.getView().byId("tsFileName").setText('');
         },
 
         onToggleButtonPress: async function (oEvent) {
@@ -138,28 +140,28 @@ sap.ui.define([
             var oModel = this.getOwnerComponent().getModel("poservice");
             var that = this;
 
-            oModel.read("/VehicleNumberSet", {
-                filters: aFilters,
-                success: function (oData, response) {
-                    // Perform validation on the response
-                    if (oData.results.length === 1) {
-                        MessageBox.error(oData.results[0].Message);
-                        return; // Exit if the vehicle number is not valid
-                    }
+            // oModel.read("/VehicleNumberSet", {
+            //     filters: aFilters,
+            //     success: function (oData, response) {
+            //         // Perform validation on the response
+            //         if (oData.results.length === 1) {
+            //             MessageBox.error(oData.results[0].Message);
+            //             return; // Exit if the vehicle number is not valid
+            //         }
 
-                    // 2. If the vehicle number is valid, proceed with creating the ASN (POST operation)
-                    that._createASN(inputs);  // Call the function to create ASN with the valid inputs
-                },
-                error: function (oError) {
-                    return;
-                }
-            });
-            // }
+            // 2. If the vehicle number is valid, proceed with creating the ASN (POST operation)
+            that._createASN(inputs);  // Call the function to create ASN with the valid inputs
+            //     },
+            //     error: function (oError) {
+            //         return;
+            //     }
+            // });
+
         },
 
         validateLineItem: function (oSelectedData, index) {
-            var asnQty = oSelectedData.Asnqty || 0;
-            var blQty = oSelectedData.Blqty || 0;
+            var asnQty = parseFloat(oSelectedData.Asnqty) || 0;
+            var blQty = parseFloat(oSelectedData.Blqty) || 0;
             var asnWeight = oSelectedData.Asnweight || 0;
             var meins = oSelectedData.Meins;
 
@@ -224,7 +226,7 @@ sap.ui.define([
                     // "X-CSRF-Token": csrfToken,
                     "Content-Type": "application/json",
                 },
-                success: function (oData) {
+                success: async function (oData) {
                     debugger;
                     var asnNumber = oData.d.Ebeln;
                     var oController = this; // Store the reference to 'this'  
@@ -232,13 +234,28 @@ sap.ui.define([
                         MessageBox.error("DC number already available in the Financial Year.", { duration: 2000 });
                         return;
                     } else
-                        MessageBox.success("ASN Number Created:" + asnNumber, {
-                            onClose: function () {
-                                debugger;
-                                history.go(-1);
-                                //    oController.oRouter.navTo("SupAsnCrt", {},false);                            
-                            }.bind(this)
-                        });
+
+                        // Upload attachments and wait for completion
+                        await this.uploadAttachments(asnNumber);
+
+                    MessageBox.success("ASN Number Created:" + asnNumber, {
+                        onClose: async function () {
+                            debugger;
+                            var oLocalModel = this.getView().getModel("local");
+                            oLocalModel.setData({
+                                attachData: {
+                                    mimetype: "",
+                                    InvoiceFileName: "",
+                                    InvoiceFileBase64: "",
+                                    TsFileName: "",
+                                    TsFileBase64: ""
+                                }
+                            });
+
+                            history.go(-1);
+                            //    oController.oRouter.navTo("SupAsnCrt", {},false);                            
+                        }.bind(this)
+                    });
                     this.clearInputs();
                     // Clear input fields and navigate after a delay
                 }.bind(this),
@@ -455,20 +472,116 @@ sap.ui.define([
         onDCNOValidation: function (oEvent) {
             // Get the input value
             var sValue = oEvent.getParameter("value");
-        
+
             // Get the Input control to display an error state if needed
             var oInput = oEvent.getSource();
-        
+
             // Check if the input length is greater than 16
             if (sValue.length > 16) {
                 // Set the value state to Error
                 oInput.setValueState("Error");
-                oInput.setValueStateText("Only 16 characters allowed");                
+                oInput.setValueStateText("Only 16 characters allowed");
             } else {
                 // Reset the value state if the length is valid
                 oInput.setValueState("None");
             }
-        }         
+        },
+
+        onAttachFilePress: function (oEvent) {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "*/*"; // Allow all file types
+
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const fileName = file.name; // Ensure fileName is captured here
+                    const fileType = file.type;
+                    const reader = new FileReader();
+
+                    reader.onload = (event) => {
+                        const base64String = event.target.result.split(',')[1]; // Extract Base64 data
+
+
+                        // Update the model with Base64 and file name
+                        const buttonId = oEvent.getSource().getId();
+                        if (buttonId.includes("invoiceAttachment")) {
+                            this.getView().getModel("local").setProperty("/attachData/InvoiceFileName", fileName);
+                            this.getView().getModel("local").setProperty("/attachData/InvoiceFileBase64", base64String);
+                            this.getView().getModel("local").setProperty("/attachData/mimetype", fileType);
+                        } else if (buttonId.includes("tsAttachment")) {
+                            this.getView().getModel("local").setProperty("/attachData/TsFileName", fileName);
+                            this.getView().getModel("local").setProperty("/attachData/TsFileBase64", base64String);
+                            this.getView().getModel("local").setProperty("/attachData/mimetype", fileType);
+                        }
+                    };
+
+                    // Read the file as a Base64 string
+                    reader.readAsDataURL(file);   //commented on 1012
+                }
+            };
+
+            input.click(); // Open the file dialog
+        },
+
+        uploadAttachments: async function (asnNumber) {
+            const oLocalModel = this.getView().getModel("local");
+            const attachData = oLocalModel.getProperty("/attachData");
+            debugger;
+            // Configure ODataModel for the AttachmentSet
+            const oDataModel = new sap.ui.model.odata.v2.ODataModel("/sap/opu/odata/sap/YMM_SUPPLIER_PO_SRV/");
+            // const concatenatedFileName = `${asnNumber}/${attachData.InvoiceFileName || attachData.DhsFileName}`;
+
+            const uploadFile = (fileName, base64Data, mimeType, filePrefix) => {
+                if (!fileName || !base64Data) {
+                    return Promise.resolve(); // Skip if no file data
+                }
+
+                let concatenatedFileName = `${asnNumber}/`;
+
+                // Concatenate the prefix ('INV' or 'DHS') to the filename
+                concatenatedFileName += filePrefix + fileName;
+
+                // Prepare payload
+                const oFileData = {
+                    AsnNumber: asnNumber, // Bind ASN Number
+                    FileName: fileName,
+                    MimeType: mimeType,
+                    Base64Content: base64Data
+                };
+
+                // Set custom headers
+                const mHeaders = {
+                    "slug": concatenatedFileName  // Use filename as slug
+                };
+
+                // Return a promise for the upload request
+                return new Promise((resolve, reject) => {
+                    oDataModel.create("/AttachmentSet", oFileData, {
+                        headers: mHeaders,
+                        success: function () {
+                            MessageToast.show(`File uploaded successfully: ${fileName}`);
+                            resolve();
+                        },
+                        error: function (oError) {
+                            MessageBox.error(`Error uploading file: ${fileName}`);
+                            reject(oError);
+                        }
+                    });
+                });
+            };
+
+            // Check and upload Invoice Attachment
+            if (attachData.InvoiceFileName && attachData.InvoiceFileBase64) {
+                await uploadFile(attachData.InvoiceFileName, attachData.InvoiceFileBase64, attachData.mimetype, 'INV');
+            }
+
+            // Check and upload DHS Attachment
+            if (attachData.TsFileName && attachData.TsFileBase64) {
+                await uploadFile(attachData.TsFileName, attachData.TsFileBase64, attachData.mimetype, 'TSC');
+            }
+        },
+
     });
 });
 

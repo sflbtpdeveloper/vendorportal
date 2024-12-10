@@ -6,7 +6,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:mdc="sap.ui.mdc"
     xmlns:core="sap.ui.core"
-     xmlns:unified="sap.ui.unified"
+    xmlns:unified="sap.ui.unified"
 >
     <m:Page
         id="Asn"
@@ -43,7 +43,7 @@
                         text="Supplier PO Report"
                         textAlign="Center"
                         titleStyle="Auto"
-                       class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
+                        class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
                     />
                 </m:VBox>
                 <m:HBox
@@ -192,9 +192,40 @@
                     showEmptyIndicator="true"
                     visible="false"
                 />
+
+                <m:Label text="Attachments" />
+                <!-- Invoice Attachment -->
+                <m:Button
+                    id="invoiceAttachment"
+                    icon="sap-icon://attachment"
+                    text="Invoice"
+                    press="onAttachFilePress"
+                    width="auto"
+                />
+                <m:Text
+                    id="invoiceFileName"
+                    text="{local>/attachData/InvoiceFileName}"
+                    class="sapUiTinyMarginBegin"
+                    width="auto"
+                />
+
+                <!-- Test certificate Attachment -->
+                <m:Button
+                    id="tsAttachment"
+                    icon="sap-icon://attachment"
+                    text="TC"
+                    press="onAttachFilePress"
+                    width="auto"
+                />
+                <m:Text
+                    id="tsFileName"
+                    text="{local>/attachData/TsFileName}"
+                    class="sapUiTinyMarginBegin"
+                    width="auto"
+                />
             </form:SimpleForm>
 
-          <!-- <unified:FileUploader
+            <!-- <unified:FileUploader
                 id="fileUploader"
                 uploadUrl="/your/service/url"
                 fileType="pdf"
@@ -205,27 +236,26 @@
             <m:ScrollContainer
                 id="_IDGenScrollContainer"
                 width="100%"
-                height="400px"
+                height="100%"
                 horizontal="true"
                 vertical="true"
             >
-            <!-- <extension> -->
-                        <!-- <m:OverflowToolbar
+                <!-- <extension> -->
+                <!-- <m:OverflowToolbar
                             id="_IDGenOverflowToolbar2"
                             style="Clear"
                         > -->
-                            <m:Title
-                                text="ASN Item Details"
-                                class="title1"
-                            />
-                        <!-- </m:OverflowToolbar> -->
-                    <!-- </extension> -->
+                <m:Title
+                    text="ASN Item Details"
+                    class="title1"
+                />
+                <!-- </m:OverflowToolbar> -->
+                <!-- </extension> -->
                 <Table
                     id="_IDGenTable1"
                     rows="{asnItems>/results}"
-                    selectionMode="None"                    
+                    selectionMode="None"
                 >
-                    
                     <columns>
                         <Column
                             id="_IDGenColumnEbeln"

@@ -14,34 +14,37 @@
         showHeader="false"
     >
 	<content>
-        <VBox>
-            <HBox>
+      <HBox
+                width="100%"
+                alignItems="Center"
+                justifyContent="SpaceBetween"
+            >
                 <Image
                     src="/images/sfllogoonly.png"
                     alt="Company Logo"
                     densityAware="false"
                     width="4rem"
                 />
-                <VBox>
+                <VBox
+                    alignItems="Center"
+                    width="100%"
+                >
                     <Title
-                        text="Sundram Fasteners Limited"
-                        width="380%"
+                        text="Sundram Fasteners Limited"                        
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiMediumMarginTop"
                     />
 
                     <Title
-                        text="Subcontract ASN Creation"
-                        width="380%"
+                        text="Subcontract ASN Creation"                        
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
                     />
                 </VBox>
-                <HBox width="4rem"/>                
+                <HBox width="4rem" />                
             </HBox>
-        </VBox>
         
             <Toolbar>
                 <SearchField
@@ -91,8 +94,8 @@
             </Toolbar>
         
             <ScrollContainer
-                width="auto"
-                height="auto"
+                width="100%"
+                height="100%"
                 horizontal="true"
                 vertical="true"
             >

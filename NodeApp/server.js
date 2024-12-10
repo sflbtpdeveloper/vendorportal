@@ -14,7 +14,15 @@ const session = require('express-session');             //  Middleware for sessi
 const jwt = require("jsonwebtoken");                    //Used to handle JWTs, allowing the application to generate and verify tokens, typically for authentication purposes
 const crypto = require("crypto");                       // generating secure tokens, hashing data, or encrypting/decrypting information
 // const session = require("express-session");     // to enable session management.
+const bodyParser = require('body-parser');
 
+
+// Set body-parser limit to handle larger payloads
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+app.use(express.json({ limit: "10mb" })); 
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 
 const PORT = process.env.PORT || 8082;

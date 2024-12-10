@@ -91,6 +91,8 @@ sap.ui.define([
             this.getView().byId("idVhNo").setValue('');
             this.getView().byId("datePicker_ed").setValue('');
             this.getView().byId("idLifn2").setValue('');
+            this.getView().byId("invoiceFileName").setText('');
+            this.getView().byId("dhsFileName").setText('');
 
 
             var sModel = this.getOwnerComponent().getModel("selectedRecords");
@@ -153,6 +155,9 @@ sap.ui.define([
             let sMatWgt = this.getView().byId("idMatWgt").getValue();
             let sVhNo = this.getView().byId("idVhNo").getValue();
 
+
+
+            debugger;
             // Create an array of mandatory fields to validate
             let aMandatoryFields = [
                 { field: sDcno, fieldId: "idDcNo", fieldName: "DC Number" },
@@ -186,7 +191,7 @@ sap.ui.define([
             }
 
             this._userModel = this.getOwnerComponent().getModel("userModel");
-            let sEmail = this._userModel.oData.email            
+            let sEmail = this._userModel.oData.email
 
             let aFilters = [
                 new sap.ui.model.Filter("Email", sap.ui.model.FilterOperator.EQ, sEmail),
@@ -236,6 +241,7 @@ sap.ui.define([
         //         });
         //     });
         // },
+
         _createASNRecord: async function () {
             let oModel = this.getOwnerComponent().getModel("asncrt");
             this.getView().setModel(oModel);
@@ -249,6 +255,9 @@ sap.ui.define([
             var sDate = oDatePicker.getValue(); // The date in "yyyy-MM-dd" format
             var sDate_de = oDatePicker_ed.getValue(); // The date in "yyyy-MM-dd" format
             var sDate_lr = oDatePicker_lr.getValue();
+
+            // Get the Base64 values from the model
+            let oLocalModel = this.getView().getModel("local");
 
             oPayload.Dcdate = sDate;
             oPayload.exDelvDate = sDate_de;
@@ -298,6 +307,11 @@ sap.ui.define([
 
             });
 
+            var asnModel = this.getOwnerComponent().getModel("ASNMODEL");
+            var oASNData = asnModel.getData();
+
+            oPayload.Ebeln = oASNData.Ebeln; // Purchase Order Number
+            oPayload.Ebelp = oASNData.Ebelp; // Purchase Order Item Number
 
             var oRadioButtonGroup = this.byId("idRadioGroup");
             var iSelectedIndex = oRadioButtonGroup.getSelectedIndex();
@@ -360,31 +374,53 @@ sap.ui.define([
                     // "X-CSRF-Token": csrfToken,
                     "Content-Type": "application/json",
                 },
-                success: function (oData) {
+                success: async function (oData) {
                     debugger;
-                    MessageBox.success("ASN Number Created: " + oData.d.Asnno, {
-                        onClose: function () {
-                            var oLocalModel = this.getView().getModel("local");
-                            oLocalModel.setData({
-                                asnData: {
-                                    Dcno: "",
-                                    Menge: "",
-                                    Lrnumber: "",
-                                    Zpack: "",
-                                    Asnweight: "",
-                                    Vechileno: "",
-                                    exDelvDate: "",
-                                    Lrdate: ""
-                                }
-                            });
+                    const asnNumber = oData.d.Asnno;
+                    try {
+                        // Upload attachments and wait for completion
+                        await this.uploadAttachments(asnNumber);
 
-                            // Clear the Machine dropdown selection
-                            var oMachineSelect = this.getView().byId("idMachdrp");
-                            oMachineSelect.setSelectedKey(null);
-                            oLocalModel.updateBindings(true);
-                            history.go(-1);
-                        }.bind(this)
-                    });
+                        MessageBox.success("ASN Number Created: " + oData.d.Asnno, {
+                            onClose: async function () {
+                                // await this.uploadAttachments(asnNumber);
+                                var oLocalModel = this.getView().getModel("local");
+                                oLocalModel.setData({
+                                    asnData: {
+                                        Dcno: "",
+                                        Menge: "",
+                                        Lrnumber: "",
+                                        Zpack: "",
+                                        Asnweight: "",
+                                        Vechileno: "",
+                                        exDelvDate: "",
+                                        Lrdate: ""
+
+                                    },
+                                    attachData: {
+                                        mimetype: "",
+                                        InvoiceFileName: "",
+                                        InvoiceFileBase64: "",
+                                        DhsFileName: "",
+                                        DhsFileBase64: ""
+                                    }
+                                });
+
+                                // Clear the Machine dropdown selection
+                                var oMachineSelect = this.getView().byId("idMachdrp");
+                                oMachineSelect.setSelectedKey(null);
+                                oLocalModel.updateBindings(true);
+                                history.go(-1);
+                            }.bind(this)
+                        });
+
+                    } catch (error) {
+                        // Handle attachment upload failure
+                        MessageBox.error(
+                            "ASN created, but there was an error uploading attachments.\n" +
+                            "Error Details: " + error.message
+                        );
+                    }
                 }.bind(this),
                 error: function (oErr) {
                     var statusCode = oErr.status;
@@ -397,6 +433,63 @@ sap.ui.define([
                     );
                 }
             });
+        },
+        uploadAttachments: async function (asnNumber) {
+            const oLocalModel = this.getView().getModel("local");
+            const attachData = oLocalModel.getProperty("/attachData");
+            debugger;
+            // Configure ODataModel for the AttachmentSet
+            const oDataModel = new sap.ui.model.odata.v2.ODataModel("/sap/opu/odata/sap/YMM_SUPPLIER_PO_SRV/");
+            // const concatenatedFileName = `${asnNumber}/${attachData.InvoiceFileName || attachData.DhsFileName}`;
+
+            const uploadFile = (fileName, base64Data, mimeType, filePrefix) => {
+                if (!fileName || !base64Data) {
+                    return Promise.resolve(); // Skip if no file data
+                }
+
+                let concatenatedFileName = `${asnNumber}/`;
+
+                // Concatenate the prefix ('INV' or 'DHS') to the filename
+                concatenatedFileName += filePrefix + fileName;
+
+                // Prepare payload
+                const oFileData = {
+                    AsnNumber: asnNumber, // Bind ASN Number
+                    FileName: fileName,
+                    MimeType: mimeType,
+                    Base64Content: base64Data
+                };
+
+                // Set custom headers
+                const mHeaders = {
+                    "slug": concatenatedFileName  // Use filename as slug
+                };
+
+                // Return a promise for the upload request
+                return new Promise((resolve, reject) => {
+                    oDataModel.create("/AttachmentSet", oFileData, {
+                        headers: mHeaders,
+                        success: function () {
+                            MessageToast.show(`File uploaded successfully: ${fileName}`);
+                            resolve();
+                        },
+                        error: function (oError) {
+                            MessageBox.error(`Error uploading file: ${fileName}`);
+                            reject(oError);
+                        }
+                    });
+                });
+            };
+
+            // Check and upload Invoice Attachment
+            if (attachData.InvoiceFileName && attachData.InvoiceFileBase64) {
+                await uploadFile(attachData.InvoiceFileName, attachData.InvoiceFileBase64, attachData.mimetype, 'INV');
+            }
+
+            // Check and upload DHS Attachment
+            if (attachData.DhsFileName && attachData.DhsFileBase64) {
+                await uploadFile(attachData.DhsFileName, attachData.DhsFileBase64, attachData.mimetype, 'DHS');
+            }
         },
         getCsrfToken: function (url) {
             return new Promise(function (resolve, reject) {
@@ -637,42 +730,79 @@ sap.ui.define([
                 oInput.setValueState("None");
             }
         },
-        onVehicleValidation: function (oEvent) {
-            // Get the entered value
-            var sVhNo = oEvent.getParameter("value");
-        
-            // Define the regex pattern for validation
-            var oRegex = /^[A-Z]{2}\d{2}[A-Z]{2}\d{4}$/;
-        
-            // Get the input control for displaying error state
-            var oInput = oEvent.getSource();
-        
-            if (oRegex.test(sVhNo)) {
-                // If valid, remove error state
-                oInput.setValueState("None");
-            } else {
-                // If invalid, set error state and message
-                oInput.setValueState("Error");
-                oInput.setValueStateText("Invalid Vehicle Number format");
-            }
-        },        
+        // onVehicleValidation: function (oEvent) {
+        //  liveChange=".onVehicleValidation" to be set in screen
+        //     // Get the entered value
+        //     var sVhNo = oEvent.getParameter("value");
+
+        //     // Define the regex pattern for validation
+        //     var oRegex = /^[A-Z]{2}\d{2}[A-Z]{2}\d{4}$/;
+
+        //     // Get the input control for displaying error state
+        //     var oInput = oEvent.getSource();
+
+        //     if (oRegex.test(sVhNo)) {
+        //         // If valid, remove error state
+        //         oInput.setValueState("None");
+        //     } else {
+        //         // If invalid, set error state and message
+        //         oInput.setValueState("Error");
+        //         oInput.setValueStateText("Invalid Vehicle Number format");
+        //     }
+        // },
         onDCNOValidation: function (oEvent) {
             // Get the input value
             var sValue = oEvent.getParameter("value");
-        
+
             // Get the Input control to display an error state if needed
             var oInput = oEvent.getSource();
-        
+
             // Check if the input length is greater than 16
             if (sValue.length > 16) {
                 // Set the value state to Error
                 oInput.setValueState("Error");
                 oInput.setValueStateText("Only 16 characters allowed");
-                oInput.setValue("");
+                // oInput.setValue("");
             } else {
                 // Reset the value state if the length is valid
                 oInput.setValueState("None");
             }
-        }        
+        },
+        onAttachFilePress: function (oEvent) {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "*/*"; // Allow all file types
+
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const fileName = file.name; // Ensure fileName is captured here
+                    const fileType = file.type;
+                    const reader = new FileReader();
+
+                    reader.onload = (event) => {
+                        const base64String = event.target.result.split(',')[1]; // Extract Base64 data
+
+                        // Update the model with Base64 and file name
+                        const buttonId = oEvent.getSource().getId();
+                        if (buttonId.includes("invoiceAttachment")) {
+                            this.getView().getModel("local").setProperty("/attachData/InvoiceFileName", fileName);
+                            this.getView().getModel("local").setProperty("/attachData/InvoiceFileBase64", base64String);
+                            this.getView().getModel("local").setProperty("/attachData/mimetype", fileType);
+                        } else if (buttonId.includes("dhsAttachment")) {
+                            this.getView().getModel("local").setProperty("/attachData/DhsFileName", fileName);
+                            this.getView().getModel("local").setProperty("/attachData/DhsFileBase64", base64String);
+                            this.getView().getModel("local").setProperty("/attachData/mimetype", fileType);
+                        }
+                    };
+
+                    // Read the file as a Base64 string
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            input.click(); // Open the file dialog
+        },
+
     });
 });

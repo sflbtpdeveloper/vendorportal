@@ -253,18 +253,48 @@ sap.ui.define([
             var oModel1 = oView1.getModel();
             var opdfViewer = new PDFViewer();
             this.getView().addDependent(opdfViewer);
-            var sServiceURL = oModel1.sServiceUrl;
-            var sSourceR = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
-            var sSource = sServiceURL + "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+
+            // var sServiceURL = oModel1.sServiceUrl;
+            // var sSourceR = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+            // var sSource = sServiceURL + "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+// Define the OData request parameters
+            var sPath = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+            //********DO NOT TOUCH - IMPORTANT****************** */
+
+            // opdfViewer.setSource(sSource);
+            // opdfViewer.setTitle("DA PDF");
+            // opdfViewer.open();
 
             //********DO NOT TOUCH - IMPORTANT****************** */
 
-            opdfViewer.setSource(sSource);
-            opdfViewer.setTitle("DA PDF");
-            opdfViewer.open();
-
-            //********DO NOT TOUCH - IMPORTANT****************** */
-
+            oModel1.read(sPath, {
+                success: function (oResponse) {
+                    // Construct the PDF source URL
+                    var sSource = oModel1.sServiceUrl + sPath;
+        
+                    // Configure and open the PDF Viewer
+                    opdfViewer.setSource(sSource);
+                    opdfViewer.setTitle("DA PDF");
+                    opdfViewer.open();
+                },
+                error: function (oError) {
+                    // Parse and display the error message
+                    var sErrorMessage = "Preview not available for this Challan !!!";
+                    // if (oError && oError.responseText) {
+                    //     try {
+                    //         var oErrorResponse = JSON.parse(oError.responseText);
+                    //         if (oErrorResponse.error && oErrorResponse.error.message) {
+                    //             sErrorMessage = oErrorResponse.error.message.value || sErrorMessage;
+                    //         }
+                    //     } catch (e) {
+                    //         // Ignore JSON parsing errors
+                    //     }
+                    // }
+        
+                    // Display the error message using a MessageToast or MessageBox
+                    sap.m.MessageBox.error(sErrorMessage);
+                }
+            });
 
         },
         onMat: function (oEvent) {
@@ -485,8 +515,10 @@ sap.ui.define([
             dataobject.Ebelp = sModel.oData[0].Ebelp;
 
             const v_ebeln = sModel.oData[0].Ebeln;
-            const v_ebelp = sModel.oData[0].Ebelp;            
-            this._vMenge = sModel.oData[0].Menge;
+            const v_ebelp = sModel.oData[0].Ebelp;        
+            const v_Ip_Matnr = sModel.oData[0].Ip_Matnr;            
+            const v_Op_Matnr = sModel.oData[0].Op_Matnr;  
+            this._vMenge = sModel.oData[0].Menge - sModel.oData[0].Menga;
 
             // MessageBox.success("Selected Record" + " " + vendor + " " );
 
@@ -500,7 +532,7 @@ sap.ui.define([
             // Get the DA list from the model
             const daList = this.getView().getModel("default").getData();
             // Filter the DA list by `Ebeln`
-            const filteredData = daList.filter(item => item.Ebeln === v_ebeln && item.Ebelp !== v_ebelp);
+            const filteredData = daList.filter(item => item.Ebeln === v_ebeln && item.Ebelp !== v_ebelp && item.Ip_Matnr === v_Ip_Matnr);
             if (filteredData.length === 0) {
                 sap.m.MessageBox.error("No records found for the selected PO");
                 return;
@@ -560,16 +592,25 @@ sap.ui.define([
             debugger;
             var sModel = this.getOwnerComponent().getModel("selectedRecords");
             var cModel = this.getOwnerComponent().getModel("changedRecords");
+            var asnModel = this.getOwnerComponent().getModel("ASNMODEL");
             var sData = sModel.getData();
             var cData = cModel.getData();
+            var asnData = asnModel.getData();
             
             var ratio = cData[0].Ratio;
-            var balanceQty = v_menge * ratio;
+            var balanceQty = v_menge / ratio;
+            balanceQty = parseFloat(balanceQty.toFixed(3));
             if (sData && sData.length > 0) {
                 sData[0].Balqty = balanceQty; // Replace "BalanceQty" with the actual field name
+                sData[0].Op_matnr = cData[0].Op_matnr;
                 sModel.setData(sData);        
                 // Update the view to reflect the changes
                 this.getView().getModel("selectedRecords").refresh(true);
+                
+                asnData.Ebelp = cData[0].Ebelp;
+                asnModel.setData(asnData);
+                this.getView().getModel("ASNMODEL").refresh(true);
+
             } else {
                 MessageBox.error("No data found in the selected records model.");
             }            

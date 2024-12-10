@@ -70,14 +70,14 @@
             </Toolbar>
             <ScrollContainer
                 width="100%"
-                height="450px"
+                height="100%"
                 horizontal="true"
                 vertical="true"
             >
                 <Table
                     id="myCustomTable"
                     items="{path:'listModel>/'}"
-                    width="100%"
+                    width="auto"
                     growing="true"
                     growingThreshold="20"
                     growingScrollToLoad="true"

@@ -229,7 +229,9 @@ sap.ui.define([
             var sServiceURL = oModel1.sServiceUrl;
             var sSourceR = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
             var sSource = sServiceURL + "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
-
+            // var sPath = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+            // var sServiceURL = oModel1.sServiceUrl + sPath;
+            // Trigger the OData service call to check if the PDF can be fetched
             //********DO NOT TOUCH - IMPORTANT****************** */
 
             opdfViewer.setSource(sSource);
@@ -238,7 +240,7 @@ sap.ui.define([
 
             //********DO NOT TOUCH - IMPORTANT****************** */
 
-
+            
         },
         onMat: function (oEvent) {
             // Get the search query

@@ -107,6 +107,40 @@ sap.ui.define([
             this._applyFilters();
         },
 
+        jobstatff: function (sValue) {
+            if (sValue) {
+                return (sValue === 'C') ? "/images/GTICK.jpg" : "/images/RCROSS.jpg";
+            }
+            return sValue;
+        },  
+
+        PayText: function (paystat) {            
+            if (paystat === "P") {
+                return "Completed"; // Positive state
+            } else if (paystat === "NP") {
+                return "Pending"; // Negative state
+            }
+            return " "; // Default state
+        },     
+           
+        PayState: function (paystat) {            
+            if (paystat === "P") {
+                return "Success"; // Positive state
+            } else if (paystat === "NP") {
+                return "Error"; // Negative state
+            }
+            return "None"; // Default state
+        },
+
+        PayIcon: function (paystat) {
+            if (paystat === "P") {
+                return "sap-icon://accept"; // Checkmark for payment made
+            } else if (paystat === "NP") {
+                return "sap-icon://decline"; // Cross for payment not made
+            }
+            return ""; // No icon for other cases
+        }, 
+
         _applyFilters: function () {
             var aFilters = [];
             // Get values from the search fields

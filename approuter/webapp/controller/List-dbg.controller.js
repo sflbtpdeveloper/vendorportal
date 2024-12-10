@@ -152,7 +152,6 @@ sap.ui.define([
             var oButton = oEvent.getSource();
             var oItem = oButton.getParent(); // Get the parent ColumnListItem
             var oContext = oItem.getBindingContext("listModel");
-
             var data = oContext.getObject();
 
             // Ensure unique ID for PDFViewer
@@ -161,12 +160,46 @@ sap.ui.define([
                 id: uniqueViewerId
             });
             this.getView().addDependent(opdfViewer);
-
+            var oView1 = this.getView();
+            var oModel1 = oView1.getModel();
             var sServiceURL = this.getView().getModel('pdf').sServiceUrl;
             var sSource = sServiceURL + "/get_pdfSet('" + data.Ebeln + "')/$value";
-            opdfViewer.setSource(sSource);
-            opdfViewer.setTitle("My PDF");
-            opdfViewer.open();
+            var sPath = "/get_pdfSet('" + data.Ebeln + "')/$value";
+            // opdfViewer.setSource(sSource);
+            // opdfViewer.setTitle("My PDF");
+            // opdfViewer.open();    
+
+            
+            oModel1.read(sPath, {
+                success: function (oResponse) {
+                    // Construct the PDF source URL
+                    var sSource = oModel1.sServiceUrl + sPath;
+        
+                    // Configure and open the PDF Viewer
+                    opdfViewer.setSource(sSource);
+                    opdfViewer.setTitle("My PDF");
+                    opdfViewer.open();
+                },
+                error: function (oError) {
+                    // Parse and display the error message
+                    var sErrorMessage = "Preview not available for this PO !!!";
+                    // if (oError && oError.responseText) {
+                    //     try {
+                    //         var oErrorResponse = JSON.parse(oError.responseText);
+                    //         if (oErrorResponse.error && oErrorResponse.error.message) {
+                    //             sErrorMessage = oErrorResponse.error.message.value || sErrorMessage;
+                    //         }
+                    //     } catch (e) {
+                    //         // Ignore JSON parsing errors
+                    //     }
+                    // }
+        
+                    // Display the error message using a MessageToast or MessageBox
+                    sap.m.MessageBox.error(sErrorMessage);
+                }
+            });
+
+
         },
         fetchSupplierPO: async function (email) {
             debugger;
@@ -198,7 +231,7 @@ sap.ui.define([
                  const errorMessage = oErr.responseJSON?.error?.innererror?.errordetails?.[0]?.message || "Unknown error occurred";
  
                  // Show error message
-                 MessageBox.error(errorMessage);
+                //  MessageBox.error(errorMessage);
              }
          }
  

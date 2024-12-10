@@ -58,9 +58,14 @@
         "Lifnr2" : "",
          "Magrv" : "",
          "Arbpl": "",
-         "Grstatus":""
-         
-         
-    },    
+         "Grstatus":""                
+    },   
+    "attachData":{
+        "mimetype":"",
+        "InvoiceFileName":"",
+        "InvoiceFileBase64":"",
+        "DhsFileName":"",
+        "DhsFileBase64":""  
+    },     
     "demo": "Welcome to TVS Next !!"  
 }

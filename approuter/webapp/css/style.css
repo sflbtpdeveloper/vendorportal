@@ -625,4 +625,9 @@ body {
   text-transform: none;
   background: none;
 }
+.wrapText {
+  white-space: normal; /* Allow wrapping */
+  word-wrap: break-word; /* Break long words */
+  overflow-wrap: break-word; /* Ensures compatibility */
+}
 

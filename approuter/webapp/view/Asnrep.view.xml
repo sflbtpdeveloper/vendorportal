@@ -47,7 +47,7 @@
                 </m:VBox>
                 <m:HBox width="4rem" />
             </m:HBox>
-            <m:Toolbar >
+            <m:Toolbar>
                 <m:ToolbarSpacer />
                 <m:Button
                     id="btnColumnSelect"
@@ -93,8 +93,8 @@
             </m:Toolbar>
 
             <m:ScrollContainer
-                width="auto"
-                height="auto"
+                width="100%"
+                height="100%"
                 horizontal="true"
                 vertical="true"
             >
@@ -102,7 +102,7 @@
                     id="asnTable"
                     rows="{asnRep>/}"
                     selectionMode="None"
-                    class="customTableHeader"                    
+                    class="customTableHeader"
                 >
                     <columns>
                         <Column
@@ -235,7 +235,7 @@
                                               ${asnRep>Asnstatus} === 'Deleted' ? 'Error' : 
                                               ${asnRep>Asnstatus} === 'Received' ? 'Success' : 
                                               ${asnRep>Asnstatus} === 'GR Completed' ? 'Warning' : 
-                                              ${asnRep>Asnstatus} === 'IR Completed' ? 'Warning' : 'None'}"
+                                              ${asnRep>Asnstatus} === 'IR Completed' ? 'Indication18-------------' : 'None'}"
                                     icon="{= ${asnRep>Asnstatus} === 'Created' ? 'sap-icon://create' : 
                                              ${asnRep>Asnstatus} === 'Deleted' ? 'sap-icon://delete' : 
                                              ${asnRep>Asnstatus} === 'Received' ? 'sap-icon://accept' : 
@@ -290,9 +290,15 @@
                         >
                             <m:Label text="Payment Status" />
                             <template>
-                                <m:Text
+                                <!-- <m:Text
                                     text="{asnRep>Pstatus}"
                                     wrapping="false"
+                                /> -->
+                                <m:ObjectStatus
+                                    class="sapUiSmallMarginBottom wrapText"
+                                    text="{path: 'asnRep>Paystat' , formatter: '.PayText'}"
+                                    state="{path: 'asnRep>Paystat', formatter: '.PayState'}"
+                                    icon="{path: 'asnRep>Paystat', formatter: '.PayIcon'}"
                                 />
                             </template>
                         </Column>
