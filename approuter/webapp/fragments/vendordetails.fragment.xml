@@ -1,0 +1,13 @@
+<m:Popover xmlns:m="sap.m" id="vendordetails" placement="Auto" >
+    <m:VBox>
+        <m:Label text="Vendor Name: {vendorModel>/Name1}" />
+        <m:Label text="GST Number: {vendorModel>/Taxnum}" />
+        <m:Label text="Address:"/>
+        <m:Label text="Street and House Number: {vendorModel>/Stras}" />
+        <m:Label text="City: {vendorModel>/Ort01}" />
+        <m:Label text="District: {vendorModel>/Ort02}" />
+        <m:Label text="Postal Code: {vendorModel>/Pstlz}" />
+        <m:Label text="Region: {vendorModel>/Regio}" />
+    </m:VBox>
+</m:Popover>
+

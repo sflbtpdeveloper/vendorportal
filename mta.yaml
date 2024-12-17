@@ -1,0 +1,93 @@
+_schema-version: 3.2.0
+ID: ui5-approuter
+description: Supply chain management configuration
+version: 1.0.0
+modules:
+  #-----------------------------------------------------------------
+  - name: nodeapp
+    #-----------------------------------------------------------------
+    type: nodejs
+    path: ./NodeApp
+    requires:
+      - name: sfd-xsuaa
+      - name: sfd-destination
+      - name: sfd-connectivity
+    provides:
+      - name: node_api
+        properties:
+          url: "${default-url}"
+          forwardAuthToken: true
+    parameters:
+      disk-quota: 1G
+      memory: 1G
+      start-command: npm start # Ensure that Cloud Foundry starts the app in inspect mode
+    build-parameters:
+      builder: custom
+      buildpack: nodejs_buildpack # Add the nodejs_buildpack here
+      commands:
+        - npm install
+  #-----------------------------------------------------------------
+  - name: ui5
+    #-----------------------------------------------------------------
+    type: html5
+    path: ./webapp # Path to your UI5 app  
+    requires:
+      - name: sfd-xsuaa
+      - name: node_api
+      - name: ui5-approuter_html_repo_host # HTML5 app repository is required to store the app
+    build-parameters:
+      builder: custom
+      commands:
+        - npm install
+        - ui5 build --dest ../approuter/webapp  
+      timeout: 20m
+      supported-platforms: []
+
+    parameters:
+      disk-quota: 128M
+      memory: 128M
+  #-----------------------------------------------------------------
+  - name: approuter_scm
+    #-----------------------------------------------------------------
+    type: approuter.nodejs
+    path: ./approuter
+    requires:
+      - name: sfd-destination
+      - name: sfd-connectivity
+      - name: sfd-xsuaa
+      - name: node_api
+    parameters:
+      disk-quota: 1G
+      memory: 1G   
+      host: sflvps  # Hostname for custom domain    removed route and checking
+      domains:        
+        - sfl.co.in  # Custom domain           
+
+resources:
+  - name: sfd-destination
+    type: org.cloudfoundry.managed-service
+    description: Destination Service
+    parameters:
+      service: destination
+      service-name: sfd-destination
+      service-plan: lite
+  - name: sfd-connectivity
+    type: org.cloudfoundry.managed-service
+    description: Connectivity Service
+    parameters:
+      service: connectivity
+      service-plan: lite
+  - name: sfd-xsuaa
+    type: org.cloudfoundry.managed-service
+    description: xsuaa Security service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-plan: application
+  - name: ui5-approuter_html_repo_host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo 
+      service-plan: app-host
+parameters:
+  enable-parallel-deployments: true  

@@ -1,0 +1,75 @@
+general:
+  buildTool: "mta"  
+service:
+  buildToolVersion: "MBTJ17N18"
+  stages:
+    Release:
+      cfCredentialsId: "cf"
+stages:
+  Build:
+    mavenExecuteStaticCodeChecks: false
+    npmExecuteLint: false
+  Acceptance:
+    cloudFoundryDeploy: false
+    npmExecuteEndToEndTests: false
+  Malware Scan:
+    malwareExecuteScan: false
+  Release:
+    tmsExport: false
+    tmsUpload: true
+    cfApiEndpoint: "https://api.cf.in30.hana.ondemand.com"
+    cfOrg: "Sundram Fasteners Ltd_sfl-mm-dev-mvtyst9g"
+    cfSpace: "DEV"  # This value should be set dynamically based on the pipeline run
+    deployType: "standard"
+    cloudFoundryDeploy: true
+  Additional Unit Tests:
+    npmExecuteScripts: false
+  Compliance:
+    sonarExecuteScan: false
+  BuildProject:
+    steps:
+      - name: Build Project
+        script: |
+          mvn clean install
+  Deploy:
+    steps:
+      - name: Deploy to SAP BTP
+        script: |
+          # Dynamically set environment variables based on the cfSpace value
+          if [ "$cfSpace" == "DEV" ]; then
+            export ENVIRONMENT="dev"
+            export HOSTNAME="sflvpsdev"
+            export DOMAIN="sfl.co.in"
+          elif [ "$cfSpace" == "QAS" ]; then
+            export ENVIRONMENT="qas"
+            export HOSTNAME="sflvpsqas"
+            export DOMAIN="sfl.co.in"
+          elif [ "$cfSpace" == "PROD" ]; then
+            export ENVIRONMENT="prod"
+            export HOSTNAME="sflvps"
+            export DOMAIN="sfl.co.in"
+          else
+            echo "Unknown cfSpace: $cfSpace"
+            exit 1
+          fi
+
+          # Display variables for verification
+          echo "Deploying to environment: $ENVIRONMENT"
+          echo "Using hostname: $HOSTNAME"
+          echo "Using domain: $DOMAIN"   
+
+          # Deploy using the modified mta.yaml
+          mbt build -p cf
+          cf deploy ./mta_archives/your-app.mtar --hostname $HOSTNAME --domain $DOMAIN
+steps:
+  cloudFoundryDeploy:
+    mtaDeployParameters: "-f --version-rule ALL"
+  tmsUpload:
+    nodeName: "qas"
+    credentialsId: "tms-key"
+  artifactPrepareVersion:
+    versioningType: "cloud_noTag"
+
+
+
+

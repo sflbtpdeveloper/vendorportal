@@ -1,0 +1,400 @@
+<mvc:View
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    controllerName="zmmsubcontract.controller.asncrt"
+    xmlns:l="sap.ui.layout"
+>
+    <Page
+        id="mySubconASN"
+        showFooter="true"
+        showHeader="false"
+    >
+        <content>
+           <HBox
+                width="100%"
+                alignItems="Center"
+                justifyContent="SpaceBetween"
+            >
+                <Image
+                    src="/images/sfllogoonly.png"
+                    alt="Company Logo"
+                    densityAware="false"
+                    width="4rem"
+                />
+                <VBox
+                    alignItems="Center"
+                    width="100%"
+                >
+                    <Title
+                        text="Sundram Fasteners Limited"                        
+                        textAlign="Center"
+                        titleStyle="Auto"
+                        class="sapUiTinyMarginBegin sapUiMediumMarginTop"
+                    />
+
+                    <Title
+                        text="Subcontract ASN Creation"                        
+                        textAlign="Center"
+                        titleStyle="Auto"
+                        class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
+                    />
+                </VBox>
+                <HBox width="4rem" />                
+            </HBox>
+            <Toolbar>
+                <ToolbarSpacer />
+                <Button
+                    text="SAVE ASN"
+                    press="onSaveASN"
+                    icon="sap-icon://save"
+                    type="Accept"
+                />
+            </Toolbar>
+            <VBox class="sapUiSmallMargin">
+                <f:SimpleForm
+                    id="SimpleFormChange456"
+                    editable="true"
+                    layout="ColumnLayout"
+                    columnsM="2"
+                    columnsL="3"
+                    columnsXL="4"
+                    title="Enter ASN (Details)"
+                    backgroundDesign="Translucent"
+                >
+                    <f:content>
+                        <Label text="Plant / Vendor" />
+                        <Input
+                            id="idWerk"
+                            value="{ASNMODEL>/plant}"
+                            editable="false"
+                        />
+
+                        <Input
+                            id="idLifn"
+                            value="{ASNMODEL>/vendor}"
+                            editable="false"
+                        >
+                            <layoutData>
+                                <l:GridData span="XL2 L1 M3 S4" />
+                            </layoutData>
+                        </Input>
+
+                        <Label text="PO Number/Item" />
+                        <Input
+                            id="idInvNo"
+                            value="{ASNMODEL>/Ebeln}"
+                            editable="false"
+                        />
+                        <Input
+                            id="idInvItm"
+                            value="{ASNMODEL>/Ebelp}"
+                            editable="false"
+                        >
+                            <layoutData>
+                                <l:GridData span="XL2 L1 M3 S4" />
+                            </layoutData>
+                        </Input>
+
+                        <Label text="DC Number / DC Date" />
+                        <Input
+                            id="idDcNo"
+                            value="{local>/asnData/Dcno}"
+                            editable="true"
+                            required="true"
+                            liveChange=".onDCNOValidation"
+                        />
+
+                        <DatePicker
+                            id="datePicker"
+                            valueFormat="yyyy-MM-dd"
+                            displayFormat="MMM dd, yyyy"
+                            value="{path: '/local>/asnData/Dcdate', type: 'sap.ui.model.type.Date', formatOptions: { style: 'long' }}"
+                            change="onDateChange"
+                            required="true"
+                        >
+                            <layoutData>
+                                <l:GridData span="XL2 L1 M3 S4" />
+                            </layoutData>
+                        </DatePicker>
+
+                        <Label text="Invoice Quantity" />
+                        <Input
+                            id="idInvQty"
+                            value="{local>/asnData/Menge}"
+                            change="onInvoiceQtyChange"
+                            required="true"
+                        />
+
+                        <Label text="LR Number" />
+                        <Input
+                            id="idLrNo"
+                            value="{local>/asnData/Lrnumber}"
+                            required="true"
+                        />
+
+                        <Label text="LR Date" />
+                        <DatePicker
+                            id="datePicker_lr"
+                            valueFormat="yyyy-MM-dd"
+                            displayFormat="long"
+                            required="true"
+                            value="{path: '{local>/asnData/Lrdate}', type: 'sap.ui.model.type.Date', formatOptions: { style: 'long' }}"
+                        />
+
+                        <Label text="Package Type" />
+                        <Select
+                            id="idselpt"
+                            forceSelection="false"
+                            change="onSelectChange"
+                            items="{dropModel>/}"
+                            required="true"
+                        >
+                            <items>
+                                <core:Item
+                                    id="idpackty"
+                                    key="{dropModel>Magrv}"
+                                    text="{dropModel>Bezei}"
+                                />
+                            </items>
+                        </Select>
+
+                        <Label text="Number of Packages" />
+                        <Input
+                            id="idNoPckg"
+                            value="{local>/asnData/Zpack}"
+                            required="true"
+                            liveChange=".onNumberValidation"
+                            valueStateText="Please Enter Numbers only"
+                            valueState="None"
+                        />
+
+                        <Label text="Material Weight" />
+                        <Input
+                            id="idMatWgt"
+                            value="{local>/asnData/Asnweight}"
+                            required="true"
+                            liveChange="onAsnweight"
+                        />
+
+                        <Label text="Vehicle Number" />
+                        <Input
+                            id="idVhNo"
+                            value="{local>/asnData/Vechileno}"
+                            required="true"                           
+                        />
+
+                        <Label text="Expected Delivery Date" />
+                        <DatePicker
+                            id="datePicker_ed"
+                            valueFormat="yyyy-MM-dd"
+                            displayFormat="long"
+                            value="{path: '{local>/asnData/exDelvDate}', type: 'sap.ui.model.type.Date', formatOptions: { style: 'long' }}"
+                            change="onExpDelivChange"
+                        />
+
+                        <Label
+                            text="Machine"
+                            id="idMachineLabel"
+                        />
+                        <Select
+                            id="idMachdrp"
+                            forceSelection="false"
+                            change="onMachineSelect"
+                            items="{MachListModel>/}"
+                        >
+                            <items>
+                                <core:Item
+                                    id="idMachitm"
+                                    key="{MachListModel>Arbpl}"
+                                    text="{MachListModel>Machinedesc}"
+                                />
+                            </items>
+                        </Select>
+
+                        <Label text="Job Status" />
+                        <RadioButtonGroup
+                            id="idRadioGroup"
+                            columns="3"
+                            selectedIndex="0"
+                            select="onRadio"
+                        >
+                            <buttons>
+                                <RadioButton
+                                    text="Operation Completed"
+                                    wrapping="true"
+                                    wrappingType="Normal"
+                                />
+                                <RadioButton
+                                    text="Scrap/Operation Not Completed"
+                                    wrapping="true"
+                                    wrappingType="Normal"
+                                />
+                            </buttons>
+                        </RadioButtonGroup>
+                        <Label text="Confirmatory ASN" />
+                        <Switch
+                            id="idConfAsnSwt"
+                            change="onChange"
+                        />
+                        <Label
+                            id="idSecVend"
+                            text="Second Vendor"
+                        />
+                        <Input
+                            id="idLifn2"
+                            value="{local>/asnData/Lifnr2}"
+                            editable="true"
+                            visible="false"
+                        />
+
+                        <!-- <Label text="Attachments" /> -->
+                        <!-- Invoice Attachment -->
+                                        <!-- <Button
+                                            id="invoiceAttachment"
+                                            icon="sap-icon://attachment"
+                                            text="Invoice"
+                                            press="onAttachFilePress"
+                                            width="auto"                                             
+                                        />
+                                        <Text
+                                            id="invoiceFileName"
+                                            text="{local>/attachData/InvoiceFileName}"
+                                            class="sapUiTinyMarginBegin"
+                                            width="auto"
+                                        /> -->
+
+                        <!-- DHS Attachment -->                        
+                            <!-- <Button
+                                id="dhsAttachment"
+                                icon="sap-icon://attachment"
+                                text="DHS"
+                                press="onAttachFilePress"
+                                width="auto"                                
+                            />
+                            <Text
+                                id="dhsFileName"
+                                text="{local>/attachData/DhsFileName}"
+                                class="sapUiTinyMarginBegin"
+                                width="auto"
+                            />                         -->
+                    </f:content>
+                </f:SimpleForm>
+            </VBox>
+
+            <!-- items="{/selectedItems}" -->
+            <ScrollContainer
+                width="100%"
+                height="100%"
+                horizontal="true"
+                vertical="true"
+            >
+                <Table
+                    id="idSelASN"
+                    items="{regasnmodel>/}"
+                    growing="true"
+                    fixedLayout="false"
+                    headerText="Selected DA Details"
+                    width="auto"
+                    sticky="ColumnHeaders"
+                >
+                    <columns>
+                        <Column>
+                            <Label text="DA Number" />
+                        </Column>
+                        <Column>
+                            <Label
+                                text="DA Date"
+                                visible="false"
+                            />
+                        </Column>
+                        <Column>
+                            <Label text="Plant" />
+                        </Column>
+                        <Column>
+                            <Label text="Vendor" />
+                        </Column>
+                        <Column>
+                            <Label text="Output Part Number" />
+                        </Column>
+                        <Column>
+                            <Label text="Input Part Number" />
+                        </Column>
+                        <Column>
+                            <Label text="Description" />
+                        </Column>
+                        <Column>
+                            <Label text="Unit of Measure" />
+                        </Column>
+                        <Column>
+                            <Label text="Balance Quanity" />
+                        </Column>
+                        <Column>
+                            <Label text="Adviced Quanity" />
+                        </Column>
+                        <Column>
+                            <Label
+                                text="Invoice Number"
+                                visible="false"
+                            />
+                        </Column>
+                        <Column>
+                            <Label
+                                text="Invoice Item"
+                                visible="false"
+                            />
+                        </Column>
+                        <Column>
+                            <Label
+                                text="Ex Year"
+                                visible="false"
+                            />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem id="rowTemplate">
+                            <cells>
+                                <Text text="{regasnmodel>Exnum}" />
+                                <Text
+                                    text="{regasnmodel>Exdat}"
+                                    visible="false"
+                                />
+                                <Text text="{regasnmodel>Werks}" />
+                                <Text text="{regasnmodel>Lifnr}" />
+                                <Text text="{regasnmodel>Op_matnr}" />
+                                <Text text="{regasnmodel>Ip_Matnr}" />
+                                <Text text="{regasnmodel>Maktx}" />
+                                <Button text="{regasnmodel>Meins}" />
+                                <Text text="{regasnmodel>Balqty}" />
+                                <Input
+                                    value="{regasnmodel>Advqty}"
+                                    fieldWidth="auto"
+                                />
+                                <Text
+                                    text="{regasnmodel>Ebeln}"
+                                    visible="false"
+                                />
+                                <Text
+                                    text="{regasnmodel>Ebelp}"
+                                    visible="false"
+                                />
+                                <Text
+                                    text="{regasnmodel>Exyear}"
+                                    visible="false"
+                                />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </ScrollContainer>
+            <VBox
+                class="sapUiSmallMargin"
+                justifyContent="Center"
+                alignItems="Center"
+                fitContainer="true"
+                height="15%"
+            />
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/format/DateFormat"],function(e){"use strict";return{formatDate:function(t){debugger;var r=e.getDateInstance({pattern:"yyyy-MM-dd'T'HH:mm:ss"});return r.format(new Date(t))},SWITCHFF:function(e){debugger;return Salary>6e4?true:false}}});
+//# sourceMappingURL=formatter.js.map

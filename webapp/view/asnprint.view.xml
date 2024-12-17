@@ -1,0 +1,223 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    displayBlock="true"
+    xmlns:l="sap.ui.layout"
+    xmlns:t="sap.ui.table"
+    controllerName="zmmsubcontract.controller.asnprint"
+>
+    <Page
+        id="myasnPrn"
+        showFooter="false"
+        showHeader="false"
+    >
+        <content>
+           <HBox
+                width="100%"
+                alignItems="Center"
+                justifyContent="SpaceBetween"
+            >
+                <Image
+                    src="/images/sfllogoonly.png"
+                    alt="Company Logo"
+                    densityAware="false"
+                    width="4rem"
+                />
+                <VBox
+                    alignItems="Center"
+                    width="100%"
+                >
+                    <Title
+                        text="Sundram Fasteners Limited"                        
+                        textAlign="Center"
+                        titleStyle="Auto"
+                        class="sapUiTinyMarginBegin sapUiMediumMarginTop"
+                    />
+
+                    <Title
+                        text="ASN Print"                        
+                        textAlign="Center"
+                        titleStyle="Auto"
+                        class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
+                    />
+                </VBox>
+                <HBox width="4rem" />                
+            </HBox>
+            <Toolbar>
+                <SearchField
+                    id="idFilPlant3"
+                    width="20%"
+                    placeholder="Search Plant"
+                    liveChange="onPlant"
+                />
+
+                <SearchField
+                    id="idFilASN3"
+                    width="20%"
+                    placeholder="Search ASN"
+                    liveChange="onASN"
+                />
+                <SearchField
+                    id="idFilVen3"
+                    width="20%"
+                    placeholder="Search Vendor"
+                    liveChange="onVendor"
+                />
+
+                <SearchField
+                    id="searchField3"
+                    width="20%"
+                    placeholder="Search Invoice"
+                    liveChange="onInv"
+                />
+            </Toolbar>
+
+            <ScrollContainer
+                width="100%"
+                height="100%"
+                horizontal="true"
+                vertical="true"
+            >
+                <Table
+                    id="idasn"
+                    items="{asnrepModel>/}"
+                    growing="true"                    
+                    fixedLayout="true"
+                    growingScrollToLoad="true"
+                    width="auto"
+                    sticky="ColumnHeaders"
+                >
+                    <columns>
+                        <Column width="120px">
+                            <Label text="Print ASN" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="ASN Number" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="Vendor" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="Plant" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="Invoice No / Item" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="DC No/Dc Date" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="Quantity" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="Pack Type" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="ASN Weight" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="LR Date" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="LR Number" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="Vehicle Number" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="Expected Deliv Date" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="DA Number 1" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="DA Quanity 1" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="DA Number 2" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="DA Quanity 2" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="DA Number 3" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="DA Quanity 3" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="DA Number 4" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="DA Quanity 4" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="Job Status" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="Vendor 2" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Button
+                                    text="Preview PDF"
+                                    press="onPreviewPDF"
+                                />
+                                <ObjectIdentifier title="{asnrepModel>Asnno}" />
+                                <Text text="{asnrepModel>Lifnr}" />
+                                <Text text="{asnrepModel>Werks}" />
+                                <ObjectIdentifier
+                                    title="{asnrepModel>Ebeln}"
+                                    text="{asnrepModel>Ebelp}"
+                                    class="smallfont"
+                                />
+                                <!-- <VBox>
+                                <Text
+                                    text="{asnrepModel>Ebeln}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Ebelp}"
+                                    class="smallfont"
+                                />
+                            </VBox>                             -->
+                                <VBox>
+                                    <Text
+                                        text="{asnrepModel>Dcno}"
+                                        class="boldtext"
+                                    />
+                                    <Text
+                                        text="{asnrepModel>Dcdate}"
+                                        class="smallfont"
+                                    />
+                                </VBox>
+                                <Text text="{asnrepModel>Menge}" />
+                                <Text text="{asnrepModel>Zpack}" />
+                                <Text text="{asnrepModel>Asnweight}" />
+                                <Text text="{asnrepModel>Lrdate}" />
+                                <Text text="{asnrepModel>Lrnumber}" />
+                                <Text text="{asnrepModel>Vechileno}" />
+                                <Text text="{asnrepModel>exDelvDate}" />
+
+                                <Text text="{asnrepModel>Exnum1}" />
+                                <Text text="{asnrepModel>Menge1}" />
+                                <Text text="{asnrepModel>Exnum2}" />
+                                <Text text="{asnrepModel>Menge2}" />
+                                <Text text="{asnrepModel>Exnum3}" />
+                                <Text text="{asnrepModel>Menge3}" />
+                                <Text text="{asnrepModel>Exnum4}" />
+                                <Text text="{asnrepModel>Menge4}" />
+                                <Text text="{asnrepModel>Jobstat}" />
+                                <Text text="{asnrepModel>Lifnr2}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </ScrollContainer>
+        </content>
+    </Page>
+</mvc:View>

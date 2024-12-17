@@ -1,0 +1,449 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f"
+    controllerName="zmmsubcontract.controller.subcon"
+>
+    <Page
+        id="myPageSub"
+        showFooter="true"
+        showHeader="true"
+        backgroundDesign="Transparent"
+        navButtonPress="onNavBack"
+        showNavButton="true"
+    >    
+        <customHeader>
+            <Bar>
+                <contentRight>
+                    <Button
+                        text="About Us"
+                        press="onAboutUsPress"
+                        class="pulsatingButton zoomOutImage"
+                    />
+                    <Button
+                        text="News"
+                        press="onNewsPress"
+                        class="pulsatingButton zoomOutImage"
+                    />
+                    <Button
+                        text="Events"
+                        press="onEventsPress"
+                        class="pulsatingButton zoomOutImage"
+                    />
+                    <Button
+                        text="Contacts"
+                        press="onContactsPress"
+                        class="pulsatingButton zoomOutImage"
+                    />
+                    <core:Icon
+                        src="sap-icon://log"
+                        tooltip="Sign Out"
+                        press="onLogOut"
+                    />
+                </contentRight>
+            </Bar>
+        </customHeader>
+        <content>        
+            <VBox>
+                <HBox
+                    justifyContent="SpaceBetween"
+                    alignItems="Center"
+                    width="100%"
+                >
+                    <Image
+                        src="/images/sfllogoonly.png"
+                        alt="Company Logo"
+                        densityAware="false"
+                        class="companyLogo"
+                        width="4rem"
+                        height="5rem"
+                    />
+                    <VBox
+                        alignItems="Center"
+                        width="100%"
+                    >
+                        <Title
+                            text="SUNDRAM FASTENERS LIMITED"
+                            textAlign="Begin"
+                            titleStyle="Auto"                            
+                            class="zoomOutImage companyHeading "
+                        />
+
+                        <Title
+                            text="Supply Chain Management"
+                            width="auto"
+                            textAlign="Center"
+                            titleStyle="Auto"                                                        
+                            class="scmHeading  zoomOutImage"
+                        />
+                    </VBox>
+                    <VBox>
+                        <HBox
+                            justifyContent="End"
+                            width="auto"
+                        >
+                            <core:Icon
+                                src="sap-icon://employee"
+                                class="sapUiTinyMarginEnd"
+                                tooltip="Logged in User Name"
+                            />
+                            <Link
+                                id="idLName"
+                                text="{userModel>/user/given_name} {userModel>/user/family_name}"
+                                textAlign="Right"
+                                class="boldtext"
+                            />
+                        </HBox>
+                        <HBox
+                            justifyContent="End"
+                            width="auto"
+                        >
+                            <!-- <core:Icon
+                            src="sap-icon://employee"
+                            class="sapUiTinyMarginEnd"
+                            tooltip="Logged in User"
+                        /> -->
+                            <Link
+                                id="idLEmail"
+                                text="{userModel>/email}"
+                                textAlign="Right"
+                                class="boldtext"
+                                press="onEmailPress"
+                            />
+                        </HBox>
+                    </VBox>
+                </HBox>
+
+                <IconTabBar
+                    id="idIconTabBar"
+                    expandable="false"
+                    expanded="false"
+                    tabDensityMode="Compact"
+                    backgroundDesign="Transparent"
+                    select="onTabClick"
+                >
+                    <items>
+                        <IconTabFilter
+                            key="id_Home"
+                            text="Home"
+                            design="Horizontal"
+                            textDirection="Inherit"
+                        />
+                        <IconTabFilter
+                            key="id_VenOnb"
+                            text="Vendor Onboarding"
+                            design="Horizontal"
+                        />
+                        <IconTabFilter
+                            key="id_SupSer"
+                            text="Supplier Services"
+                            design="Horizontal"
+                        />
+                        <IconTabFilter
+                            key="id_SubSer"
+                            text="Subcontract Services"
+                            design="Horizontal"
+                        />
+                        <IconTabFilter
+                            key="id_Qis"
+                            text="Quality Information system"
+                            design="Horizontal"
+                        />
+                        <IconTabFilter
+                            key="id_trVen"
+                            text="Transport Vendors"
+                            design="Horizontal"
+                        />
+                        <IconTabFilter
+                            key="id_CrDbNt"
+                            text="Credit / Debit Notes"
+                            design="Horizontal"
+                        />
+                        <IconTabFilter
+                            key="id_Ncr"
+                            text="Non conformance Report"
+                            design="Horizontal"
+                        />
+                        <IconTabFilter
+                            key="id_SupRt"
+                            text="Supplier Rating"
+                            design="Horizontal"
+                        />
+                        <IconTabFilter
+                            key="id_Cir"
+                            text="Circulars"
+                            design="Horizontal"
+                        />
+                        <IconTabFilter
+                            key="id_Dash"
+                            text="Dashboard"
+                            design="Horizontal"
+                        />
+                    </items>
+                </IconTabBar>
+            </VBox>
+
+            <Popover
+                id="popover"
+                placement="Bottom"
+                contentWidth="200px"
+                showHeader="false"
+            >
+                <VBox>
+                    <List
+                        id="idList"
+                        items="{localData>/items}"
+                        growingThreshold="5"
+                        growingScrollToLoad="false"
+                        mode="None"
+                        selectionChange="onPress"
+                    >
+                        <StandardListItem
+                            title="{localData>text}"
+                            type="Active"
+                            press="onPress"
+                        />
+                    </List>
+                </VBox>
+            </Popover>
+
+            <Carousel
+                id="idCars1"
+                height="250px"
+                loop="true"
+                showPageIndicator="false"
+            >
+                <VBox id="idWelcom">
+                    <Image
+                        src="/images/banner_03.jpg"
+                        width="100%"
+                        class="carouselImage"
+                    />
+                    <!-- <VBox id="idWelcom" class="title waviy"/>   -->
+                    <Text
+                        text="Welcome to our Supply Chain Management Portal"
+                        class="carouselText title"
+                    />
+                </VBox>
+                <VBox>
+                    <Image
+                        src="/images/sfl50.png"
+                        width="100%"
+                        class="carouselImage"
+                    />
+                    <Text
+                        text="Started in 1966"
+                        class="carouselText"
+                    />
+                </VBox>
+            </Carousel>
+
+            <HBox
+                alignItems="Center"
+                justifyContent="Center"
+            >
+                <VBox
+                    class=" contentBox sapUiLargePadding "
+                    justifyContent="Center"
+                    alignItems="Center"
+                    width="100%"
+                >
+                    <Text
+                        id="idPara1"
+                        text="Started in 1966, Sundram Fasteners Limited has grown into a global leader, manufacturing critical, high precision components for the automotive, infrastructure, windmill and aviation sectors."
+                        class="paragraphText animate-charcter"
+                        textAlign="Center"
+                        wrapping="true"
+                        maxLines="4"
+                        wrappingType="Hyphenated"
+                    />
+                    <VBox
+                        id="idPara"
+                        class="waviy"
+                    />
+                </VBox>
+            </HBox>
+
+            <Image
+                src="/images/banner-01.jpg"
+                width="100%"
+                class="sapUiSmallMargin sapUiLargePadding zoomOutImage"
+            />
+
+            <VBox
+                class=" contentBox sapUiLargePadding "
+                justifyContent="Center"
+                alignItems="Center"
+                width="100%"
+            >
+                <Text
+                    id="idPara3"
+                    text=" Recognition does not come easy. It comes with absolute adherence to stringent standards that are never compromised."
+                    class="paragraphTextOrg"
+                    textAlign="Center"
+                    wrapping="true"
+                    maxLines="4"
+                    wrappingType="Hyphenated"
+                />
+
+                <Text
+                    id="idPara4"
+                    text=" Be it in the domestic or global markets, we have been lauded for consistently delivering products and services that 
+                             delight our customers,vendors, the OEM community and the aftermarket."
+                    class="paragraphText"
+                    textAlign="Center"
+                    wrapping="true"
+                    maxLines="4"
+                    wrappingType="Hyphenated"
+                />
+            </VBox>
+
+            <Carousel
+                id="idCars2"
+                loop="true"
+                showPageIndicator="false"
+            >
+                <VBox>
+                    <Image
+                        src="/images/sflpeople.png"
+                        class="carouselImage"
+                    />
+                    <Text
+                        text="Manufacturing critical,high precision components"
+                        class="carouselText"
+                    />
+                </VBox>
+                <VBox>
+                    <Image
+                        src="/images/rocket.jpg"
+                        class="carouselImage"
+                    />
+                    <Text
+                        text="High Tensile Fasteners"
+                        class="carouselText"
+                    />
+                </VBox>
+                <VBox>
+                    <Image
+                        src="/images/bridge.jpg"
+                        class="carouselImage"
+                    />
+                    <Text
+                        text="High Tensile Fasteners"
+                        class="carouselText"
+                    />
+                </VBox>
+            </Carousel>
+            <HBox
+                alignItems="Center"
+                justifyContent="Center"
+            >
+                <VBox
+                    class=" contentBox sapUiLargePadding "
+                    justifyContent="Center"
+                    alignItems="Center"
+                    width="100%"
+                >
+                    <Text />
+                    <Text
+                        id="idPara5"
+                        text=" Our varied range of productions encompasses fasteners, power train components, sintered metal products, iron powder, cold extruded parts, radiator caps, water pumps, oil pumps and wind energy components."
+                        class="paragraphText"
+                        textAlign="Center"
+                        wrapping="true"
+                        maxLines="4"
+                        wrappingType="Hyphenated"
+                    />
+                    <Text />
+                </VBox>
+            </HBox>
+
+            <Carousel
+                id="idCars3"
+                loop="true"
+                showPageIndicator="false"
+            >
+                <VBox>
+                    <Image
+                        src="/images/sflcol.png"
+                        class="carouselImage"
+                    />
+                    <Text
+                        text="CSR"
+                        class="carouselText"
+                    />
+                </VBox>
+                <VBox>
+                    <Image
+                        src="/images/sflcol1.jpg"
+                        class="carouselImage"
+                    />
+                    <Text
+                        text="Education"
+                        class="carouselText"
+                    />
+                </VBox>
+                <VBox>
+                    <Image
+                        src="/images/csrcol3.png"
+                        class="carouselImage"
+                    />
+                    <Text
+                        text="Green Motto"
+                        class="carouselText"
+                    />
+                </VBox>
+            </Carousel>
+            <VBox
+                class=" contentBox sapUiLargePadding "
+                justifyContent="Center"
+                alignItems="Center"
+                width="100%"
+            >
+                <Text
+                    id="idParagraph3"
+                    text=" At Sundram Fastners,We believe in giving back to Society."
+                    class="paragraphTextOrg"
+                    textAlign="Center"
+                    wrapping="true"
+                    maxLines="4"
+                    wrappingType="Hyphenated"
+                />
+
+                <Text
+                    id="idParagraph4"
+                    text="Childrens Education is a paramount Importance to Sundram Fastners.We have provided scholarships for our employess children while creating an ideal learning platform for lots of other children within the community."
+                    class="paragraphText"
+                    textAlign="Center"
+                    wrapping="true"
+                    maxLines="4"
+                    wrappingType="Hyphenated"
+                />
+            </VBox>
+        </content>
+
+        <footer>
+            <Toolbar>
+                <HBox class="newsTickerBox">
+                    <Text
+                        id="idNewsText"
+                        text="Registered Office : SUNDRAM FASTENERS LIMITED,
+                              98 - A, VII Floor,
+                              Dr. Radhakrishnan Salai,
+                              Mylapore,Chennai - 600 004, India.,
+                              Phone: +91 44 28478500,
+                              E - mail: hq@corp.sfl.co.in"
+                        class="newsText"
+                    />
+                </HBox>
+
+                <ToolbarSpacer />
+                <core:Icon
+                    src="sap-icon://call"
+                    size="1rem"
+                />
+            </Toolbar>
+        </footer>
+    </Page>
+</mvc:View>

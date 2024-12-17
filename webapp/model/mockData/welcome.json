@@ -1,0 +1,71 @@
+{
+
+    "newProduct":{
+        "Mandt" : "555",
+        "Id" : "",
+        "Shift" : "",
+        "Machine" : "",
+        "Partno" : "",
+        "Matnr" : "",
+        "Zdesc" : "",
+        "Menge" : "",
+        "Zdate" : "\/Date(1713744000000)\/",
+        "Userid" : ""
+    },    
+
+    "machineText":{
+        "Mtext" : ""
+    },
+    "grnData":{
+        "Mandt" : "555",
+        "Vbeln" : "",
+        "ZgrnnoCustomer" : "",
+        "ZgrnnoDate" : "00000000",
+        "Grnqty" : "",
+        "Fkdat" : "",
+        "Matnr" : "",
+        "Kunrg" : ""
+    },
+    "asnData":{
+        "Asnno" : "",
+        "Lifnr" : "",
+        "Werks" : "",
+        "Matnr" : "",
+        "Ebeln" : "",
+        "Ebelp" : "",
+        "Dcno" : "",
+        "Dcdate" : "",
+        "Menge" : "",
+        "Zpack" : "",
+        "Asnweight" : "",
+        "Lrdate" : null,
+        "Lrnumber" : "",
+        "Vechileno" : "",
+        "exDelvDate" : "",
+        "Exnum1" : "",
+        "Exyear1": "",
+        "Menge1" : "",
+        "Exnum2" : "",
+        "Exyear2": "",
+        "Menge2" : "",
+        "Exnum3" : "",
+        "Exyear3": "",
+        "Menge3" : "",
+        "Exnum4" : "",
+        "Exyear4": "",
+        "Jobstat" : "",
+        "Menge4" : "",
+        "Lifnr2" : "",
+         "Magrv" : "",
+         "Arbpl": "",
+         "Grstatus":""                
+    },   
+    "attachData":{
+        "mimetype":"",
+        "InvoiceFileName":"",
+        "InvoiceFileBase64":"",
+        "DhsFileName":"",
+        "DhsFileBase64":""  
+    },     
+    "demo": "Welcome to TVS Next !!"  
+}

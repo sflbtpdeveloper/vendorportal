@@ -1,0 +1,35 @@
+---
+applications:
+#Applications
+- name: nodeapp
+  path: NodeApp
+  instances: 1
+  routes: 
+   - route: https://zgrn_capm-bharath.cfapps.in30.hana.ondemand.com
+  command: npm run inspect
+  memory: 128M
+  timeout: 100
+  buildpacks:
+   - nodejs_buildpack 
+  services:
+    - sfd-xsuaa  
+#Approuter
+- name: approuter
+  path: approuter  
+  routes: 
+   - route: https://approuter-zgrn_capm.cfapps.in30.hana.ondemand.com
+
+  memory: 128M  
+  buildpacks:
+   - nodejs_buildpack    
+  services:
+   - sfd-xsuaa 
+  env:
+    destinations: >
+      [
+        {
+          "name": "nodeapp",          
+          "url": "https://zgrn_capm-bharath.cfapps.in30.hana.ondemand.com",
+          "forwardAuthToken": true
+        }        
+      ]

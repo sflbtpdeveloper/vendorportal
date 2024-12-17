@@ -1,0 +1,7 @@
+{
+    "items": [
+    { "key": "item1", "text": "Supplier rating" },
+    { "key": "item2", "text": "Rating parameters" },
+    { "key": "item3", "text": "Supplier remarks" }          
+]    
+}

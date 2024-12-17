@@ -1,0 +1,8 @@
+{
+    "items": [
+    { "key": "item1", "text": "PO Schedules" },
+    { "key": "item2", "text": "Create ASN" },
+    { "key": "item3", "text": "Supplier ASN Report" },     
+    { "key": "item3", "text": "Delete ASN" }        
+]    
+}

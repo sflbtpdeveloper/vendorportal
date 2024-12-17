@@ -1,0 +1,151 @@
+<mvc:View
+    controllerName="zmmsubcontract.controller.List"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+>
+    <Page
+        id="List"
+        showFooter="false"
+        showHeader="false"
+        showNavButton="false"
+    >
+        <content>
+            <HBox
+                width="100%"
+                alignItems="Center"
+                justifyContent="SpaceBetween"
+            >
+                <Image
+                    src="/images/sfllogoonly.png"
+                    alt="Company Logo"
+                    densityAware="false"
+                    width="4rem"
+                />
+                <VBox
+                    alignItems="Center"
+                    width="100%"
+                >
+                    <Title
+                        text="Sundram Fasteners Limited"
+                        textAlign="Center"
+                        titleStyle="Auto"
+                        class="sapUiTinyMarginBegin sapUiMediumMarginTop"
+                    />
+                    <Title
+                        text="Supplier PO Report"
+                        textAlign="Center"
+                        titleStyle="Auto"
+                        class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
+                    />
+                </VBox>
+                <HBox width="4rem" />
+            </HBox>
+
+            <Toolbar class="customToolbar">
+                <SearchField
+                    id="searchFieldWerks"
+                    width="17.5rem"
+                    placeholder="Search by Plant"
+                    liveChange="onWerks"
+                />
+                <SearchField
+                    id="searchFieldEbeln"
+                    width="17.5rem"
+                    placeholder="Search by PO Number"
+                    liveChange="onEbeln"
+                />
+                <SearchField
+                    id="searchFieldMatnr"
+                    width="17.5rem"
+                    placeholder="Search by Material"
+                    liveChange="onMatnr"
+                />
+                <SearchField
+                    id="searchFieldMaktx"
+                    width="17.5rem"
+                    placeholder="Search by Description"
+                    liveChange="onMaktx"
+                />
+                <ToolbarSpacer />
+            </Toolbar>
+            <ScrollContainer
+                width="100%"
+                height="100%"
+                horizontal="true"
+                vertical="true"
+            >
+                <Table
+                    id="myCustomTable"
+                    items="{path:'listModel>/'}"
+                    width="auto"
+                    growing="true"
+                    growingThreshold="20"
+                    growingScrollToLoad="true"
+                    fixedLayout="false"
+                    class="customTableHeader"
+                >
+                    <columns>
+                        <Column width="auto">
+                            <Text text="Plant" />
+                        </Column>
+                        <Column width="auto">
+                            <Text text="PO No / Item" />
+                        </Column>
+                        <Column width="auto">
+                            <Text text="Material / Desc" />
+                        </Column>
+                        <Column width="auto">
+                            <Text text="Delivery Date" />
+                        </Column>
+                        <Column width="auto">
+                            <Text text="Scheduled Qty" />
+                        </Column>
+                        <Column width="auto">
+                            <Text text="Delivered Qty" />
+                        </Column>
+                        <Column width="auto">
+                            <Text text="Balance Qty" />
+                        </Column>
+                        <Column width="auto">
+                            <Text text="UoM" />
+                        </Column>
+                        <Column width="auto">
+                            <Text text="Price / Unit" />
+                        </Column>
+                        <Column width="auto">
+                            <Text text="PO Pdf" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Inactive">
+                            <cells>
+                                <ObjectIdentifier title="{listModel>Werks}" />
+                                <ObjectIdentifier
+                                    title="{listModel>Ebeln}"
+                                    text="{listModel>Ebelp}"
+                                />
+                                <ObjectIdentifier
+                                    title="{listModel>Matnr}"
+                                    text="{listModel>Maktx}"
+                                />
+                                <ObjectIdentifier title="{listModel>Eindt}" />
+                                <ObjectIdentifier title="{listModel>Menge}" />
+                                <ObjectIdentifier title="{listModel>Wemng}" />
+                                <ObjectIdentifier title="{listModel>Blqty}" />
+                                <ObjectIdentifier title="{listModel>Meins}" />
+                                <ObjectIdentifier
+                                    title="{listModel>Netpr}"
+                                    text="{listModel>Peinh}"
+                                />
+                                <Button
+                                    text="Preview PDF"
+                                    press="onButtonPress"
+                                />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </ScrollContainer>
+        </content>
+    </Page>
+</mvc:View>

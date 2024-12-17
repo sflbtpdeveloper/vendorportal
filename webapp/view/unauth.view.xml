@@ -1,0 +1,23 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    controllerName="zmmsubcontract.controller.unauth"
+>
+    <Page
+        id="myAuth"
+    >
+        <content>
+            <VBox 
+                class="sapUiSmallMargin" 
+                justifyContent="Center" 
+                alignItems="Center"
+                height="100%"
+            >
+                <Text 
+                    text="You do not have permission to access this page." 
+                    class="unauthText"
+                />                
+            </VBox>          
+        </content>
+    </Page>
+</mvc:View>

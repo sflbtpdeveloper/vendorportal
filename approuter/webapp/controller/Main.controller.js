@@ -1,0 +1,2 @@
+sap.ui.define(["zmmsubcontract/controller/BaseController"],function(t){"use strict";return t.extend("zmmsubcontract.controller.welcome",{onInit:function(){this.oRouter=this.getOwnerComponent().getRouter()},OnSubcon:function(){this.oRouter.navTo("subcon")}})});
+//# sourceMappingURL=Main.controller.js.map

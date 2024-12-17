@@ -1,0 +1,62 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    controllerName="zmmsubcontract.controller.Main"
+>
+    <Page
+        id="myPage"
+        showFooter="false"
+        showHeader="false"
+    >
+        <content>
+            <VBox>
+                <HBox>
+                    <Image
+                        src="/images/tvs_logo.jpg"
+                        alt="Company Logo"
+                        densityAware="false"
+                    />
+
+                    <Title
+                        text="Sundram Fasteners Limited"
+                        level="H1"
+                        width="350%"
+                        textAlign="Right"
+                        textDirection="RTL"
+                        titleStyle="Auto"
+                        class="sapUiTinyMarginBegin sapUiSmallMarginTop"
+                    />
+                </HBox>
+</VBox>
+                <!-- Page content goes here -->
+                <GenericTile
+                    class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout"
+                    header="SUPPLIER"
+                    subheader="Sundram Fastners Ltd"
+                    press="onSupl"
+                    url="https://www.sap.com/"
+                >
+                    <TileContent>
+                        <ImageContent
+                            src="https://cdn.vectorstock.com/i/500p/08/32/forklift-icon-vector-46420832.jpg"
+                        />
+                    </TileContent>
+                </GenericTile>
+
+                <GenericTile
+                    class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout"
+                    header="SUB CONTRACT"
+                    subheader="Sundram Fastners Ltd"
+                    press="OnSubcon"
+                    url="https://www.sap.com/"
+                >
+                    <TileContent>
+                        <ImageContent
+                            src="https://www.levelset.com/wp-content/uploads/2019/02/Sub-Contractor.png"
+                        />
+                    </TileContent>
+                </GenericTile>
+            
+        </content>
+    </Page>
+</mvc:View>

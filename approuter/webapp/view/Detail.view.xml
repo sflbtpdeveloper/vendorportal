@@ -1,0 +1,145 @@
+<mvc:View
+    controllerName="zmmsubcontract.controller.Detail"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+>
+    <Page
+        id="Detail"
+        showFooter="false"
+        showHeader="false"
+    >
+        <content>
+            <HBox
+                width="100%"
+                alignItems="Center"
+                justifyContent="SpaceBetween"
+            >
+                <Image
+                    src="/images/sfllogoonly.png"
+                    alt="Company Logo"
+                    densityAware="false"
+                    width="4rem"
+                />
+                <VBox
+                    alignItems="Center"
+                    width="100%"
+                >
+                    <Title
+                        text="Sundram Fasteners Limited"
+                        textAlign="Center"
+                        titleStyle="Auto"
+                        class="sapUiTinyMarginBegin sapUiMediumMarginTop"
+                    />
+                    <Title
+                        text="Supplier PO Report"
+                        textAlign="Center"
+                        titleStyle="Auto"
+                        class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
+                    />
+                </VBox>
+                <HBox width="4rem" />
+            </HBox>
+            <Toolbar class="customToolbar">
+                <SearchField
+                    id="searchFieldWerks"
+                    width="17.5rem"
+                    placeholder="Search by Plant"
+                    liveChange="onWerks"
+                />
+                <SearchField
+                    id="searchFieldEbeln"
+                    width="17.5rem"
+                    placeholder="Search by PO Number"
+                    liveChange="onEbeln"
+                />
+                <SearchField
+                    id="searchFieldMatnr"
+                    width="17.5rem"
+                    placeholder="Search by Material"
+                    liveChange="onMatnr"
+                />
+                <SearchField
+                    id="searchFieldMaktx"
+                    width="17.5rem"
+                    placeholder="Search by Description"
+                    liveChange="onMaktx"
+                />
+                <ToolbarSpacer />
+                <ToggleButton
+                    text="Create Asn"
+                    type="Emphasized"
+                    press="onToggleButtonPress"
+                />
+            </Toolbar>
+
+            <ScrollContainer
+                width="100%"
+                height="100%"
+                horizontal="true"
+                vertical="true"
+            >
+                <Table
+                    id="detailTab"
+                    items="{path:'detailModel>/'}"
+                    growing="true"
+                    growingThreshold="20"
+                    includeItemInSelection="true"
+                    fixedLayout="false"
+                    growingScrollToLoad="true"
+                    width="auto"
+                    mode="MultiSelect"
+                    class="customTableHeader"
+                >
+                    <columns>
+                        <Column width="auto">
+                            <Label text="Plant" />
+                        </Column>
+                        <Column width="auto">
+                            <Label text="PO Number" />
+                        </Column>
+                        <Column width="auto">
+                            <Label text="Item Number" />
+                        </Column>
+                        <Column width="auto">
+                            <Label text="Material Number" />
+                        </Column>
+                        <Column width="auto">
+                            <Label text="Description" />
+                        </Column>
+                        <Column width="auto">
+                            <Label text="UoM" />
+                        </Column>
+                        <Column width="auto">
+                            <Label text="Delivery Date" />
+                        </Column>
+                        <Column width="auto">
+                            <Label text="Balance Qty" />
+                        </Column>
+                        <Column width="auto">
+                            <Label text="Price" />
+                        </Column>
+                        <Column width="auto">
+                            <Label text="Price Unit" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <ObjectIdentifier title="{detailModel>Werks}" />
+                                <ObjectIdentifier title="{detailModel>Ebeln}" />
+                                <ObjectIdentifier title="{detailModel>Ebelp}" />
+                                <ObjectIdentifier title="{detailModel>Matnr}" />
+                                <ObjectIdentifier title="{detailModel>Maktx}" />
+                                <ObjectIdentifier title="{detailModel>Meins}" />
+                                <ObjectIdentifier title="{detailModel>Eindt}" />
+                                <ObjectIdentifier title="{detailModel>Blqty}" />
+                                <ObjectIdentifier title="{detailModel>Netpr}" />
+                                <ObjectIdentifier title="{detailModel>Peinh}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </ScrollContainer>
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,7 @@
+{
+    "items": [
+    { "key": "item1", "text": "Prepare NCR" },
+    { "key": "item2", "text": "Approve/Reject NCR" },
+    { "key": "item3", "text": "NCR status" }          
+]    
+}

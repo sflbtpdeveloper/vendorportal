@@ -1,0 +1,408 @@
+<mvc:View
+    controllerName="zmmsubcontract.controller.Asn"
+    xmlns="sap.ui.table"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:m="sap.m"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:mdc="sap.ui.mdc"
+    xmlns:core="sap.ui.core"
+    xmlns:unified="sap.ui.unified"
+>
+    <m:Page
+        id="Asn"
+        showHeader="false"
+    >
+        <m:content>
+            <m:HBox
+                id="_IDGenHBox"
+                width="100%"
+                alignItems="Center"
+                justifyContent="SpaceBetween"
+            >
+                <m:Image
+                    id="_IDGenImage"
+                    src="/images/sfllogoonly.png"
+                    alt="Company Logo"
+                    densityAware="false"
+                    width="4rem"
+                />
+                <m:VBox
+                    id="_IDGenVBox"
+                    alignItems="Center"
+                    width="100%"
+                >
+                    <m:Title
+                        id="_IDGenTitle"
+                        text="Sundram Fasteners Limited"
+                        textAlign="Center"
+                        titleStyle="Auto"
+                        class="sapUiTinyMarginBegin sapUiMediumMarginTop"
+                    />
+                    <m:Title
+                        id="_IDGenTitle1"
+                        text="Supplier PO Report"
+                        textAlign="Center"
+                        titleStyle="Auto"
+                        class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
+                    />
+                </m:VBox>
+                <m:HBox
+                    id="_IDGenHBox3"
+                    width="4rem"
+                />
+            </m:HBox>
+            <form:SimpleForm
+                id="_IDGenSimpleForm"
+                layout="ColumnLayout"
+            >
+                <form:toolbar>
+                    <m:OverflowToolbar id="_IDGenOverflowToolbar">
+                        <m:Title
+                            id="_IDGenTitle3"
+                            text="ASN Header Info"
+                            class="customTitleColor"
+                        />
+                        <m:ToolbarSpacer id="_IDGenToolbarSpacer" />
+                        <m:ToggleButton
+                            id="_IDGenToggleButton"
+                            text="Create ASN"
+                            type="Emphasized"
+                            press="onToggleButtonPress"
+                        />
+                    </m:OverflowToolbar>
+                </form:toolbar>
+                <m:Label
+                    id="_IDGenLabel1"
+                    text="Invoice Number"
+                />
+                <mdc:Field
+                    id="DCNO"
+                    value="{path: 'data>/string', type: 'sap.ui.model.type.String'}"
+                    editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
+                    showEmptyIndicator="true"
+                    required="true"
+                    liveChange=".onDCNOValidation"
+                />
+                <m:Label
+                    id="_IDGenLabel2"
+                    text="ETA"
+                />
+                <mdc:Field
+                    id="ETA"
+                    value="{path: 'data>/date', type: 'sap.ui.model.type.Date'}"
+                    editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
+                    showEmptyIndicator="true"
+                />
+                <m:Label
+                    id="_IDGenLabel3"
+                    text="LR No"
+                />
+                <mdc:Field
+                    id="LRNO"
+                    value="{path: 'data>/string', type: 'sap.ui.model.type.String'}"
+                    editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
+                    showEmptyIndicator="true"
+                />
+                <m:Label
+                    id="_IDGenLabel4"
+                    text="Packs No."
+                />
+                <mdc:Field
+                    id="PACKS"
+                    value="{path: 'data>/string', type: 'sap.ui.model.type.String'}"
+                    editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
+                    showEmptyIndicator="true"
+                    required="true"
+                />
+                <m:Label
+                    id="_IDGenLabel5"
+                    text="Transporter Name"
+                />
+                <mdc:Field
+                    id="TNAME"
+                    value="{path: 'data>/string', type: 'sap.ui.model.type.String'}"
+                    editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
+                    showEmptyIndicator="true"
+                    required="false"
+                />
+                <m:Label
+                    id="_IDGenLabel6"
+                    text="Invoice Date"
+                />
+                <mdc:Field
+                    id="DCDATE"
+                    value="{path: 'data>/date', type: 'sap.ui.model.type.Date'}"
+                    editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
+                    showEmptyIndicator="true"
+                    required="true"
+                    change="onDcDateChange"
+                />
+                <m:Label
+                    id="_IDGenLabel8"
+                    text="Vehicle No"
+                />
+                <mdc:Field
+                    id="VEHNO"
+                    value="{path: 'data>/string', type: 'sap.ui.model.type.String'}"
+                    editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
+                    showEmptyIndicator="true"
+                    required="true"
+                />
+                <m:Label
+                    id="_IDGenLabel9"
+                    text="LR Date"
+                />
+                <mdc:Field
+                    id="LRDATE"
+                    value="{path: 'data>/date', type: 'sap.ui.model.type.Date'}"
+                    editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
+                    showEmptyIndicator="true"
+                />
+                <m:Label
+                    id="_IDGenLabel7"
+                    text="Bag Type"
+                />
+                <m:Select
+                    id="mySelect"
+                    forceSelection="false"
+                    change="onSelectChange"
+                    items="{dropModel>/}"
+                    required="true"
+                >
+                    <m:items>
+                        <core:Item
+                            id="_IDGenItem"
+                            key="{dropModel>magrv}"
+                            text="{dropModel>Bezei}"
+                        />
+                    </m:items>
+                </m:Select>
+                <m:Label
+                    id="_IDGenLabel23"
+                    text="Confirmatory Vendor"
+                />
+                <m:Switch
+                    id="Switch"
+                    change="onChange"
+                />
+                <mdc:Field
+                    id="SVENDOR"
+                    value="{path: 'data>/string', type: 'sap.ui.model.type.String'}"
+                    editMode="{= ${view>/editMode} ? 'Editable' : 'Display'}"
+                    showEmptyIndicator="true"
+                    visible="false"
+                />
+
+                <!-- <m:Label text="Attachments" /> -->
+                <!-- Invoice Attachment -->
+                <!-- <m:Button
+                    id="invoiceAttachment"
+                    icon="sap-icon://attachment"
+                    text="Invoice"
+                    press="onAttachFilePress"
+                    width="auto"
+                />
+                <m:Text
+                    id="invoiceFileName"
+                    text="{local>/attachData/InvoiceFileName}"
+                    class="sapUiTinyMarginBegin"
+                    width="auto"
+                /> -->
+
+                <!-- Test certificate Attachment -->
+                <!-- <m:Button
+                    id="tsAttachment"
+                    icon="sap-icon://attachment"
+                    text="TC"
+                    press="onAttachFilePress"
+                    width="auto"
+                />
+                <m:Text
+                    id="tsFileName"
+                    text="{local>/attachData/TsFileName}"
+                    class="sapUiTinyMarginBegin"
+                    width="auto"
+                /> -->
+            </form:SimpleForm>
+
+            <!-- <unified:FileUploader
+                id="fileUploader"
+                uploadUrl="/your/service/url"
+                fileType="pdf"
+                multiple="false"
+                change="onFileChange"
+            /> -->
+
+            <m:ScrollContainer
+                id="_IDGenScrollContainer"
+                width="100%"
+                height="100%"
+                horizontal="true"
+                vertical="true"
+            >
+                <!-- <extension> -->
+                <!-- <m:OverflowToolbar
+                            id="_IDGenOverflowToolbar2"
+                            style="Clear"
+                        > -->
+                <m:Title
+                    text="ASN Item Details"
+                    class="title1"
+                />
+                <!-- </m:OverflowToolbar> -->
+                <!-- </extension> -->
+                <Table
+                    id="_IDGenTable1"
+                    rows="{asnItems>/results}"
+                    selectionMode="None"
+                >
+                    <columns>
+                        <Column
+                            id="_IDGenColumnEbeln"
+                            minWidth="100px"
+                            width="auto"
+                        >
+                            <m:Label
+                                id="_IDGenLabelEbeln"
+                                text="PO Number"
+                            />
+                            <template>
+                                <m:Text
+                                    id="_IDGenTextEbeln"
+                                    text="{asnItems>Ebeln}"
+                                    wrapping="false"
+                                />
+                            </template>
+                        </Column>
+                        <Column
+                            id="_IDGenColumn1"
+                            width="4rem"
+                        >
+                            <m:Label
+                                id="_IDGenLabel10"
+                                text="Item Number"
+                            />
+                            <template>
+                                <m:Text
+                                    id="_IDGenText1"
+                                    text="{asnItems>Ebelp}"
+                                    wrapping="false"
+                                />
+                            </template>
+                        </Column>
+                        <Column
+                            id="_IDGenColumn2"
+                            width="12rem"
+                        >
+                            <m:Label
+                                id="_IDGenLabel11"
+                                text="Material Number"
+                            />
+                            <template>
+                                <m:Text
+                                    id="_IDGenText3"
+                                    text="{asnItems>Matnr}"
+                                    wrapping="false"
+                                />
+                            </template>
+                        </Column>
+                        <Column
+                            id="_IDGenColumn3"
+                            width="20rem"
+                        >
+                            <m:Label
+                                id="_IDGenLabel12"
+                                text="Material Description"
+                            />
+                            <template>
+                                <m:Label
+                                    id="_IDGenLabel13"
+                                    text="{asnItems>Maktx}"
+                                />
+                            </template>
+                        </Column>
+                        <Column
+                            id="_IDGenColumn4"
+                            minWidth="100px"
+                            width="auto"
+                        >
+                            <m:Label
+                                id="_IDGenLabel14"
+                                text="Balance Qty"
+                            />
+                            <template>
+                                <m:Label
+                                    id="_IDGenLabel15"
+                                    text="{asnItems>Blqty}"
+                                />
+                            </template>
+                        </Column>
+                        <Column
+                            id="_IDGenColumn6"
+                            minWidth="100px"
+                            width="auto"
+                        >
+                            <m:Label
+                                id="_IDGenLabel16"
+                                text="ASN Quantity"
+                            />
+                            <template>
+                                <m:Input
+                                    id="_IDGenInput1"
+                                    value="{asnItems>Asnqty}"
+                                />
+                            </template>
+                        </Column>
+                        <Column
+                            id="_IDGenColumn7"
+                            minWidth="100px"
+                            width="3rem"
+                        >
+                            <m:Label
+                                id="_IDGenLabel17"
+                                text="UoM"
+                            />
+                            <template>
+                                <m:Label
+                                    id="_IDGenLabel21"
+                                    text="{asnItems>Meins}"
+                                />
+                            </template>
+                        </Column>
+                        <Column
+                            id="_IDGenColumn8"
+                            minWidth="100px"
+                            width="auto"
+                        >
+                            <m:Label
+                                id="_IDGenLabel18"
+                                text="ASN Weight (Kg)"
+                            />
+                            <template>
+                                <m:Input
+                                    id="_IDGenInput2"
+                                    value="{asnItems>Asnweight}"
+                                />
+                            </template>
+                        </Column>
+                        <Column
+                            id="_IDGenColumn9"
+                            width="20rem"
+                        >
+                            <m:Label
+                                id="_IDGenLabel19"
+                                text="Remarks"
+                            />
+                            <template>
+                                <m:Input
+                                    id="_IDGenInput3"
+                                    value="{asnItems>Remarks}"
+                                />
+                            </template>
+                        </Column>
+                    </columns>
+                </Table>
+            </m:ScrollContainer>
+        </m:content>
+    </m:Page>
+</mvc:View>

@@ -1,0 +1,52 @@
+{
+  "xsappname": "getuserinfo",
+  "tenant-mode": "dedicated",
+  "description": "Security profile of getuserinfo",
+  "scopes": [
+    {
+      "name": "uaa.user",
+      "description": "UAA"
+    },
+    {
+      "name": "$XSAPPNAME.read",
+      "description": "role to read data"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "Token_Exchange",
+      "description": "UAA",
+      "scope-references": [
+        "uaa.user"
+      ]
+    },
+    {
+      "name": "Viewer",
+      "description": "Viewer Role",
+      "scope-references": [
+        "$XSAPPNAME.read"
+      ]
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "SCM_RoleCollection",
+      "description": "SCM Role Collection",
+      "role-template-references": [
+        "$XSAPPNAME.Viewer"
+      ]
+    }
+  ],
+  "oauth2-configuration": {
+    "redirect-uris": [      
+      "https://sflvps.sfl.co.in/*",
+      "https://sflvpsqas.sfl.co.in/*",
+      "https://sflvpsdev.sfl.co.in/*",   
+      "https://sflvpsqas.sfl.co.in/login/callback",
+      "https://sflvpsdev.sfl.co.in/login/callback",
+      "https://sflvps.sfl.co.in/login/callback"      
+    ]
+  }  
+}
+
+

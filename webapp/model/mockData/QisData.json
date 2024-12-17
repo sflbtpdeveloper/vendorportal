@@ -1,0 +1,7 @@
+{
+    "items": [
+    { "key": "item1", "text": "Quality parameters" },
+    { "key": "item2", "text": "Incoming Inspection details" },
+    { "key": "item3", "text": "Rejection details" }          
+]    
+}

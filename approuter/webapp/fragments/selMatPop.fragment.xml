@@ -1,0 +1,127 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog id="idSelectMaterialDialog" title="Select Material">
+        <content>
+<Table
+                id="idMaterialTable"
+                items="{SelectMatModel>/}"
+                growing="true"                
+                mode="SingleSelectLeft"
+                selectionChange="captureRecordEH"
+                includeItemInSelection="true"
+                fixedLayout="false"
+                class="myTableWithBackground"
+                sticky="ColumnHeaders"
+                width="auto"
+                inset="false" 
+            >
+                <columns>
+                    <Column>
+                        <Label text="DA Number" />
+                    </Column>
+                    <Column>
+                        <Label
+                            text="DA Date"
+                            visible="false"
+                        />
+                    </Column>
+                    <Column>
+                        <Label text="Plant" />
+                    </Column>
+                    <Column>
+                        <Label text="Vendor" />
+                    </Column>
+                    <Column>
+                        <Label text="Output Part Number" />
+                    </Column>
+                    <Column>
+                        <Label text="Input Part Number" />
+                    </Column>
+                    <Column>
+                        <Label text="PO Number" />
+                    </Column>
+                    <Column>
+                        <Label text="Unit of Measure" />
+                    </Column>
+                    <Column>
+                        <Label text="Balance Quanity" />
+                    </Column>
+                    <Column>
+                        <Label text="Preview PDF" />
+                    </Column>
+                    <Column>
+                        <Label
+                            text="Invoice Number"
+                            visible="false"
+                        />
+                    </Column>
+                    <Column>
+                        <Label
+                            text="Invoice Item"
+                            visible="false"
+                        />
+                    </Column>
+                    <Column>
+                        <Label
+                            text="Ex Year"
+                            visible="false"
+                        />
+                    </Column>                    																							                
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text
+                                text="{SelectMatModel>Exnum}"
+                                class="boldtext"
+                            />
+                            <Text
+                                text="{SelectMatModel>Exdat}"
+                                visible="false"
+                            />
+                            <Text text="{SelectMatModel>Werks}" />
+                            <Text text="{SelectMatModel>Lifnr}" />
+                            <VBox>
+                                <Text
+                                    text="{SelectMatModel>Op_matnr}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{SelectMatModel>Maktx}"
+                                    class="smallfont"
+                                />
+                            </VBox>
+                            <Text text="{SelectMatModel>Ip_Matnr}" />
+                            <VBox>
+                                <Text
+                                    text="{SelectMatModel>Ebeln}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{SelectMatModel>Ebelp}"
+                                    class="smallfont"
+                                />
+                            </VBox>
+
+                            <Button text="{SelectMatModel>Meins}" />
+                            <Text text="{SelectMatModel>Balqty}" />
+                            <Button
+                                text="Preview PDF"
+                                press="onPreviewPDF"
+                            />
+                            <Text text="{SelectMatModel>Exyear}" visible="false" />                            
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>            
+        </content>
+        <beginButton>
+            <Button text="Change" press="onChangeSelectedMaterial" />
+        </beginButton>
+        <endButton>
+            <Button text="Cancel" press="onCloseSelectMaterialDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
