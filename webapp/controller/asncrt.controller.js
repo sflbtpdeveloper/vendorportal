@@ -308,7 +308,7 @@ sap.ui.define([
                         var maxInd = oData.results[0].Maxind;
                         let sInvQty = this.getView().byId("idInvQty").getValue();
                         var sInvQtyP = parseFloat(sInvQty) || 0;
-                       
+
                         if (maxInd === 'X') {
                             maxInd = null;
                             if (sInvQtyP > maxQty) {
@@ -320,9 +320,9 @@ sap.ui.define([
                                 return;
                             }
                         } else if (maxInd === 'Y') {
-                            reject("Maximum stock level not available for material!");   
-                            return;                     
-                        } 
+                            reject("Maximum stock level not available for material!");
+                            return;
+                        }
                         resolve();
                     }.bind(this),
                     error: function (oErr) {
