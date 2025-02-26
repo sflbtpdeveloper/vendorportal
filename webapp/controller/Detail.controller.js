@@ -240,7 +240,7 @@ sap.ui.define([
                 // Ensure data is bound to the table
                 that.getView().byId("detailTab").setModel(oJsonModel, "detailModel");
 
-                that._applyHighlighting();
+                // that._applyHighlighting();
 
             } catch (oErr) {
                 sap.ui.core.BusyIndicator.hide();

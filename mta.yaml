@@ -96,6 +96,8 @@ resources:
       path: ./xs-security.json
       service: xsuaa
       service-plan: application
+      config:
+        xsappname: getuserinfo-${space}        
   - name: ui5-approuter_html_repo_host
     type: org.cloudfoundry.managed-service
     parameters:

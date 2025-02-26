@@ -293,7 +293,7 @@ sap.ui.define([
                 // Ensure data is bound to the table
                 that.getView().byId("myCustomTable").setModel(oJsonModel, "listModel");
 
-                that._applyHighlighting();
+                // that._applyHighlighting();
 
             } catch (oErr) {
                 sap.ui.core.BusyIndicator.hide();

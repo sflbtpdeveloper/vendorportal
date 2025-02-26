@@ -1,5 +1,5 @@
 {
-  "xsappname": "getuserinfo",
+  "xsappname": "${xsappname}",
   "tenant-mode": "dedicated",
   "description": "Security profile of getuserinfo",
   "scopes": [
