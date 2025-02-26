@@ -1,0 +1,7 @@
+{
+    "csrfProtection": false,
+    "source": "^/user-api(.*)",
+    "target": "$1",
+    "service": "sap-approuter-userapi",
+    "authenticationType": "xsuaa"
+}

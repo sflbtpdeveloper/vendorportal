@@ -68,6 +68,7 @@
                             text="Create ASN"
                             type="Emphasized"
                             press="onToggleButtonPress"
+                            enabled="{saveButtonModel>/isSaveEnabled}"
                         />
                     </m:OverflowToolbar>
                 </form:toolbar>
@@ -193,45 +194,44 @@
                     visible="false"
                 />
 
-                <!-- <m:Label text="Attachments" /> -->
-                <!-- Invoice Attachment -->
-                <!-- <m:Button
+                <m:Label text="Attachments" />
+
+                <unified:FileUploader
                     id="invoiceAttachment"
+                    buttonOnly="true"
                     icon="sap-icon://attachment"
-                    text="Invoice"
-                    press="onAttachFilePress"
-                    width="auto"
+                    buttonText="Invoice"
+                    change="onFileChangedI"
+                    class="truncateButtonText"
+                    useMultipart="false"
+                    sendXHR='true'
+                    uploadUrl="/sap/opu/odata/sap/YMM_SUPPLIER_ATT_SRV/ZFILESet"
                 />
                 <m:Text
                     id="invoiceFileName"
                     text="{local>/attachData/InvoiceFileName}"
                     class="sapUiTinyMarginBegin"
                     width="auto"
-                /> -->
+                />
 
-                <!-- Test certificate Attachment -->
-                <!-- <m:Button
+                <unified:FileUploader
                     id="tsAttachment"
+                    buttonOnly="true"
                     icon="sap-icon://attachment"
-                    text="TC"
-                    press="onAttachFilePress"
-                    width="auto"
+                    buttonText="Test Cert."
+                    change="onFileChangedT"
+                    class="truncateButtonText"
+                    useMultipart="false"
+                    sendXHR='true'
+                    uploadUrl="/sap/opu/odata/sap/YMM_SUPPLIER_ATT_SRV/ZFILESet"
                 />
                 <m:Text
                     id="tsFileName"
                     text="{local>/attachData/TsFileName}"
                     class="sapUiTinyMarginBegin"
                     width="auto"
-                /> -->
+                />
             </form:SimpleForm>
-
-            <!-- <unified:FileUploader
-                id="fileUploader"
-                uploadUrl="/your/service/url"
-                fileType="pdf"
-                multiple="false"
-                change="onFileChange"
-            /> -->
 
             <m:ScrollContainer
                 id="_IDGenScrollContainer"
@@ -382,6 +382,25 @@
                                 <m:Input
                                     id="_IDGenInput2"
                                     value="{asnItems>Asnweight}"
+                                />
+                            </template>
+                        </Column>
+                        <Column
+                            id="_IDGenColumn10"
+                            minWidth="100px"
+                            width="auto"
+                        >
+                            <m:Label
+                                id="_IDGenLabel20"
+                                text="Invoice Value"
+                            />
+                            <template>
+                                <m:Input
+                                    id="_IDGenInput4"
+                                    value="{asnItems>Invvalue}"
+                                    type="Number"
+                                    maxLength="15"
+                                    required="true"
                                 />
                             </template>
                         </Column>

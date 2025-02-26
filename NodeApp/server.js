@@ -21,8 +21,8 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-app.use(express.json({ limit: "10mb" })); 
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(express.json({ limit: "50mb" })); 
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 
 const PORT = process.env.PORT || 8082;
@@ -144,6 +144,67 @@ const convertToISOFormat = (dcDate) => {
   // Format it to ISO string
   return dateObj.toISOString();
 };
+//---------------------------------------------------------------------
+//  fetch data for Change Material Popup
+//---------------------------------------------------------------------
+app.get("/changemat", async (req, res) => {
+  const ip_matnr = req.query.ip_matnr;  
+  const ebeln = req.query.ebeln;
+  const ebelp = req.query.ebelp;
+  const lifnr = req.query.lifnr;
+  const werks = req.query.werks;
+  
+  try {
+    // Construct the $filter parameter
+    let filter = `Ebeln eq '${ebeln}'`;
+    if (ebelp) {
+      filter += ` and Ebelp eq '${ebelp}'`;
+    }
+    if (ip_matnr) {
+      filter += ` and Ip_Matnr eq '${ip_matnr}'`;
+    }
+    if (werks) {
+      filter += ` and Werks eq '${werks}'`;
+    }
+    if (lifnr) {
+      filter += ` and Lifnr eq '${lifnr}'`;
+    }    
+
+    console.log("Constructed $filter:", filter);
+      
+    const response = await axios1({
+      method: "GET",
+      url: "/sap/opu/odata/sap/ZMM_SUBCON_DA_SRV/zet_chg_matSet",
+      params: {
+        $format: "json",        
+        $filter: filter,
+        "sap-client": "999"
+      },
+      headers: {
+        "content-type": "application/json"
+      }
+    });
+
+    res.status(200).send(response.data.d.results);
+
+  } catch (error) {
+    console.error("Error in asnstatus:", error); // Log the error for debugging
+    console.error("Error details:", {
+      message: error.message,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      headers: error.response?.headers,
+      data: error.response?.data, // Body of the error response (may contain more details)
+      config: error.config, // The config for the request made
+    });
+    res.status(error.response?.status || 500).send({
+      message: error.message,
+      errorDetails: error.response?.data || "Unknown error occurred"
+    });
+
+  }
+});
+
 //---------------------------------------------------------------------
 //  fetch data for ASN Status Report
 //---------------------------------------------------------------------
@@ -928,7 +989,7 @@ app.post("/custom/asnpost", passport.authenticate("JWT", { session: false }), as
     headers: {
       'x-csrf-token': 'Fetch',  // Request a new CSRF token      
       "content-type": "application/json",
-      "sap-client": "999",
+      "sap-client": "999",      
       // 'Authorization': `Bearer ${jwtToken}`
     },
     withCredentials: true
@@ -958,7 +1019,7 @@ app.post("/custom/asnpost", passport.authenticate("JWT", { session: false }), as
       headers: {
         'X-CSRF-Token': csrfToken,
         "content-type": "application/json; charset=UTF-8",
-        "sap-client": "999",
+        "sap-client": "999",        
         'Authorization': `Bearer ${token}`,
         'Cookie': cookies.join('; ')
       },
@@ -999,7 +1060,6 @@ app.post("/custom/supasnpost", passport.authenticate("JWT", { session: false }),
   console.log("asnpost req details", req);
   const records = req.body
   console.log("Data being sent to OData service befor get call:", records);
-
 
   const csrfResponse = await axios1({
     method: "GET",

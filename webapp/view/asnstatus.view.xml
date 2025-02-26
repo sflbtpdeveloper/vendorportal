@@ -30,22 +30,28 @@
                     width="100%"
                 >
                     <Title
-                        text="Sundram Fasteners Limited"                        
+                        text="Sundram Fasteners Limited"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiMediumMarginTop"
                     />
 
                     <Title
-                        text="ASN Status"                        
+                        text="ASN Status"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
                     />
                 </VBox>
-                <HBox width="4rem" />                
+                <HBox width="4rem" />
             </HBox>
             <Toolbar>
+                <SearchField
+                    id="idFilWerks"
+                    width="20%"
+                    placeholder="Search Plant"
+                    liveChange="onWerks"
+                />
                 <SearchField
                     id="idFilASN"
                     width="20%"
@@ -64,12 +70,20 @@
                     placeholder="Search DC Number"
                     liveChange="onDCnumb"
                 />
-                <!-- <SearchField
-                    id="idFilDcdate"
+                <SearchField
+                    id="idFilDcdate1"
                     width="20%"
                     placeholder="Search DC Date"
-                    liveChange="onDCdate"
-                />                 -->
+                    liveChange="onDCdate1"
+                />
+
+                <Button
+                    text="Download Excel"
+                    press="onDownloadExcel"
+                    type="Ghost"
+                    icon="sap-icon://excel-attachment"
+                    width="10%"
+                />
             </Toolbar>
 
             <ScrollContainer
@@ -77,7 +91,6 @@
                 height="100%"
                 horizontal="true"
                 vertical="true"
-
             >
                 <Table
                     id="idasnStat"
@@ -87,52 +100,58 @@
                     growingScrollToLoad="true"
                     width="auto"
                     sticky="ColumnHeaders"
-                    
                 >
                     <columns>
-                        <Column>
+                        <Column width="5rem">
+                            <Label text="Plant" />
+                        </Column>
+                        <Column width="7rem">
                             <Label text="ASN Number/Item" />
                         </Column>
-                        <Column>
+                        <Column width="7rem">
                             <Label text="Invoice No / Item" />
                         </Column>
-                        <Column>
+                        <Column width="25rem">
                             <Label text="Material Code/Desc" />
                         </Column>
-                        <Column>
+                        <Column width="10rem">
                             <Label text="DC No" />
                         </Column>
-                        <Column>
+                        <Column width="7rem">
                             <Label text="DC Date" />
                         </Column>
-                        <Column>
+                        <Column width="7rem">
                             <Label text="ASN Quantity" />
                         </Column>
-                        <Column>
+                        <Column width="10rem">
                             <Label text="Job Status" />
                         </Column>
-                        <Column>
+                        <Column width="10rem">
                             <Label text="ASN Status" />
                         </Column>
-                        <Column>
+                        <Column width="7rem">
                             <Label text="DMRR Number" />
                         </Column>
-                        <Column>
+                        <Column width="7rem">
                             <Label text="GR Number /Item" />
                         </Column>
-                        <Column>
+                        <Column width="7rem">
+                            <Label text="Posting Date" />
+                        </Column>
+                        <Column width="7rem">
                             <Label text="IR Number" />
                         </Column>
-                        <Column>
+                        <Column width="10rem">
                             <Label text="Payment Status" />
                         </Column>
-                        <Column>
+                        <Column width="10rem">
                             <Label text="Payment Reference" />
                         </Column>
                     </columns>
                     <items>
                         <ColumnListItem>
                             <cells>
+                                <ObjectIdentifier title="{asnrepModel>Werks}" />
                                 <ObjectIdentifier title="{asnrepModel>Asnno}" />
                                 <ObjectIdentifier
                                     title="{asnrepModel>Ebeln}"
@@ -150,9 +169,10 @@
                                     width="80px"
                                 />
                                 <!-- <Text text="{asnrepModel>Dcdat}" /> -->
-                                <ObjectIdentifier
+                                <!-- <ObjectIdentifier
                                     title="{path: 'asnrepModel>Dcdat',  formatter: '.formatDate'}"
-                                />
+                                /> -->
+                                <Text text="{asnrepModel>Dcdat1}" />
                                 <Text text="{asnrepModel>Asnqty}" />
                                 <!-- <Text text="{asnrepModel>Jobstat}" width="100%"/> -->
                                 <Image
@@ -190,6 +210,7 @@
                                     text="{path: 'asnrepModel>Gritm' , formatter: '.conditionalText'}"
                                     class="smallfont"
                                 />
+                                <Text text="{path: 'asnrepModel>Budat'}" />
                                 <Text
                                     text="{path: 'asnrepModel>Irno' , formatter:'.conditionalText'}"
                                 />

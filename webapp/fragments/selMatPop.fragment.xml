@@ -2,12 +2,15 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
 >
-    <Dialog id="idSelectMaterialDialog" title="Select Material">
+    <Dialog
+        id="idSelectMaterialDialog"
+        title="Select Material"
+    >
         <content>
-<Table
+            <Table
                 id="idMaterialTable"
                 items="{SelectMatModel>/}"
-                growing="true"                
+                growing="true"
                 mode="SingleSelectLeft"
                 selectionChange="captureRecordEH"
                 includeItemInSelection="true"
@@ -15,18 +18,18 @@
                 class="myTableWithBackground"
                 sticky="ColumnHeaders"
                 width="auto"
-                inset="false" 
+                inset="false"
             >
                 <columns>
-                    <Column>
+                    <!-- <Column>
                         <Label text="DA Number" />
-                    </Column>
-                    <Column>
+                    </Column> -->
+                    <!-- <Column>
                         <Label
                             text="DA Date"
                             visible="false"
                         />
-                    </Column>
+                    </Column> -->
                     <Column>
                         <Label text="Plant" />
                     </Column>
@@ -48,9 +51,9 @@
                     <Column>
                         <Label text="Balance Quanity" />
                     </Column>
-                    <Column>
+                    <!-- <Column>
                         <Label text="Preview PDF" />
-                    </Column>
+                    </Column> -->
                     <Column>
                         <Label
                             text="Invoice Number"
@@ -68,19 +71,19 @@
                             text="Ex Year"
                             visible="false"
                         />
-                    </Column>                    																							                
+                    </Column>
                 </columns>
                 <items>
                     <ColumnListItem>
                         <cells>
-                            <Text
+                            <!-- <Text
                                 text="{SelectMatModel>Exnum}"
                                 class="boldtext"
                             />
                             <Text
                                 text="{SelectMatModel>Exdat}"
                                 visible="false"
-                            />
+                            /> -->
                             <Text text="{SelectMatModel>Werks}" />
                             <Text text="{SelectMatModel>Lifnr}" />
                             <VBox>
@@ -107,21 +110,30 @@
 
                             <Button text="{SelectMatModel>Meins}" />
                             <Text text="{SelectMatModel>Balqty}" />
-                            <Button
+                            <!-- <Button
                                 text="Preview PDF"
                                 press="onPreviewPDF"
+                            /> -->
+                            <Text
+                                text="{SelectMatModel>Exyear}"
+                                visible="false"
                             />
-                            <Text text="{SelectMatModel>Exyear}" visible="false" />                            
                         </cells>
                     </ColumnListItem>
                 </items>
-            </Table>            
+            </Table>
         </content>
         <beginButton>
-            <Button text="Change" press="onChangeSelectedMaterial" />
+            <Button
+                text="Change"
+                press="onChangeSelectedMaterial"
+            />
         </beginButton>
         <endButton>
-            <Button text="Cancel" press="onCloseSelectMaterialDialog" />
+            <Button
+                text="Cancel"
+                press="onCloseSelectMaterialDialog"
+            />
         </endButton>
     </Dialog>
 </core:FragmentDefinition>

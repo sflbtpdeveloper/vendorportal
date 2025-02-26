@@ -237,6 +237,11 @@ sap.ui.define([
                 const oJsonModel = new sap.ui.model.json.JSONModel(supplierPODetailData);
                 that.getView().setModel(oJsonModel, "detailModel");
 
+                // Ensure data is bound to the table
+                that.getView().byId("detailTab").setModel(oJsonModel, "detailModel");
+
+                that._applyHighlighting();
+
             } catch (oErr) {
                 sap.ui.core.BusyIndicator.hide();
                 console.error("Error fetching DA List:", oErr);
@@ -246,6 +251,37 @@ sap.ui.define([
                 // Show error message
                 // MessageBox.error(errorMessage);
             }
+        },
+        _applyHighlighting: function () {
+            // var oView = this.getView();
+            var oTable = this.getView().byId("detailTab"); // Get the table
+
+            if (!oTable) {
+                console.error("Table not found!");
+                return;
+            }
+
+            var aItems = oTable.getItems(); // Get all rows (ColumnListItems)
+
+            aItems.forEach((oItem, index) => {
+                var oContext = oItem.getBindingContext("detailModel");
+
+                if (!oContext) {
+                    console.warn(`No binding context for row ${index}`);
+                    return;
+                }
+
+                var sPopValue = oContext.getProperty("POP");
+                console.log(`Row ${index} POP Value:`, sPopValue);
+
+                var oMatnrObject = oItem.getCells()[3]; // Assuming VBox is the 3rd cell
+
+                if (sPopValue === "X") {
+                    oMatnrObject.addStyleClass("highlightText");
+                } else {
+                    oMatnrObject.addStyleClass("boldtext");
+                }
+            });
         }
     });
 });

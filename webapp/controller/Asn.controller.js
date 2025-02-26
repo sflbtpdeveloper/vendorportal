@@ -2,9 +2,11 @@ sap.ui.define([
     'zmmsubcontract/controller/BaseController',
     "sap/ui/core/mvc/Controller",
     'sap/m/MessageToast',
-    'sap/m/MessageBox'
+    "sap/m/MessageBox",
+    'sap/ui/unified/FileUploaderParameter',
+    'sap/ui/model/odata/v2/ODataModel'
 
-], function (BaseController, Controller, MessageToast, MessageBox) {
+], function (BaseController, Controller, ODataModel, MessageToast, MessageBox, FileUploaderParameter) {
     "use strict";
 
     return BaseController.extend("zmmsubcontract.controller.Asn", {
@@ -46,13 +48,6 @@ sap.ui.define([
             oModel.refreshMetadata();
             sap.ui.core.BusyIndicator.show(0);
             var that = this;
-            // this._userModel = this.getOwnerComponent().getModel("userModel");
-            // let sEmail = this._userModel.oData.email
-
-            // let aFilters = [
-            //     new sap.ui.model.Filter("Email", sap.ui.model.FilterOperator.EQ, sEmail)
-            // ];
-
             this.fetchPackageType();
         },
 
@@ -100,8 +95,39 @@ sap.ui.define([
             this.getView().byId("TNAME").setValue("");
             this.getView().byId("VEHNO").setValue("");
             this.getView().byId("SVENDOR").setValue("");
-            // this.getView().byId("invoiceFileName").setText('');
-            // this.getView().byId("tsFileName").setText('');
+            this.getView().byId("invoiceFileName").setText('');
+            this.getView().byId("tsFileName").setText('');
+
+            // Get the FileUploader controls by their ID
+            var invoiceUploader = this.getView().byId("invoiceAttachment");
+            var tsUploader = this.getView().byId("tsAttachment");
+
+            // Reset their values to clear any pre-existing data
+            if (invoiceUploader) {
+                invoiceUploader.setValue("");
+            }
+            if (tsUploader) {
+                tsUploader.setValue("");
+            }
+
+            // Optionally, clear the text controls if used to display file names
+            var invoiceFileNameText = this.byId("invoiceFileName");
+            if (invoiceFileNameText) {
+                invoiceFileNameText.setText("");
+            }
+
+            var tsFileNameText = this.byId("tsFileName");
+            if (tsFileNameText) {
+                tsFileNameText.setText("");
+            }
+
+            //code to enable the save button
+            const saveButtonModel = new sap.ui.model.json.JSONModel({
+                isSaveEnabled: true
+            });
+            this.getView().setModel(saveButtonModel, "saveButtonModel");
+            this.getView().getModel("saveButtonModel").setProperty("/isSaveEnabled", true);
+
         },
 
         onToggleButtonPress: async function (oEvent) {
@@ -118,7 +144,7 @@ sap.ui.define([
                 sLrno: this.byId("LRNO").getValue(),
                 sLrdate: this.byId("LRDATE").getValue(),
                 sTname: this.byId("TNAME").getValue(),
-                sVehno: this.byId("VEHNO").getValue(),
+                sVehno: this.byId("VEHNO").getValue().replace(/\s+/g, ''),
                 sBtype: this.sSelectedKey,
                 sEta: this.byId("ETA").getValue(),
             };
@@ -140,44 +166,47 @@ sap.ui.define([
             var oModel = this.getOwnerComponent().getModel("poservice");
             var that = this;
 
-            // oModel.read("/VehicleNumberSet", {
-            //     filters: aFilters,
-            //     success: function (oData, response) {
-            //         // Perform validation on the response
-            //         if (oData.results.length === 1) {
-            //             MessageBox.error(oData.results[0].Message);
-            //             return; // Exit if the vehicle number is not valid
-            //         }
-
-            // 2. If the vehicle number is valid, proceed with creating the ASN (POST operation)
             that._createASN(inputs);  // Call the function to create ASN with the valid inputs
-            //     },
-            //     error: function (oError) {
-            //         return;
-            //     }
-            // });
-
         },
 
-        validateLineItem: function (oSelectedData, index) {
+        validateLineItem: function (oSelectedData, index, dcDate) {
             var asnQty = parseFloat(oSelectedData.Asnqty) || 0;
             var blQty = parseFloat(oSelectedData.Blqty) || 0;
             var asnWeight = oSelectedData.Asnweight || 0;
             var meins = oSelectedData.Meins;
+            var invVal = oSelectedData.Invvalue;
 
             var maxQty = parseFloat(oSelectedData.Max)
             var maxInd = oSelectedData.Maxind;
 
+            //08.01.2025
+            var aedat = oSelectedData.Aedat;
+
+            // Convert '20230427' (YYYYMMDD) to a JavaScript Date object
+            var year = aedat.substring(0, 4);    // '2023'
+            var month = aedat.substring(4, 6);   // '04'
+            var day = aedat.substring(6, 8);     // '27'
+
+            // JavaScript months are 0-indexed, so subtract 1 from the month
+            var aedat = new Date(year, month - 1, day);
+
+            if (dcDate < aedat) {
+                // DCDATE is in the future, show an error message
+                sap.m.MessageBox.error('DC date is Prior than PO creation date');
+                return;
+            }
+            //08.01.2025
+
             if (maxInd === 'X') {
                 if (asnQty > maxQty) {
-                    MessageBox.error("Quantity exceeds maximum stock!");
+                    sap.m.MessageBox.error("Quantity exceeds maximum stock!");
                     return;
                 }
             }
 
             if (maxInd === 'Y') {
                 // if (asnQty > maxQty) {
-                MessageBox.error("Maximum stock level not available for material");
+                sap.m.MessageBox.error("Maximum stock level not available for material");
                 return;
                 // }
             }
@@ -187,23 +216,28 @@ sap.ui.define([
                 // If asnQty contains decimals, trigger a validation error
                 if (asnQty % 1 !== 0) {
                     // Trigger validation error (you can use a message box, dialog, or any other UI feedback mechanism)
-                    MessageBox.error("ASN Quantity cannot contain decimal values for the selected unit of measure.");
+                    sap.m.MessageBox.error("ASN Quantity cannot contain decimal values for the selected unit of measure.");
                     return false; // Prevent further processing or submission if validation fails
                 }
             }
 
+            if (!invVal) {
+                sap.m.MessageBox.error("Please Enter Invoice Value for line item " + (index + 1) + ".");
+                return false; // Stop further execution
+            }
+
             if (!asnQty || isNaN(asnQty) || asnQty <= 0) {
-                MessageBox.error("Please Enter ASN Quantity for line item " + (index + 1) + ".");
+                sap.m.MessageBox.error("Please Enter ASN Quantity for line item " + (index + 1) + ".");
                 return false;
             }
 
             if (!asnWeight || isNaN(asnWeight) || asnWeight <= 0) {
-                MessageBox.error("Please Enter ASN Weight for line item " + (index + 1) + ".");
+                sap.m.MessageBox.error("Please Enter ASN Weight for line item " + (index + 1) + ".");
                 return false;
             }
 
             if (asnQty > blQty) {
-                MessageBox.error("ASN Quantity must not be greater than BL Quantity for line item " + (index + 1) + ".");
+                sap.m.MessageBox.error("ASN Quantity must not be greater than BL Quantity for line item " + (index + 1) + ".");
                 return false;
             }
             return true;
@@ -228,60 +262,62 @@ sap.ui.define([
                 Peinh: oData.Peinh || "",
                 Asnqty: oData.Asnqty || "",
                 Asnweight: oData.Asnweight || "",
+                Invvalue: oData.Invvalue || "",
                 Remarks: oData.Remarks || ""
             };
         },
 
         createODataEntry: function (oDataModel, oHeaderData) {
             debugger;
-
-            //ajax call added on 04.11.2024
+            // AJAX call added on 04.11.2024
             $.ajax({
                 url: "/nodeapp/custom/supasnpost",
                 type: "POST",
                 contentType: "application/json; charset=UTF-8",
                 data: JSON.stringify(oHeaderData),
                 headers: {
-                    // "X-CSRF-Token": csrfToken,
                     "Content-Type": "application/json",
                 },
                 success: async function (oData) {
                     debugger;
-                    var asnNumber = oData.d.Ebeln;
-                    var oController = this; // Store the reference to 'this'  
-                    if (asnNumber === "duplicate") { // Replace this condition with your actual logic to determine duplication
-                        MessageBox.error("DC number already available in the Financial Year.", { duration: 2000 });
+                    const asnNumber = oData.d.Ebeln;
+
+                    if (asnNumber === "duplicate") {
+                        sap.m.MessageBox.error("DC number already available in the Financial Year.", { duration: 2000 });
                         return;
-                    } else
+                    }
 
-                        // Upload attachments and wait for completion
-                        // await this.uploadAttachments(asnNumber);
 
-                        MessageBox.success("ASN Number Created:" + asnNumber, {
-                            onClose: async function () {
-                                debugger;
-                                // var oLocalModel = this.getView().getModel("local");
-                                // oLocalModel.setData({
-                                //     attachData: {
-                                //         mimetype: "",
-                                //         InvoiceFileName: "",
-                                //         InvoiceFileBase64: "",
-                                //         TsFileName: "",
-                                //         TsFileBase64: ""
-                                //     }
-                                // });
+                    // // Ensure 'this' refers to the controller
+                    await this.uploadAttachments(asnNumber);
 
-                                history.go(-1);
-                                //    oController.oRouter.navTo("SupAsnCrt", {},false);                            
-                            }.bind(this)
-                        });
+                    // Show success message after attachments are uploaded
+                    sap.m.MessageBox.show("ASN Number Created: " + asnNumber, {
+                        icon: sap.m.MessageBox.Icon.SUCCESS,
+                        title: "Success",
+                        actions: [sap.m.MessageBox.Action.OK],
+                        onClose: function () {
+                            debugger;
+                            const oLocalModel = this.getView().getModel("local");
+                            oLocalModel.setData({
+                                attachData: {
+                                    mimetype: "",
+                                    InvoiceFileName: "",
+                                    InvoiceFileBase64: "",
+                                    TsFileName: "",
+                                    TsFileBase64: ""
+                                }
+                            });
+
+                            history.go(-1);
+                        }.bind(this)
+                    });
+
+                    // Clear input fields
                     this.clearInputs();
-                    // Clear input fields and navigate after a delay
-                }.bind(this),
+                }.bind(this), // Bind 'this' to the controller
                 error: function (oError) {
-                    // console.error(oError);
-                    // MessageToast.show("Error creating header and items.");
-                    MessageBox.error("Error creating entry: " + oError.message);
+                    sap.m.MessageBox.error("Error creating entry: " + oError.message);
                 }
             });
         },
@@ -330,7 +366,7 @@ sap.ui.define([
                 const errorMessage = oErr.responseJSON?.error?.innererror?.errordetails?.[0]?.message || "Unknown error occurred";
 
                 // Show error message
-                MessageBox.error(errorMessage);
+                sap.m.MessageBox.error(errorMessage);
             }
         },
 
@@ -349,7 +385,7 @@ sap.ui.define([
             // Check if the DCDATE is a future date
             if (dcDate > currentDate) {
                 // DCDATE is in the future, show an error message
-                MessageBox.error('Invoice date cannot be a future date');
+                sap.m.MessageBox.error('Invoice date cannot be a future date');
                 return;
                 // Optionally, set focus back to the DCDATE input field
                 this.byId("DCDATE").setValue(""); // Clear the invalid date
@@ -370,7 +406,7 @@ sap.ui.define([
             // Check if the DCDATE is a future date
             if (dcDate > currentDate) {
                 // DCDATE is in the future, show an error message
-                MessageBox.error('Invoice date cannot be a future date');
+                sap.m.MessageBox.error('Invoice date cannot be a future date');
                 return;
                 // Optionally, set focus back to the DCDATE input field
                 this.byId("DCDATE").setValue(""); // Clear the invalid date
@@ -381,7 +417,7 @@ sap.ui.define([
             var regex = /^[+-]?\d+$/;
             if (!regex.test(packs)) {
                 // If validation fails, show an error message
-                MessageBox.error("Please enter a pack number without decimals.");
+                sap.m.MessageBox.error("Please enter a pack number without decimals.");
                 return;
             }
 
@@ -417,7 +453,7 @@ sap.ui.define([
 
             // Show error message if there are validation errors
             if (aErrors.length > 0) {
-                MessageBox.error(aErrors.join("\n"));
+                sap.m.MessageBox.error(aErrors.join("\n"));
                 return;
             }
 
@@ -429,7 +465,7 @@ sap.ui.define([
             var aHeaderToItem = [];
             for (var i = 0; i < aContexts.length; i++) {
                 var oSelectedData = aContexts[i].getObject();
-                if (!this.validateLineItem(oSelectedData, i)) return; // Validate each line item
+                if (!this.validateLineItem(oSelectedData, i, dcDate)) return; // Validate each line item
                 aHeaderToItem.push(this.prepareItemData(oSelectedData));
             }
 
@@ -456,6 +492,7 @@ sap.ui.define([
             this.createODataEntry(oDataModel, oHeaderData);
 
         },
+
         onDCNOValidation: function (oEvent) {
             // Get the input value
             var sValue = oEvent.getParameter("value");
@@ -474,117 +511,143 @@ sap.ui.define([
             }
         },
 
-        onAttachFilePress: function (oEvent) {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.accept = "*/*"; // Allow all file types
-
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const fileName = file.name; // Ensure fileName is captured here
-                    const fileType = file.type;
-                    const reader = new FileReader();
-
-                    reader.onload = (event) => {
-                        // const base64String = event.target.result.split(',')[1]; // Extract Base64 data
-                        const arrayBuffer = event.target.result;
-                        const xstring = this.convertToXstring(arrayBuffer);
-
-                        // Update the model with Base64 and file name
-                        const buttonId = oEvent.getSource().getId();
-                        if (buttonId.includes("invoiceAttachment")) {
-                            this.getView().getModel("local").setProperty("/attachData/InvoiceFileName", fileName);
-                            this.getView().getModel("local").setProperty("/attachData/InvoiceFileBase64", xstring);
-                            this.getView().getModel("local").setProperty("/attachData/mimetype", fileType);
-                        } else if (buttonId.includes("tsAttachment")) {
-                            this.getView().getModel("local").setProperty("/attachData/TsFileName", fileName);
-                            this.getView().getModel("local").setProperty("/attachData/TsFileBase64", xstring);
-                            this.getView().getModel("local").setProperty("/attachData/mimetype", fileType);
-                        }
-                    };
-
-                    // Read the file as a Base64 string
-                    // reader.readAsDataURL(file);   //commented on 1012
-                    reader.readAsArrayBuffer(file);
-                }
-            };
-
-            input.click(); // Open the file dialog
-        },
-
-        convertToXstring: function (arrayBuffer) {
-            const byteArray = new Uint8Array(arrayBuffer);  // Convert ArrayBuffer to Uint8Array (byte array)
-            let xstring = '';
-
-            // Convert each byte to a 2-character hex string and concatenate
-            byteArray.forEach((byte) => {
-                xstring += byte.toString(16).padStart(2, '0');  // Convert byte to hex and ensure it's 2 characters
-            });
-
-            return xstring;  // Return the concatenated hex string (xstring)
-        },
-
         uploadAttachments: async function (asnNumber) {
             const oLocalModel = this.getView().getModel("local");
             const attachData = oLocalModel.getProperty("/attachData");
             debugger;
             // Configure ODataModel for the AttachmentSet
-            const oDataModel = new sap.ui.model.odata.v2.ODataModel("/sap/opu/odata/sap/YMM_SUPPLIER_PO_SRV/");
-            // const concatenatedFileName = `${asnNumber}/${attachData.InvoiceFileName || attachData.DhsFileName}`;
+            const oDataModel = new sap.ui.model.odata.v2.ODataModel("/sap/opu/odata/sap/YMM_SUPPLIER_ATT_SRV/");
 
-            const uploadFile = (fileName, xstring, mimeType, filePrefix) => {
-                if (!fileName || !xstring) {
+            // Helper function to refresh CSRF token
+            const refreshCsrfToken = () => {
+                return new Promise((resolve, reject) => {
+                    oDataModel.refreshSecurityToken(
+                        () => {
+                            const csrfToken = oDataModel.getSecurityToken();
+                            if (csrfToken) {
+                                resolve(csrfToken);
+                            } else {
+                                reject(new Error("Failed to retrieve CSRF token."));
+                            }
+                        },
+                        (error) => {
+                            reject(new Error("Failed to refresh CSRF token: " + JSON.stringify(error)));
+                        }
+                    );
+                });
+            };
+
+            const uploadFile = (fileName, mimeType, filePrefix) => {
+                if (!fileName) {
                     return Promise.resolve(); // Skip if no file data
                 }
 
                 let concatenatedFileName = `${asnNumber}/`;
 
-                // Concatenate the prefix ('INV' or 'DHS') to the filename
+                // Concatenate the prefix ('INV' or 'TSC') to the filename
                 concatenatedFileName += filePrefix + fileName;
 
-                // Prepare payload
-                const oFileData = {
-                    AsnNumber: asnNumber, // Bind ASN Number
-                    FileName: fileName,
-                    MimeType: mimeType,
-                    Content: xstring
-                };
+                var oFileUploader;
 
-                // Set custom headers
-                const mHeaders = {
-                    "slug": concatenatedFileName  // Use filename as slug
-                };
+                if (filePrefix === 'INV') {
+                    oFileUploader = this.getView().byId("invoiceAttachment");
+                } else if (filePrefix === 'TSC') {
+                    oFileUploader = this.getView().byId("tsAttachment");
+                }
 
-                // var oFileData = { Bin : xstring };
+                if (oFileUploader) {
+                    // Clear existing parameters
+                    oFileUploader.destroyHeaderParameters();
 
-                // Return a promise for the upload request
-                return new Promise((resolve, reject) => {
-                    oDataModel.create("/FileSet", oFileData, {
-                        // headers: mHeaders,
-                        success: function () {
-                            MessageToast.show(`File uploaded successfully: ${fileName}`);
-                            resolve();
-                        },
-                        error: function (oError) {
-                            MessageBox.error(`Error uploading file: ${fileName}`);
-                            reject(oError);
+                    // If the file is selected, proceed with adding the SLUG header and upload logic
+                    oFileUploader.addHeaderParameter(new sap.ui.unified.FileUploaderParameter({
+                        name: "SLUG",
+                        value: concatenatedFileName // Pass the file name as SLUG
+                    }));
+
+                    return new Promise(async (resolve, reject) => {
+                        try {
+                            // Refresh CSRF token before proceeding with file upload
+                            const csrfToken = await refreshCsrfToken();
+
+                            oFileUploader.addHeaderParameter(
+                                new sap.ui.unified.FileUploaderParameter({
+                                    name: "x-csrf-token",
+                                    value: csrfToken // Pass CSRF token for secure upload
+                                })
+                            );
+
+                            // Set the request to send via XHR (for file upload)
+                            oFileUploader.setSendXHR(true);
+
+                            // Trigger the file upload
+                            oFileUploader.upload(); // This should trigger the file upload
+
+                            // After file upload completes, handle model updates
+                            oFileUploader.attachUploadComplete((oUploadCompleteEvent) => {
+                                const status = oUploadCompleteEvent.getParameter("status");
+                                if (status === 200 || status === 201) {
+                                    resolve();
+                                } else {
+                                    reject(new Error("File upload failed with status: " + status));
+                                }
+                            });
+                        } catch (error) {
+                            reject(error); // Handle token refresh or upload errors
                         }
                     });
-                });
+                }
             };
 
-            // Check and upload Invoice Attachment
-            if (attachData.InvoiceFileName && attachData.InvoiceFileBase64) {
-                await uploadFile(attachData.InvoiceFileName, attachData.InvoiceFileBase64, attachData.mimetype, 'INV');
+            // Get FileUploader controls
+            const invoiceUploader = this.getView().byId("invoiceAttachment");
+            const tsUploader = this.getView().byId("tsAttachment");
+
+            // Upload Invoice Attachment (INV)
+            if (attachData.InvoiceFileName) {
+                await uploadFile(attachData.InvoiceFileName, attachData.mimetype, 'INV');
             }
 
-            // Check and upload DHS Attachment
-            if (attachData.TsFileName && attachData.TsFileBase64) {
-                await uploadFile(attachData.TsFileName, attachData.TsFileBase64, attachData.mimetype, 'TSC');
+            // Upload Test Certificate Attachment (TSC)
+            if (attachData.TsFileName) {
+                await uploadFile(attachData.TsFileName, attachData.mimetype, 'TSC');
             }
+
+            // Refresh FileUploader controls after upload
+            if (invoiceUploader) {
+                invoiceUploader.setValue(""); // Reset the value of the FileUploader
+            }
+            if (tsUploader) {
+                tsUploader.setValue(""); // Reset the value of the FileUploader
+            }
+
+            // Clear local model properties for file names
+            oLocalModel.setProperty("/attachData/InvoiceFileName", "");
+            oLocalModel.setProperty("/attachData/TsFileName", "");
+
+            // Clear Text controls (if used to display file names)
+            this.byId("invoiceFileName").setText("");
+            this.byId("tsFileName").setText("");
         },
 
+        onFileChangedI: function (oEvent) {
+            var oFileUploader = oEvent.getSource(); // Get the FileUploader control
+            var sFileName = oFileUploader.getValue(); // Get the file name selected by the user
+            this.getView().getModel("local").setProperty("/attachData/InvoiceFileName", sFileName);
+
+            // Set the selected file name to the Text control
+            var oTextControl = this.byId("invoiceFileName");
+            oTextControl.setText(sFileName);
+        },
+
+        onFileChangedT: function (oEvent) {
+            var oFileUploader = oEvent.getSource();
+            var sFileName = oFileUploader.getValue();
+            this.getView().getModel("local").setProperty("/attachData/TsFileName", sFileName);
+
+            // Set the selected file name to the Text control
+            var oTextControl = this.byId("tsFileName");
+            oTextControl.setText(sFileName);
+        },
     });
 });
-

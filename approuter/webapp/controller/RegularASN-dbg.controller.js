@@ -216,6 +216,7 @@ sap.ui.define([
             dataobject.outputmat = sModel.oData[0].Op_matnr;
             dataobject.Ebeln = sModel.oData[0].Ebeln;
             dataobject.Ebelp = sModel.oData[0].Ebelp;
+            dataobject.Aedat = sModel.oData[0].Aedat;
 
             // MessageBox.success("Selected Record" + " " + vendor + " " );
 
@@ -449,7 +450,7 @@ sap.ui.define([
         onChangeMat: function (oEvent) {
             this._selectedPO(oEvent);
         },
-        _selectedPO: function (oEvent) {
+        _selectedPO: async function (oEvent) {
 
             var sModel = this.getOwnerComponent().getModel("selectedRecords");
             var oView = this.getView();
@@ -516,7 +517,9 @@ sap.ui.define([
 
             const v_ebeln = sModel.oData[0].Ebeln;
             const v_ebelp = sModel.oData[0].Ebelp;        
-            const v_Ip_Matnr = sModel.oData[0].Ip_Matnr;            
+            const v_Ip_Matnr = sModel.oData[0].Ip_Matnr;      
+            const v_vendor = sModel.oData[0].Lifnr;
+            const v_plant = sModel.oData[0].Werks;
             const v_Op_Matnr = sModel.oData[0].Op_Matnr;  
             this._vMenge = sModel.oData[0].Menge - sModel.oData[0].Menga;
 
@@ -529,21 +532,50 @@ sap.ui.define([
             this.getOwnerComponent().setModel(asnmodelobject, "ASNMODEL");
 
             debugger;
+            // Create the query parameters to be passed in the AJAX request
+            const params = {
+                ebeln: v_ebeln,
+                ebelp: v_ebelp,
+                ip_matnr: v_Ip_Matnr,
+                lifnr: v_vendor,
+                werks: v_plant
+            };
+
+            try {
+                // Make a request to your custom Node.js backend to get the CSRF token and DA list
+                const response = await $.ajax({
+                    url: "/nodeapp/changemat",     // Your custom backend route
+                    method: "GET",              // Use GET since you're retrieving data         
+                    contentType: "application/json",// Send the email as a query parameter
+                    data: params
+                });
+                // Success handling
+                sap.ui.core.BusyIndicator.hide();  // Hide the busy indicator on success
+                 debugger;
+                // Process the response to get the tokens and DA list                
+                const filteredData = response;        // Extract DA list data                         
+                        
             // Get the DA list from the model
-            const daList = this.getView().getModel("default").getData();
+            // const daList = this.getView().getModel("default").getData();
             // Filter the DA list by `Ebeln`
-            const filteredData = daList.filter(item => item.Ebeln === v_ebeln && item.Ebelp !== v_ebelp && item.Ip_Matnr === v_Ip_Matnr);
+            // const filteredData = daList.filter(item => item.Ebeln === v_ebeln && item.Ebelp !== v_ebelp && item.Ip_Matnr === v_Ip_Matnr);
             if (filteredData.length === 0) {
                 sap.m.MessageBox.error("No records found for the selected PO");
                 return;
             }
-
-
-
             //********FOR DISPLAYING Change Material List*****/
 
             this._displaySelectMatRatio(filteredData, v_ebeln, v_ebelp);
 
+        } catch (oErr) {
+            sap.ui.core.BusyIndicator.hide();
+            console.error("Error fetching Change Mat:", oErr);
+            // If the error response contains a message, display it in the MessageBox
+            const errorMessage = oErr.responseJSON?.error?.innererror?.errordetails?.[0]?.message || "Unknown error occurred";
+
+            // Show error message
+            // MessageBox.error(errorMessage);
+        }            
 
         },
 

@@ -12,7 +12,7 @@
         backgroundDesign="Transparent"
         navButtonPress="onNavBack"
         showNavButton="true"
-    >    
+    >
         <customHeader>
             <Bar>
                 <contentRight>
@@ -44,7 +44,7 @@
                 </contentRight>
             </Bar>
         </customHeader>
-        <content>        
+        <content>
             <VBox>
                 <HBox
                     justifyContent="SpaceBetween"
@@ -66,7 +66,7 @@
                         <Title
                             text="SUNDRAM FASTENERS LIMITED"
                             textAlign="Begin"
-                            titleStyle="Auto"                            
+                            titleStyle="Auto"
                             class="zoomOutImage companyHeading "
                         />
 
@@ -74,7 +74,7 @@
                             text="Supply Chain Management"
                             width="auto"
                             textAlign="Center"
-                            titleStyle="Auto"                                                        
+                            titleStyle="Auto"
                             class="scmHeading  zoomOutImage"
                         />
                     </VBox>
@@ -359,6 +359,29 @@
                 </VBox>
             </HBox>
 
+            <!-- <HBox
+                alignItems="Center"
+                justifyContent="Center"
+            >
+                <VBox
+                    class=" contentBox sapUiLargePadding "
+                    justifyContent="Center"
+                    alignItems="Center"
+                    width="100%"
+                >
+                    <Text />
+                    <Text
+                        id="idPara6"
+                        text=" Our varied range of productions encompasses fasteners, power train components, sintered metal products, iron powder, cold extruded parts, radiator caps, water pumps, oil pumps and wind energy components."
+                        class="paragraphText"
+                        textAlign="Center"
+                        wrapping="true"
+                        maxLines="4"
+                        wrappingType="Hyphenated"
+                    />
+                    <Text />
+                </VBox>
+            </HBox> -->
             <Carousel
                 id="idCars3"
                 loop="true"
@@ -403,7 +426,7 @@
             >
                 <Text
                     id="idParagraph3"
-                    text=" At Sundram Fastners,We believe in giving back to Society."
+                    text=" At Sundram Fasteners,We believe in giving back to Society."
                     class="paragraphTextOrg"
                     textAlign="Center"
                     wrapping="true"
@@ -413,7 +436,7 @@
 
                 <Text
                     id="idParagraph4"
-                    text="Childrens Education is a paramount Importance to Sundram Fastners.We have provided scholarships for our employess children while creating an ideal learning platform for lots of other children within the community."
+                    text="Childrens Education is a paramount Importance to Sundram Fasteners.We have provided scholarships for our employess children while creating an ideal learning platform for lots of other children within the community."
                     class="paragraphText"
                     textAlign="Center"
                     wrapping="true"

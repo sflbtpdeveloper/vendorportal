@@ -3,9 +3,10 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/PDFViewer",
     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
+    "sap/ui/model/FilterOperator",
+    "sap/ui/model/json/JSONModel"
 
-], function (BaseController, Controller, PDFViewer, Filter, FilterOperator, MessageBox) {
+], function (BaseController, Controller, PDFViewer, Filter, FilterOperator, MessageBox, JSONModel) {
     "use strict";
 
     return BaseController.extend("zmmsubcontract.controller.List", {
@@ -28,15 +29,72 @@ sap.ui.define([
                         scopes: parsedData.scopes
                     });
             }
-
+            this._loadUserInfo();
         },
+
+        _applyHighlighting: function () {
+            // var oView = this.getView();
+            var oTable = this.getView().byId("myCustomTable"); // Get the table
+
+            if (!oTable) {
+                console.error("Table not found!");
+                return;
+            }
+
+            var aItems = oTable.getItems(); // Get all rows (ColumnListItems)
+
+            aItems.forEach((oItem, index) => {
+                var oContext = oItem.getBindingContext("listModel");
+
+                if (!oContext) {
+                    console.warn(`No binding context for row ${index}`);
+                    return;
+                }
+
+                var sPopValue = oContext.getProperty("POP");
+                console.log(`Row ${index} POP Value:`, sPopValue);
+
+                var oVBox = oItem.getCells()[2]; // Assuming VBox is the 3rd cell
+
+                if (oVBox && sPopValue === "X") {
+                    oVBox.addStyleClass("highlightText");
+                } else if (oVBox) {
+                    oVBox.addStyleClass("boldtext");
+                }
+            });
+        },
+
+
+
+        //07012025
+        _loadUserInfo: function () {
+            var oModel = this.getView().getModel("userInfo");
+            var sUrl = "/userapi/currentUser"; // or /user-api/attributes
+
+            $.ajax({
+                "url": sUrl,
+                async: false,
+                success: jQuery.proxy(function (user) {
+                    var currentUser = {
+                        fullName: user.lastName + ", " + user.firstName,
+                        userId: user.name,
+                    }
+
+                    oModel.setData(currentUser);
+                }),
+                error: function (error) {
+                    MessageToast.show("Error in load.", error);
+                }
+            });
+        },
+        //07012025
 
         _onObjectMatched: function (oEvent) {
             // Perform the refresh logic here
             this._refreshView();
         },
 
-        _refreshView: function () {    
+        _refreshView: function () {
             this._readData();
         },
 
@@ -232,6 +290,11 @@ sap.ui.define([
                 const oJsonModel = new sap.ui.model.json.JSONModel(supplierPOData);
                 that.getView().setModel(oJsonModel, "listModel");
 
+                // Ensure data is bound to the table
+                that.getView().byId("myCustomTable").setModel(oJsonModel, "listModel");
+
+                that._applyHighlighting();
+
             } catch (oErr) {
                 sap.ui.core.BusyIndicator.hide();
                 console.error("Error fetching DA List:", oErr);
@@ -241,7 +304,6 @@ sap.ui.define([
                 // Show error message
                 //  MessageBox.error(errorMessage);
             }
-        }
-
+        },
     });
 });

@@ -120,25 +120,48 @@
                         <ColumnListItem type="Inactive">
                             <cells>
                                 <ObjectIdentifier title="{listModel>Werks}" />
-                                <ObjectIdentifier
-                                    title="{listModel>Ebeln}"
-                                    text="{listModel>Ebelp}"
-                                />
-                                <ObjectIdentifier
-                                    title="{listModel>Matnr}"
-                                    text="{listModel>Maktx}"
-                                />
+
+                                <VBox>
+                                    <Text
+                                        text="{listModel>Ebeln}"
+                                        class="boldtext"
+                                    />
+                                    <Text
+                                        text="{listModel>Ebelp}"
+                                        class="boldtext"
+                                    />
+                                </VBox>
+
+                                <VBox id="POP">
+                                    <Text
+                                        text="{listModel>Matnr}"
+                                        class="boldtext"
+                                    />
+                                    <Text
+                                        text="{listModel>Maktx}"
+                                        class="boldtext"
+                                    />
+                                </VBox>
+
                                 <ObjectIdentifier title="{listModel>Eindt}" />
                                 <ObjectIdentifier title="{listModel>Menge}" />
                                 <ObjectIdentifier title="{listModel>Wemng}" />
                                 <ObjectIdentifier title="{listModel>Blqty}" />
                                 <ObjectIdentifier title="{listModel>Meins}" />
-                                <ObjectIdentifier
-                                    title="{listModel>Netpr}"
-                                    text="{listModel>Peinh}"
-                                />
+
+                                <VBox>
+                                    <Text
+                                        text="{listModel>Netpr}"
+                                        class="boldtext"
+                                    />
+                                    <Text
+                                        text="{listModel>Peinh}"
+                                        class="boldtext"
+                                    />
+                                </VBox>
+
                                 <Button
-                                    text="Preview PDF"
+                                    text="PDF"
                                     press="onButtonPress"
                                 />
                             </cells>

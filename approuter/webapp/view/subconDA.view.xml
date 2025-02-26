@@ -16,7 +16,7 @@
         showNavButton="true"
     >
         <content>
-        <HBox
+            <HBox
                 width="100%"
                 alignItems="Center"
                 justifyContent="SpaceBetween"
@@ -32,20 +32,20 @@
                     width="100%"
                 >
                     <Title
-                        text="Sundram Fasteners Limited"                        
+                        text="Sundram Fasteners Limited"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiMediumMarginTop"
                     />
 
                     <Title
-                        text="Subcontract DA Report"                        
+                        text="Subcontract DA Report"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
                     />
                 </VBox>
-                <HBox width="4rem" />                
+                <HBox width="4rem" />
             </HBox>
             <Toolbar>
                 <SearchField
@@ -75,14 +75,13 @@
                     liveChange="onMat"
                 />
 
-    <Button
-        text="Download Excel"
-        press="onDownloadExcel"
-        type="Ghost"
-        icon="sap-icon://excel-attachment"
-        width="10%"
-    />
-
+                <Button
+                    text="Download Excel"
+                    press="onDownloadExcel"
+                    type="Ghost"
+                    icon="sap-icon://excel-attachment"
+                    width="10%"
+                />
             </Toolbar>
 
             <ScrollContainer
@@ -91,80 +90,79 @@
                 horizontal="true"
                 vertical="true"
             >
-
-            <Table
-                id="idDetail"
-                items="{default>/}"
-                growing="true"                
-                fixedLayout="false"
-                sticky="ColumnHeaders"
-                width="auto"
-            >
-                <columns>
-                    <Column>
-                        <Label text="DA Number" />
-                    </Column>
-                    <Column>
-                        <Label
-                            text="DA Date"
-                            visible="false"
-                        />
-                    </Column>
-                    <Column>
-                        <Label text="Plant" />
-                    </Column>
-                    <Column>
-                        <Label text="Vendor" />
-                    </Column>
-                    <Column>
-                        <Label text="Output Part Number" />
-                    </Column>
-                    <Column>
-                        <Label text="Input Part Number" />
-                    </Column>
-                    <Column>
-                        <Label text="No of Days" />
-                    </Column>                    
-                    <Column>
-                        <Label text="PO Number" />
-                    </Column>
-                    <!-- <Column>
-                        <Label text="Unit of Measure" />
-                    </Column> -->
-                    <Column>
-                        <Label text="Balance Quanity" />
-                    </Column>
-                    <Column>
-                        <Label text="Preview PDF" />
-                    </Column>
-                </columns>
-
-                <items>
-                    <ColumnListItem>
-                        <cells>
-                            <Text
-                                text="{default>Exnum}"
-                                class="boldtext"
-                            />
-                            <Text
-                                text="{default>Exdat}"
+                <Table
+                    id="idDetail"
+                    items="{default>/}"
+                    growing="true"
+                    fixedLayout="false"
+                    sticky="ColumnHeaders"
+                    width="auto"
+                >
+                    <columns>
+                        <Column>
+                            <Label text="DA Number" />
+                        </Column>
+                        <Column>
+                            <Label
+                                text="DA Date"
                                 visible="false"
                             />
-                            <Text text="{default>Werks}" />
-                            <Text text="{default>Lifnr}" />
-                            <VBox>
+                        </Column>
+                        <Column>
+                            <Label text="Plant" />
+                        </Column>
+                        <Column>
+                            <Label text="Vendor" />
+                        </Column>
+                        <Column>
+                            <Label text="Output Part Number" />
+                        </Column>
+                        <Column>
+                            <Label text="Input Part Number" />
+                        </Column>
+                        <Column>
+                            <Label text="No of Days" />
+                        </Column>
+                        <Column>
+                            <Label text="PO Number" />
+                        </Column>
+                        <!-- <Column>
+                        <Label text="Unit of Measure" />
+                    </Column> -->
+                        <Column>
+                            <Label text="Balance Quanity" />
+                        </Column>
+                        <Column>
+                            <Label text="Preview PDF" />
+                        </Column>
+                    </columns>
+
+                    <items>
+                        <ColumnListItem>
+                            <cells>
                                 <Text
-                                    text="{default>Op_matnr}"
+                                    text="{default>Exnum}"
                                     class="boldtext"
                                 />
                                 <Text
-                                    text="{default>Maktx}"
-                                    class="smallfont"
+                                    text="{default>Exdat}"
+                                    visible="false"
                                 />
-                            </VBox>
-                            <Text text="{default>Ip_Matnr}" />
-                            <Text text="{default>noOfDays}" />
-                            <!-- <VBox>
+                                <Text text="{default>Werks}" />
+                                <Text text="{default>Lifnr}" />
+                                <VBox>
+                                    <Text
+                                        text="{default>Op_matnr}"
+                                        class="boldtext"
+                                    />
+                                    <Text
+                                        text="{default>Maktx}"
+                                        class="smallfont"
+                                    />
+                                </VBox>
+                                <Text text="{default>Ip_Matnr}" />
+                                <Text text="{default>noOfDays}" />
+                                <!-- <VBox>
                                 <Text
                                     text="{default>Ebeln}"
                                     class="boldtext"
@@ -175,28 +173,28 @@
                                 />
                             </VBox> -->
 
-                            <ObjectIdentifier
-                                title="{default>Ebeln}"
-                                text="{default>Ebelp}"
-                                class="smallfont"
-                            />
+                                <ObjectIdentifier
+                                    title="{default>Ebeln}"
+                                    text="{default>Ebelp}"
+                                    class="smallfont"
+                                />
 
-                            <!-- <Button text="{default>Meins}" /> -->
-                            <!-- <Text text="{default>Balqty}" /> -->
-                            <ObjectNumber
-                                number="{default>Balqty}"
-                                unit="{default>Meins}"
-                            />
+                                <!-- <Button text="{default>Meins}" /> -->
+                                <!-- <Text text="{default>Balqty}" /> -->
+                                <ObjectNumber
+                                    number="{default>Balqty}"
+                                    unit="{default>Meins}"
+                                />
 
-                            <Button
-                                text="Preview PDF"
-                                press="onPreviewPDF"
-                            />
-                        </cells>
-                    </ColumnListItem>
-                </items>
-            </Table>
-            </ScrollContainer>            
+                                <Button
+                                    text="Preview PDF"
+                                    press="onPreviewPDF"
+                                />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </ScrollContainer>
         </content>
     </Page>
 </mvc:View>

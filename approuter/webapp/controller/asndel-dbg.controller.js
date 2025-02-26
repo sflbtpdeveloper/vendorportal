@@ -363,7 +363,7 @@ sap.ui.define([
             oBinding.filter(aFilters);
 
         },
-        fetchASNdel: async function (email) {
+        fetchASNdel: async function (email) {   
             debugger;
              const that = this; // Preserve the reference to the controller
  

@@ -11,7 +11,11 @@ modules:
     requires:
       - name: sfd-xsuaa
       - name: sfd-destination
+        properties:
+          timeout: 600000       
       - name: sfd-connectivity
+        properties:
+          timeout: 600000       
     provides:
       - name: node_api
         properties:
@@ -20,6 +24,7 @@ modules:
     parameters:
       disk-quota: 1G
       memory: 1G
+      timeout: 600000   # Increase process timeout to 10 minutes      
       start-command: npm start # Ensure that Cloud Foundry starts the app in inspect mode
     build-parameters:
       builder: custom
@@ -56,12 +61,15 @@ modules:
       - name: sfd-connectivity
       - name: sfd-xsuaa
       - name: node_api
+        properties:
+          timeout: 600000        
     parameters:
       disk-quota: 1G
       memory: 1G   
-      host: sflvps  # Hostname for custom domain    removed route and checking
-      domains:        
-        - sfl.co.in  # Custom domain           
+      env:
+        INCOMING_CONNECTION_TIMEOUT: 600000  # Timeout set to 10 minutes (600 sec)   
+      routes:
+       - route: ${space}.sfl.co.in # Dynamic route based on CF space name                    
 
 resources:
   - name: sfd-destination
@@ -71,12 +79,16 @@ resources:
       service: destination
       service-name: sfd-destination
       service-plan: lite
+      config:
+       timeout: 600000  # 10 minutes       
   - name: sfd-connectivity
     type: org.cloudfoundry.managed-service
     description: Connectivity Service
     parameters:
       service: connectivity
       service-plan: lite
+      config:
+        timeout: 600000  # 10 minutes         
   - name: sfd-xsuaa
     type: org.cloudfoundry.managed-service
     description: xsuaa Security service

@@ -272,6 +272,19 @@
                             </template>
                         </Column>
                         <Column
+                            id="_IDGenColumn16"
+                            width="7rem"
+                            sortProperty="Budat"
+                        >
+                            <m:Label text="Posting Date" />
+                            <template>
+                                <m:Text
+                                    text="{asnRep>Budat}"
+                                    wrapping="false"
+                                />
+                            </template>
+                        </Column>
+                        <Column
                             id="_IDGenColumn13"
                             width="7rem"
                             sortProperty="Mblnr1"

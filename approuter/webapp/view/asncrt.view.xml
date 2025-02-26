@@ -5,6 +5,7 @@
     xmlns:f="sap.ui.layout.form"
     controllerName="zmmsubcontract.controller.asncrt"
     xmlns:l="sap.ui.layout"
+    xmlns:unified="sap.ui.unified"
 >
     <Page
         id="mySubconASN"
@@ -12,7 +13,7 @@
         showHeader="false"
     >
         <content>
-           <HBox
+            <HBox
                 width="100%"
                 alignItems="Center"
                 justifyContent="SpaceBetween"
@@ -28,20 +29,20 @@
                     width="100%"
                 >
                     <Title
-                        text="Sundram Fasteners Limited"                        
+                        text="Sundram Fasteners Limited"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiMediumMarginTop"
                     />
 
                     <Title
-                        text="Subcontract ASN Creation"                        
+                        text="Subcontract ASN Creation"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
                     />
                 </VBox>
-                <HBox width="4rem" />                
+                <HBox width="4rem" />
             </HBox>
             <Toolbar>
                 <ToolbarSpacer />
@@ -50,6 +51,7 @@
                     press="onSaveASN"
                     icon="sap-icon://save"
                     type="Accept"
+                    enabled="{saveButtonModel>/isSaveEnabled}"
                 />
             </Toolbar>
             <VBox class="sapUiSmallMargin">
@@ -127,11 +129,17 @@
                             required="true"
                         />
 
+                        <Label text="Invoice Value" />
+                        <Input
+                            id="idInvVal"
+                            value="{local>/asnData/Invvalue}"
+                        />
+                        
+
                         <Label text="LR Number" />
                         <Input
                             id="idLrNo"
                             value="{local>/asnData/Lrnumber}"
-                            required="true"
                         />
 
                         <Label text="LR Date" />
@@ -139,7 +147,6 @@
                             id="datePicker_lr"
                             valueFormat="yyyy-MM-dd"
                             displayFormat="long"
-                            required="true"
                             value="{path: '{local>/asnData/Lrdate}', type: 'sap.ui.model.type.Date', formatOptions: { style: 'long' }}"
                         />
 
@@ -182,7 +189,7 @@
                         <Input
                             id="idVhNo"
                             value="{local>/asnData/Vechileno}"
-                            required="true"                           
+                            required="true"
                         />
 
                         <Label text="Expected Delivery Date" />
@@ -249,9 +256,50 @@
                             visible="false"
                         />
 
-                        <!-- <Label text="Attachments" /> -->
+                        <Label text="Remarks" />
+                        <Input
+                            id="idRem"
+                            value="{local>/asnData/Remarks1}"
+                        />
+                        <Label text="Attachments" />
+
+                        <unified:FileUploader
+                            id="invoiceAttachment"
+                            buttonOnly="true"
+                            icon="sap-icon://attachment"
+                            buttonText="Invoice"
+                            change="onFileChangedI"
+                            class="truncateButtonText"
+                            useMultipart="false"
+                            sendXHR='true'
+                            uploadUrl="/sap/opu/odata/sap/YMM_SUPPLIER_ATT_SRV/ZFILESet"
+                        />
+                        <Text
+                            id="invoiceFileName"
+                            text="{local>/attachData/InvoiceFileName}"
+                            class="sapUiTinyMarginBegin"
+                            width="auto"
+                        />
+
+                        <unified:FileUploader
+                            id="dhsAttachment"
+                            buttonOnly="true"
+                            icon="sap-icon://attachment"
+                            buttonText="DHS"
+                            change="onFileChangedT"
+                            class="truncateButtonText"
+                            useMultipart="false"
+                            sendXHR='true'
+                            uploadUrl="/sap/opu/odata/sap/YMM_SUPPLIER_ATT_SRV/ZFILESet"
+                        />
+                        <Text
+                            id="dhsFileName"
+                            text="{local>/attachData/DhsFileName}"
+                            class="sapUiTinyMarginBegin"
+                            width="auto"
+                        />
                         <!-- Invoice Attachment -->
-                                        <!-- <Button
+                        <!-- <Button
                                             id="invoiceAttachment"
                                             icon="sap-icon://attachment"
                                             text="Invoice"
@@ -265,8 +313,8 @@
                                             width="auto"
                                         /> -->
 
-                        <!-- DHS Attachment -->                        
-                            <!-- <Button
+                        <!-- DHS Attachment -->
+                        <!-- <Button
                                 id="dhsAttachment"
                                 icon="sap-icon://attachment"
                                 text="DHS"

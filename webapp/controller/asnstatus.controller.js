@@ -40,7 +40,7 @@ sap.ui.define([
                         scopes: parsedData.scopes
                     });
             }
-                        
+
             //*****SETTING DATA TO MODEL AND MAPPING THE TABLE********* */
 
             // this._readData();
@@ -55,8 +55,8 @@ sap.ui.define([
 
         onAfterRendering: function () {
             if (this.oRouter) {
-            // Re-attach PatternMatched after rendering
-            this.oRouter.getRoute("asnstat").attachPatternMatched(this._onObjectMatched, this);
+                // Re-attach PatternMatched after rendering
+                this.oRouter.getRoute("asnstat").attachPatternMatched(this._onObjectMatched, this);
             }
         },
         _readData: function () {
@@ -235,6 +235,28 @@ sap.ui.define([
             // Apply the filter to the binding
             oBinding.filter(aFilters);
         },
+        onWerks: function (oEvent) {
+            // Get the search query
+            debugger;
+            var sQuery = oEvent.getParameter("newValue");
+            var oTable = this.byId("idasnStat");
+            var oBinding = oTable.getBinding("items");
+            var aFilters = [];
+
+            if (sQuery && sQuery.length > 0) {
+                // Create filters for each field you want to search on
+                var oFilter1 = new Filter("Werks", FilterOperator.Contains, sQuery);
+
+                // Combine filters with OR
+                aFilters.push(new Filter({
+                    filters: [oFilter1],
+                    and: false
+                }));
+            }
+
+            // Apply the filter to the binding
+            oBinding.filter(aFilters);
+        },
         onDCnumb: function (oEvent) {
             // Get the search query
             debugger;
@@ -281,7 +303,7 @@ sap.ui.define([
             oBinding.filter(aFilters);
 
         },
-        onDCdate: function (oEvent) {
+        onDCdate1: function (oEvent) {
             // Get the search query
             debugger;
             var sQuery = oEvent.getParameter("newValue");
@@ -289,17 +311,17 @@ sap.ui.define([
             var oBinding = oTable.getBinding("items");
             var aFilters = [];
 
-            if (sQuery && sQuery.length > 0) {              
-                    var formattedDate = this.formatDate(oParsedDate);
-                    // Create filters for each field you want to search on
-                    // var oFilter1 = new Filter("Dcdat", FilterOperator.Contains, sQuery);
-                    var oFilter1 = new Filter("Dcdat", FilterOperator.Contains, formattedDate);
+            if (sQuery && sQuery.length > 0) {
+                // var formattedDate = this.formatDate(oParsedDate);
+                // Create filters for each field you want to search on
+                var oFilter1 = new Filter("Dcdat1", FilterOperator.Contains, sQuery);
+                // var oFilter1 = new Filter("Dcdat", FilterOperator.Contains, formattedDate);
 
-                    // Combine filters with OR
-                    aFilters.push(new Filter({
-                        filters: [oFilter1],
-                        and: false
-                    }));                
+                // Combine filters with OR
+                aFilters.push(new Filter({
+                    filters: [oFilter1],
+                    and: false
+                }));
             }
 
             // Apply the filter to the binding
@@ -313,14 +335,14 @@ sap.ui.define([
                 if (match) {
                     var timestamp = parseInt(match[1], 10); // Extract and parse the timestamp
                     var oDate = new Date(timestamp);       // Create a Date object from the timestamp
-        
+
                     // Format the date using the specified pattern
                     var oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({ pattern: "dd-MM-yyyy" });
                     return oDateFormat.format(oDate);
                 }
             }
-            return "";            
-        },        
+            return "";
+        },
         formatZeroValue: function (value) {
             debugger;
             return value === null ? "" : value;
@@ -331,21 +353,21 @@ sap.ui.define([
             }
             return sValue;
 
-        },        
+        },
         isGrnoNonEmpty: function (grno) {
             // Check if Grno is not empty, undefined, or nulls
             // return grno && grno.trim() !== "";
             return !!(grno && grno.trim() !== "");
-        },            
-        PayText: function (paystat) {            
+        },
+        PayText: function (paystat) {
             if (paystat === "P") {
                 return "Completed"; // Positive state
             } else if (paystat === "NP") {
                 return "Pending"; // Negative state
             }
             return " "; // Default state
-        },        
-        PayState: function (paystat) {            
+        },
+        PayState: function (paystat) {
             if (paystat === "P") {
                 return "Success"; // Positive state
             } else if (paystat === "NP") {
@@ -360,49 +382,118 @@ sap.ui.define([
                 return "sap-icon://decline"; // Cross for payment not made
             }
             return ""; // No icon for other cases
-        },                
+        },
         conditionalText: function (value) {
             // Check for default values and return empty if they match
             if (value === "0000000000" || value === "0000" || !value) {
                 return ""; // Return empty string if the value is invalid
             }
             return value; // Return the actual value
-        },        
+        },
         fetchASNStatus: async function (email) {
             debugger;
-             const that = this; // Preserve the reference to the controller
-             sap.ui.core.BusyIndicator.show();
-             try {
-                 // Make a request to your custom Node.js backend to get the CSRF token and DA list
-                 const response = await $.ajax({
-                     url: "/nodeapp/asnstatus",     // Your custom backend route
-                     method: "GET",              // Use GET since you're retrieving data         
-                     contentType: "application/json",
-                     data: { email: email }   // Send the email as a query parameter
-                 });
-                 // Success handling
-                 sap.ui.core.BusyIndicator.hide();  // Hide the busy indicator on success
-                 
-                 // Process the response to get the tokens and DA list                
-                 const asnstatusdata = response;        // Extract DA list data
-                 debugger;
-                 // Handle the DA list (e.g., bind to a model or display in a view)
-                 const oJsonModel = new sap.ui.model.json.JSONModel(asnstatusdata);
-                 that.getView().setModel(oJsonModel, "asnrepModel");
-                //  console.log("ASN Status fetched successfully:", daList);
- 
-             } catch (oErr) {
-                 sap.ui.core.BusyIndicator.hide();
-                 console.error("Error fetching ASN Status Records:", oErr);
-                 // If the error response contains a message, display it in the MessageBox
-                 const errorMessage = oErr.responseJSON?.error?.innererror?.errordetails?.[0]?.message || "Unknown error occurred";
- 
-                 // Show error message
-                //  MessageBox.error(errorMessage);
-             }
-         }
- 
+            const that = this; // Preserve the reference to the controller
+            sap.ui.core.BusyIndicator.show();
+            try {
+                // Make a request to your custom Node.js backend to get the CSRF token and DA list
+                const response = await $.ajax({
+                    url: "/nodeapp/asnstatus",     // Your custom backend route
+                    method: "GET",              // Use GET since you're retrieving data         
+                    contentType: "application/json",
+                    data: { email: email }   // Send the email as a query parameter
+                });
+                // Success handling
+                sap.ui.core.BusyIndicator.hide();  // Hide the busy indicator on success
 
+                // Process the response to get the tokens and DA list                
+                const asnstatusdata = response;        // Extract DA list data
+                debugger;
+                // Handle the DA list (e.g., bind to a model or display in a view)
+                const oJsonModel = new sap.ui.model.json.JSONModel(asnstatusdata);
+                that.getView().setModel(oJsonModel, "asnrepModel");
+                //  console.log("ASN Status fetched successfully:", daList);
+
+            } catch (oErr) {
+                sap.ui.core.BusyIndicator.hide();
+                console.error("Error fetching ASN Status Records:", oErr);
+                // If the error response contains a message, display it in the MessageBox
+                const errorMessage = oErr.responseJSON?.error?.innererror?.errordetails?.[0]?.message || "Unknown error occurred";
+
+                // Show error message
+                //  MessageBox.error(errorMessage);
+            }
+        },
+
+        onDownloadExcel: function () {
+            var oTable = this.byId("idasnStat");
+            // var aItems = oTable.getBinding("items").getContexts().map(function (oContext) {
+            //     return oContext.getObject();
+            // });
+
+            var oModel = this.getView().getModel("asnrepModel");
+            var aItems = oModel.getProperty("/");
+            if (!aItems || aItems.length === 0) {
+                sap.m.MessageBox.error("No records found to download.");
+                return;
+            }
+            // Prepare the data for the Excel file
+            var aData = aItems.map(function (item) {
+                return {
+                    "Plant": item.Werks,
+                    "ASN Number": item.Asnno,
+                    // "ASN Item": item.Asnno,
+                    "Invoice No": item.Ebeln,
+                    "Invoice Item": item.Ebelp,
+                    "Material Code": item.Matnr,
+                    "Material Desc": item.Maktx,
+                    "DC No": item.Dcno,
+                    "DC Date": item.Dcdat1,
+                    "ASN Quantity": item.Asnqty,
+                    "Job Status": item.Grstatus,
+
+                    "ASN Status": item.Asnstatus,
+                    "DMRR Number": item.Dmrrno,
+                    "GR Number": item.Grno,
+                    "GR Number Item": item.Gritm,
+                    "IR Number": item.Irno,
+                    "Payment Status": item.Paystat,
+                    "Payment Reference": item.Payref,
+                    // Add other fields as necessary
+                };
+            });
+
+            // Convert the data to a CSV format
+            var sCsvContent = this.convertToCsv(aData);
+
+            // Create a Blob from the CSV content
+            var blob = new Blob([sCsvContent], { type: 'text/csv;charset=utf-8;' });
+
+            // Create a link element for downloading the file
+            var link = document.createElement("a");
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "subcontract_status_data.csv"); // Set the filename
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        },
+
+        convertToCsv: function (data) {
+            var csv = '';
+            // Create the headers
+            var headers = Object.keys(data[0]);
+            csv += headers.join(',') + '\r\n';
+
+            // Create rows
+            data.forEach(function (row) {
+                csv += headers.map(function (header) {
+                    return row[header] ? row[header].toString().replace(/,/g, ' ') : '';
+                }).join(',') + '\r\n';
+            });
+
+            return csv;
+        },
 
     });
 });
