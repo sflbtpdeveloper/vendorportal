@@ -69,7 +69,7 @@ modules:
       env:
         INCOMING_CONNECTION_TIMEOUT: 600000  # Timeout set to 10 minutes (600 sec)   
       routes:
-       - route: ${space}.sfl.co.in # Dynamic route based on CF space name                    
+       - route: ${space}.sfl.co.in # Dynamic route based on CF space name                       
 
 resources:
   - name: sfd-destination
