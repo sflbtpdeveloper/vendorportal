@@ -40,7 +40,7 @@
                     />
                     <m:Title
                         id="_IDGenTitle1"
-                        text="Supplier PO Report"
+                        text="ASN Create"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
@@ -65,8 +65,9 @@
                         <m:ToolbarSpacer id="_IDGenToolbarSpacer" />
                         <m:ToggleButton
                             id="_IDGenToggleButton"
-                            text="Create ASN"
-                            type="Emphasized"
+                            text="Save ASN"
+                            icon="sap-icon://save"
+                            type="Accept"
                             press="onToggleButtonPress"
                             enabled="{saveButtonModel>/isSaveEnabled}"
                         />
@@ -350,6 +351,7 @@
                                 <m:Input
                                     id="_IDGenInput1"
                                     value="{asnItems>Asnqty}"
+                                    change="onAsnQtyChange"
                                 />
                             </template>
                         </Column>

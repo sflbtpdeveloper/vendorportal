@@ -4,6 +4,7 @@
     { "key": "item2", "text": "ASN Create" },        
     { "key": "item3", "text": "ASN Status" },
     { "key": "item4", "text": "ASN Delete" },
-    { "key": "item5", "text": "ASN Print" }      
+    { "key": "item5", "text": "ASN Print" },
+    { "key": "item6", "text": "ASSEMBLY ASN" }       
 ]    
 }

@@ -12,7 +12,7 @@ sap.ui.define([
     "sap/m/Popover",
 ], function (BaseController, MessageBox, MessageToast, JSONModel, Fragment, UI5Date, Filter, FilterOperator, PDFViewer, Popup, Popover) {
     'use strict';
-    return BaseController.extend("zmmsubcontract.controller.RegularASN", {
+    return BaseController.extend("zmmsubcontract.controller.AssemblyAsn", {
 
         _data: {
             dtValue: UI5Date.getInstance(),
@@ -24,7 +24,7 @@ sap.ui.define([
             this._localModel = this.getOwnerComponent().getModel("local");
             debugger;
             // this.oRouter.attachRoutePatternMatched(this._onObjectMatched,this);
-            this.oRouter.getRoute("RegASN").attachPatternMatched(this._onObjectMatched, this);
+            this.oRouter.getRoute("AsseASN").attachPatternMatched(this._onObjectMatched, this);
             this.oRouter = this.getOwnerComponent().getRouter();
 
             this._userModel = this.getOwnerComponent().getModel("userModel");
@@ -78,7 +78,7 @@ sap.ui.define([
                 this.getOwnerComponent().setModel(cModel, "changedRecords");
             }
 
-            this.getView().byId("idRegASN").setModel(oModel);
+            this.getView().byId("idasseASN").setModel(oModel);
             var that = this;
             sap.ui.core.BusyIndicator.show(0);
             this.getOwnerComponent().setModel(oModel, "defaultModel");
@@ -140,7 +140,7 @@ sap.ui.define([
 
             var sModel = this.getOwnerComponent().getModel("selectedRecords");
             var oView = this.getView();
-            var oTable = oView.byId("idRegASN");
+            var oTable = oView.byId("idasseASN");
             var aSelectedItems = oTable.getSelectedItems();
             var aSelectedData = [];
 
@@ -205,7 +205,7 @@ sap.ui.define([
             sModel.setData(aSelectedData);
 
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-            oRouter.navTo("subconASNcr", {}, false);
+            oRouter.navTo("assyASNcr", {}, false);
 
             //***************FOR DISPLAYING HEADER********************* */
             debugger;
@@ -238,40 +238,71 @@ sap.ui.define([
 
         },
         _displayCrtAsnEH: function () {
-            this.oRouter.navTo("subconASNcr");
+            this.oRouter.navTo("assyASNcr");
         },
         onPreviewPDF: function (oEvent) {
             // Get the selected item
             var oSelectedItem = oEvent.getSource();
+
             // Get the binding context of the selected item
             var oContext = oSelectedItem.getBindingContext("default");
+
             // Get the data from the context
             var oData = oContext.getObject();
-            if (oData.Pdfchk === 'X') {
-                // Display an error message
-                sap.m.MessageBox.error("Preview not available for this Challan !!!");
-            } else {
-                //access pdf data using odata service
-                var oView1 = this.getView();
-                var oModel1 = oView1.getModel();
-                var opdfViewer = new PDFViewer();
-                this.getView().addDependent(opdfViewer);
+            //access pdf data using odata service
+            var oView1 = this.getView();
+            var oModel1 = oView1.getModel();
+            var opdfViewer = new PDFViewer();
+            this.getView().addDependent(opdfViewer);
 
-                var sPath = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
-                var sSource = oModel1.sServiceUrl + sPath;
+            // var sServiceURL = oModel1.sServiceUrl;
+            // var sSourceR = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+            // var sSource = sServiceURL + "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+            // Define the OData request parameters
+            var sPath = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+            //********DO NOT TOUCH - IMPORTANT****************** */
 
-                // Configure and open the PDF Viewer
-                opdfViewer.setSource(sSource);
-                opdfViewer.setTitle("DA PDF");
-                opdfViewer.open();
-            }
+            // opdfViewer.setSource(sSource);
+            // opdfViewer.setTitle("DA PDF");
+            // opdfViewer.open();
+
+            //********DO NOT TOUCH - IMPORTANT****************** */
+
+            oModel1.read(sPath, {
+                success: function (oResponse) {
+                    // Construct the PDF source URL
+                    var sSource = oModel1.sServiceUrl + sPath;
+
+                    // Configure and open the PDF Viewer
+                    opdfViewer.setSource(sSource);
+                    opdfViewer.setTitle("DA PDF");
+                    opdfViewer.open();
+                },
+                error: function (oError) {
+                    // Parse and display the error message
+                    var sErrorMessage = "Preview not available for this Challan !!!";
+                    // if (oError && oError.responseText) {
+                    //     try {
+                    //         var oErrorResponse = JSON.parse(oError.responseText);
+                    //         if (oErrorResponse.error && oErrorResponse.error.message) {
+                    //             sErrorMessage = oErrorResponse.error.message.value || sErrorMessage;
+                    //         }
+                    //     } catch (e) {
+                    //         // Ignore JSON parsing errors
+                    //     }
+                    // }
+
+                    // Display the error message using a MessageToast or MessageBox
+                    sap.m.MessageBox.error(sErrorMessage);
+                }
+            });
 
         },
         onMat: function (oEvent) {
             // Get the search query
             debugger;
             var sQuery = oEvent.getParameter("newValue");
-            var oTable = this.byId("idRegASN");
+            var oTable = this.byId("idasseASN");
             var oBinding = oTable.getBinding("items");
             var aFilters = [];
 
@@ -294,7 +325,7 @@ sap.ui.define([
             // Get the search query
             debugger;
             var sQuery = oEvent.getParameter("newValue");
-            var oTable = this.byId("idRegASN");
+            var oTable = this.byId("idasseASN");
             var oBinding = oTable.getBinding("items");
             var aFilters = [];
 
@@ -317,7 +348,7 @@ sap.ui.define([
             // Get the search query
             debugger;
             var sQuery = oEvent.getParameter("newValue");
-            var oTable = this.byId("idRegASN");
+            var oTable = this.byId("idasseASN");
             var oBinding = oTable.getBinding("items");
             var aFilters = [];
 
@@ -340,7 +371,7 @@ sap.ui.define([
             // Get the search query
             debugger;
             var sQuery = oEvent.getParameter("newValue");
-            var oTable = this.byId("idRegASN");
+            var oTable = this.byId("idasseASN");
             var oBinding = oTable.getBinding("items");
             var aFilters = [];
 
@@ -363,7 +394,7 @@ sap.ui.define([
             // Get the search query
             debugger;
             var sQuery = oEvent.getParameter("newValue");
-            var oTable = this.byId("idRegASN");
+            var oTable = this.byId("idasseASN");
             var oBinding = oTable.getBinding("items");
             var aFilters = [];
 
@@ -390,7 +421,7 @@ sap.ui.define([
             try {
                 // Make a request to your custom Node.js backend to get the CSRF token and DA list
                 const response = await $.ajax({
-                    url: "/nodeapp/dalist",     // Your custom backend route
+                    url: "/nodeapp/asselist",     // Your custom backend route
                     method: "GET",              // Use GET since you're retrieving data         
                     contentType: "application/json",
                     data: { email: email }   // Send the email as a query parameter                     
@@ -423,7 +454,7 @@ sap.ui.define([
 
             var sModel = this.getOwnerComponent().getModel("selectedRecords");
             var oView = this.getView();
-            var oTable = oView.byId("idRegASN");
+            var oTable = oView.byId("idasseASN");
             var aSelectedItems = oTable.getSelectedItems();
             var aSelectedData = [];
 

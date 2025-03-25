@@ -12,7 +12,7 @@ sap.ui.define([
             BaseController.prototype.onInit.apply(this);
             this.oRouter = this.getOwnerComponent().getRouter();
             // this.oRouter.attachRoutePatternMatched(this._onObjectMatched,this);
-            this.oRouter.getRoute("subconASNcr").attachPatternMatched(this._onObjectMatched, this);
+            this.oRouter.getRoute("assyASNcr").attachPatternMatched(this._onObjectMatched, this);
             this._localModel = this.getOwnerComponent().getModel("local");
             oControl = this;
 
@@ -48,13 +48,13 @@ sap.ui.define([
         onBeforeRendering: function () {
             if (this.oRouter) {
                 // Detach PatternMatched before re-rendering
-                this.oRouter.getRoute("subconASNcr").detachPatternMatched(this._onObjectMatched, this);
+                this.oRouter.getRoute("assyASNcr").detachPatternMatched(this._onObjectMatched, this);
             }
         },
 
         onAfterRendering: function () {
             // Re-attach PatternMatched after rendering
-            this.oRouter.getRoute("subconASNcr").attachPatternMatched(this._onObjectMatched, this);
+            this.oRouter.getRoute("assyASNcr").attachPatternMatched(this._onObjectMatched, this);
         },
         onSelectChange: function (oEvent) {
             // Get the selected item
@@ -170,55 +170,45 @@ sap.ui.define([
                 var iNetWeight = firstItem.Ntgew; // Fetching Net Weight
                 var sMaterialType = firstItem.Mtart; // Fetching Material Type
                 var sUoM = firstItem.Meins; // Unit
-                var iNetGewei = firstItem.Gewei; //UoM
             }
             //03032025
-            var Qty = sInvQty;
+            var iMatWeight = 0;
+            if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "KG") {
+                iMatWeight = iNetWeight * sInvQty;
+            } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "PC") {
+                iMatWeight = (iNetWeight / 100) * sInvQty;
+            } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "TO") {
+                iMatWeight = (iNetWeight / 1000) * sInvQty;
+            } else if (sMaterialType === "FERT" && sUoM === "PC") {
+                iMatWeight = (iNetWeight / 1000) * sInvQty;
+            } else if (sMaterialType === "FERT" && sUoM === "G") {
+                iMatWeight = (iNetWeight / 1000) * sInvQty;
+            } else {
+                iMatWeight = iNetWeight * sInvQty; // Default case
+            }
+            // **Update the Material Weight field**
+            var oComponent = sap.ui.core.Component.getOwnerComponentFor(oEvent.getSource());
+            if (oComponent) {
+                var oLocalModel = oComponent.getModel("local");
+                oLocalModel.setProperty("/asnData/Asnweight", iMatWeight.toFixed(3));
+            } else {
+                console.error("Component not found, cannot update Material Weight.");
+            }
+            //03032025
+            //03032025
+
             // If valid, start splitting the invoice quantity into line items
-            aItems.forEach(function (oItem) {
+            aItems.forEach(function (oItem, index) {
+                var correspondingData = aData[index]; // Access the same index in aData
+                var ratio = correspondingData.Ratio;
                 var oCells = oItem.getCells();
                 var balQty = parseFloat(oCells[8].getText()); // Get Balqty from the table
 
                 if (sInvQty > 0) {
-                    var allocatedQty = Math.min(balQty, sInvQty); // Allocate the minimum of balance and remaining invoice quantity
-                    //03032025
-                    var iMatWeight = 0;
-                    var Weight = 0;
-                    if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "KG") {
-                        iMatWeight = iNetWeight * sInvQty;
-                        Weight = iNetWeight * Qty;
-                    } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "PC" && iNetGewei !== "G") {
-                        iMatWeight = (iNetWeight / 100) * sInvQty;
-                        Weight = (iNetWeight / 100) * Qty;
-                    } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "PC" && iNetGewei === "G") {
-                        iMatWeight = (iNetWeight / 1000) * sInvQty;
-                        Weight = (iNetWeight / 1000) * Qty;
-                    } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "TO") {
-                        iMatWeight = (iNetWeight * 1000) * sInvQty;
-                        Weight = (iNetWeight * 1000) * Qty;
-                    } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "G") {
-                        iMatWeight = (iNetWeight / 1000) * sInvQty;
-                        Weight = (iNetWeight / 1000) * Qty;
-                    } else if (sMaterialType === "FERT" && sUoM === "PC") {
-                        iMatWeight = (iNetWeight / 1000) * sInvQty;
-                        Weight = (iNetWeight / 1000) * Qty;
-                    } else if (sMaterialType === "FERT" && sUoM === "G") {
-                        iMatWeight = (iNetWeight / 1000) * sInvQty;
-                        Weight = (iNetWeight / 1000) * Qty;
-                    } else {
-                        iMatWeight = iNetWeight * sInvQty; // Default case
-                        Weight = iNetWeight * Qty;
-                    }
-                    // **Update the Material Weight field**
-                    var oComponent = sap.ui.core.Component.getOwnerComponentFor(oEvent.getSource());
-                    if (oComponent) {
-                        var oLocalModel = oComponent.getModel("local");
-                        oLocalModel.setProperty("/asnData/Asnweight", Weight.toFixed(4));
-                    } else {
-                        console.error("Component not found, cannot update Material Weight.");
-                    }
-                    //03032025
-                    sInvQty -= allocatedQty; // Reduce the remaining invoice quantity
+                    var allocatedQty = Number(sInvQty) * Number(ratio);
+                    // var allocatedQty = Math.min(balQty, sInvQty); // Allocate the minimum of balance and remaining invoice quantity
+                    ////
+                    // sInvQty -= allocatedQty; // Reduce the remaining invoice quantity
 
                     // Fill the allocated quantity into the Advqty input field (9th cell)
                     var oAdvQtyInput = oCells[9];
@@ -330,12 +320,12 @@ sap.ui.define([
                 }
             });
 
-            // Check if the total allocated quantity exceeds the invoice quantity
-            if (iTotalAllocatedQty > sInvQtyc) {
-                this.getView().getModel("saveButtonModel").setProperty("/isSaveEnabled", true);
-                MessageBox.error(`The total allocated quantity (${iTotalAllocatedQty.toFixed(2)}) exceeds the invoice quantity (${sInvQtyc.toFixed(2)}).`);
-                return;
-            }
+            // // Check if the total allocated quantity exceeds the invoice quantity
+            // if (iTotalAllocatedQty > sInvQtyc) {
+            //     this.getView().getModel("saveButtonModel").setProperty("/isSaveEnabled", true);
+            //     MessageBox.error(`The total allocated quantity (${iTotalAllocatedQty.toFixed(2)}) exceeds the invoice quantity (${sInvQtyc.toFixed(2)}).`);
+            //     return;
+            // }
 
 
             this._userModel = this.getOwnerComponent().getModel("userModel");
@@ -360,7 +350,7 @@ sap.ui.define([
                     if (oData.results && oData.results.length > 0) {
                         // If records exist, show a warning messages  
                         this.getView().getModel("saveButtonModel").setProperty("/isSaveEnabled", true);
-                        MessageBox.warning("The DC number " + sDcno + " already exists."); //" with date " + sDcdate +
+                        MessageBox.warning("The DC number " + sDcno + " with date " + sDcdate + " already exists.");
                     } else {
                         // If no records are found, you can proceed with further logic here
                         // Example: Proceed with saving the new DC number

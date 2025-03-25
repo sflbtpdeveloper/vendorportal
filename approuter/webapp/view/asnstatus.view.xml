@@ -48,33 +48,50 @@
             <Toolbar>
                 <SearchField
                     id="idFilWerks"
-                    width="20%"
-                    placeholder="Search Plant"
+                    width="15%"
+                    placeholder="Plant"
                     liveChange="onWerks"
                 />
                 <SearchField
                     id="idFilASN"
-                    width="20%"
-                    placeholder="Search ASN"
+                    width="15%"
+                    placeholder="ASN No"
                     liveChange="onASN"
                 />
                 <SearchField
                     id="serInv"
-                    width="20%"
-                    placeholder="Search Invoice"
+                    width="15%"
+                    placeholder="Invoice No"
                     liveChange="onInv"
                 />
                 <SearchField
                     id="idFilDCno"
-                    width="20%"
-                    placeholder="Search DC Number"
+                    width="15%"
+                    placeholder="DC Number"
                     liveChange="onDCnumb"
                 />
                 <SearchField
                     id="idFilDcdate1"
-                    width="20%"
-                    placeholder="Search DC Date"
+                    width="15%"
+                    placeholder="DC Date"
                     liveChange="onDCdate1"
+                />
+
+                <DatePicker
+                    id="fromAsnDate"
+                    width="10rem"
+                    valueFormat="dd/MM/yyyy"
+                    displayFormat="dd/MM/yyyy"
+                    placeholder="From ASN Date"
+                    change="onFromAsnDateChange"
+                />
+                <DatePicker
+                    id="toAsnDate"
+                    width="10rem"
+                    valueFormat="dd/MM/yyyy"
+                    displayFormat="dd/MM/yyyy"
+                    placeholder="To ASN Date"
+                    change="onToAsnDateChange"
                 />
 
                 <Button
@@ -121,6 +138,9 @@
                             <Label text="DC Date" />
                         </Column>
                         <Column width="7rem">
+                            <Label text="ASN Date" />
+                        </Column>
+                        <Column width="7rem">
                             <Label text="ASN Quantity" />
                         </Column>
                         <Column width="10rem">
@@ -147,33 +167,61 @@
                         <Column width="10rem">
                             <Label text="Payment Reference" />
                         </Column>
+                        <Column width="10rem">
+                            <Label text="Job Done Received" />
+                        </Column>
+                        <Column width="10rem">
+                            <Label text="Job Not Done Received" />
+                        </Column>
+                        <Column width="10rem">
+                            <Label text="Rejected" />
+                        </Column>
                     </columns>
                     <items>
                         <ColumnListItem>
                             <cells>
                                 <ObjectIdentifier title="{asnrepModel>Werks}" />
                                 <ObjectIdentifier title="{asnrepModel>Asnno}" />
-                                <ObjectIdentifier
-                                    title="{asnrepModel>Ebeln}"
-                                    text="{asnrepModel>Ebelp}"
-                                    class="smallfont"
-                                />
-                                <ObjectIdentifier
-                                    title="{asnrepModel>Matnr}"
-                                    text="{asnrepModel>Maktx}"
-                                    class="smallfont"
-                                />
+                                <VBox>
+                                    <Text
+                                        text="{asnrepModel>Ebeln}"
+                                        class="boldtext"
+                                    />
+                                    <Text
+                                        text="{asnrepModel>Ebelp}"
+                                        class="smallfont boldtext"
+                                    />
+                                </VBox>
+                                <VBox>
+                                    <Text
+                                        text="{asnrepModel>Matnr}"
+                                        class="boldtext"
+                                    />
+                                    <Text
+                                        text="{asnrepModel>Maktx}"
+                                        class="smallfont boldtext"
+                                    />
+                                </VBox>
                                 <Text
                                     text="{asnrepModel>Dcno}"
                                     class="boldtext"
-                                    width="80px"
                                 />
                                 <!-- <Text text="{asnrepModel>Dcdat}" /> -->
                                 <!-- <ObjectIdentifier
                                     title="{path: 'asnrepModel>Dcdat',  formatter: '.formatDate'}"
                                 /> -->
-                                <Text text="{asnrepModel>Dcdat1}" />
-                                <Text text="{asnrepModel>Asnqty}" />
+                                <Text
+                                    text="{asnrepModel>Dcdat1}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Asndate}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Asnqty}"
+                                    class="boldtext"
+                                />
                                 <!-- <Text text="{asnrepModel>Jobstat}" width="100%"/> -->
                                 <Image
                                     src="{path: 'asnrepModel>Grstatus', formatter:'.jobstatff'}"
@@ -204,18 +252,23 @@
                                 <!-- , formatter: '.formatZeroValue' -->
                                 <Text
                                     text="{path: 'asnrepModel>Dmrrno' ,formatter:'.conditionalText'}"
+                                    class="boldtext"
                                 />
                                 <ObjectIdentifier
                                     title="{path: 'asnrepModel>Grno' , formatter: '.conditionalText'}"
                                     text="{path: 'asnrepModel>Gritm' , formatter: '.conditionalText'}"
-                                    class="smallfont"
+                                    class="smallfont boldtext"
                                 />
-                                <Text text="{path: 'asnrepModel>Budat'}" />
+                                <Text
+                                    text="{path: 'asnrepModel>Budat'}"
+                                    class="boldtext"
+                                />
                                 <Text
                                     text="{path: 'asnrepModel>Irno' , formatter:'.conditionalText'}"
+                                    class="boldtext"
                                 />
                                 <ObjectStatus
-                                    class="sapUiSmallMarginBottom wrapText"
+                                    class="sapUiSmallMarginBottom wrapText boldtext"
                                     text="{path: 'asnrepModel>Paystat' , formatter: '.PayText'}"
                                     state="{path: 'asnrepModel>Paystat', formatter: '.PayState'}"
                                     icon="{path: 'asnrepModel>Paystat', formatter: '.PayIcon'}"
@@ -223,7 +276,23 @@
                                 />
 
                                 <!-- <Text text="{asnrepModel>Paystat}" /> -->
-                                <Text text="{asnrepModel>Payref}" />
+                                <Text
+                                    text="{asnrepModel>Payref}"
+                                    class="boldtext"
+                                />
+
+                                <Text
+                                    text="{asnrepModel>Accqty}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Accqtyjnd}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Rejqty}"
+                                    class="boldtext"
+                                />
                             </cells>
                         </ColumnListItem>
                     </items>

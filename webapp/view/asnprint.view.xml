@@ -14,7 +14,7 @@
         showHeader="false"
     >
         <content>
-           <HBox
+            <HBox
                 width="100%"
                 alignItems="Center"
                 justifyContent="SpaceBetween"
@@ -30,20 +30,20 @@
                     width="100%"
                 >
                     <Title
-                        text="Sundram Fasteners Limited"                        
+                        text="Sundram Fasteners Limited"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiMediumMarginTop"
                     />
 
                     <Title
-                        text="ASN Print"                        
+                        text="ASN Print"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
                     />
                 </VBox>
-                <HBox width="4rem" />                
+                <HBox width="4rem" />
             </HBox>
             <Toolbar>
                 <SearchField
@@ -83,7 +83,7 @@
                 <Table
                     id="idasn"
                     items="{asnrepModel>/}"
-                    growing="true"                    
+                    growing="true"
                     fixedLayout="true"
                     growingScrollToLoad="true"
                     width="auto"
@@ -92,6 +92,12 @@
                     <columns>
                         <Column width="120px">
                             <Label text="Print ASN" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="Eway Bill Number" />
+                        </Column>
+                        <Column width="120px">
+                            <Label text="Eway Bill Date" />
                         </Column>
                         <Column width="120px">
                             <Label text="ASN Number" />
@@ -164,17 +170,30 @@
                         <ColumnListItem>
                             <cells>
                                 <Button
-                                    text="Preview PDF"
+                                    text="PDF"
                                     press="onPreviewPDF"
                                 />
+                                <Input value="{asnrepModel>EwbNo}" />
+                                <Input value="{asnrepModel>EwbDt}" />
                                 <ObjectIdentifier title="{asnrepModel>Asnno}" />
-                                <Text text="{asnrepModel>Lifnr}" />
-                                <Text text="{asnrepModel>Werks}" />
-                                <ObjectIdentifier
-                                    title="{asnrepModel>Ebeln}"
-                                    text="{asnrepModel>Ebelp}"
-                                    class="smallfont"
+                                <Text
+                                    text="{asnrepModel>Lifnr}"
+                                    class="boldtext"
                                 />
+                                <Text
+                                    text="{asnrepModel>Werks}"
+                                    class="boldtext"
+                                />
+                                <VBox>
+                                    <Text
+                                        text="{asnrepModel>Ebeln}"
+                                        class="boldtext"
+                                    />
+                                    <Text
+                                        text="{asnrepModel>Ebelp}"
+                                        class="smallfont boldtext"
+                                    />
+                                </VBox>
                                 <!-- <VBox>
                                 <Text
                                     text="{asnrepModel>Ebeln}"
@@ -192,27 +211,78 @@
                                     />
                                     <Text
                                         text="{asnrepModel>Dcdate}"
-                                        class="smallfont"
+                                        class="smallfont boldtext"
                                     />
                                 </VBox>
-                                <Text text="{asnrepModel>Menge}" />
-                                <Text text="{asnrepModel>Zpack}" />
-                                <Text text="{asnrepModel>Asnweight}" />
-                                <Text text="{asnrepModel>Lrdate}" />
-                                <Text text="{asnrepModel>Lrnumber}" />
-                                <Text text="{asnrepModel>Vechileno}" />
-                                <Text text="{asnrepModel>exDelvDate}" />
+                                <Text
+                                    text="{asnrepModel>Menge}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Zpack}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Asnweight}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{= ${asnrepModel>Lrdate} === '0000-00-00' ? '' : ${asnrepModel>Lrdate} }"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Lrnumber}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Vechileno}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>exDelvDate}"
+                                    class="boldtext"
+                                />
 
-                                <Text text="{asnrepModel>Exnum1}" />
-                                <Text text="{asnrepModel>Menge1}" />
-                                <Text text="{asnrepModel>Exnum2}" />
-                                <Text text="{asnrepModel>Menge2}" />
-                                <Text text="{asnrepModel>Exnum3}" />
-                                <Text text="{asnrepModel>Menge3}" />
-                                <Text text="{asnrepModel>Exnum4}" />
-                                <Text text="{asnrepModel>Menge4}" />
-                                <Text text="{asnrepModel>Jobstat}" />
-                                <Text text="{asnrepModel>Lifnr2}" />
+                                <Text
+                                    text="{asnrepModel>Exnum1}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Menge1}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Exnum2}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Menge2}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Exnum3}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Menge3}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Exnum4}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Menge4}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Jobstat}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{asnrepModel>Lifnr2}"
+                                    class="boldtext"
+                                />
                             </cells>
                         </ColumnListItem>
                     </items>

@@ -162,6 +162,18 @@ sap.ui.define([
                 return;
             }
 
+            //03032025
+            var selModel = sap.ui.getCore().getModel("selectedItemsModel");
+            var aData = selModel.getData();
+            if (aData && aData.length > 0) {
+                var firstItem = aData[0]; // Get the first item
+                var iNetWeight = firstItem.Ntgew; // Fetching Net Weight
+                var sMaterialType = firstItem.Mtart; // Fetching Material Type
+                var sUoM = firstItem.Meins; // Unit
+                var iNetGewei = firstItem.Gewei; //UoM
+            }
+            //03032025
+            var Qty = sInvQty;
             // If valid, start splitting the invoice quantity into line items
             aItems.forEach(function (oItem) {
                 var oCells = oItem.getCells();
@@ -169,6 +181,43 @@ sap.ui.define([
 
                 if (sInvQty > 0) {
                     var allocatedQty = Math.min(balQty, sInvQty); // Allocate the minimum of balance and remaining invoice quantity
+                    //03032025
+                    var iMatWeight = 0;
+                    var Weight = 0;
+                    if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "KG") {
+                        iMatWeight = iNetWeight * sInvQty;
+                        Weight = iNetWeight * Qty;
+                    } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "PC" && iNetGewei !== "G") {
+                        iMatWeight = (iNetWeight / 100) * sInvQty;
+                        Weight = (iNetWeight / 100) * Qty;
+                    } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "PC" && iNetGewei === "G") {
+                        iMatWeight = (iNetWeight / 1000) * sInvQty;
+                        Weight = (iNetWeight / 1000) * Qty;
+                    } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "TO") {
+                        iMatWeight = (iNetWeight * 1000) * sInvQty;
+                        Weight = (iNetWeight * 1000) * Qty;
+                    } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "G") {
+                        iMatWeight = (iNetWeight / 1000) * sInvQty;
+                        Weight = (iNetWeight / 1000) * Qty;
+                    } else if (sMaterialType === "FERT" && sUoM === "PC") {
+                        iMatWeight = (iNetWeight / 1000) * sInvQty;
+                        Weight = (iNetWeight / 1000) * Qty;
+                    } else if (sMaterialType === "FERT" && sUoM === "G") {
+                        iMatWeight = (iNetWeight / 1000) * sInvQty;
+                        Weight = (iNetWeight / 1000) * Qty;
+                    } else {
+                        iMatWeight = iNetWeight * sInvQty; // Default case
+                        Weight = iNetWeight * Qty;
+                    }
+                    // **Update the Material Weight field**
+                    var oComponent = sap.ui.core.Component.getOwnerComponentFor(oEvent.getSource());
+                    if (oComponent) {
+                        var oLocalModel = oComponent.getModel("local");
+                        oLocalModel.setProperty("/asnData/Asnweight", Weight.toFixed(4));
+                    } else {
+                        console.error("Component not found, cannot update Material Weight.");
+                    }
+                    //03032025
                     sInvQty -= allocatedQty; // Reduce the remaining invoice quantity
 
                     // Fill the allocated quantity into the Advqty input field (9th cell)
@@ -311,7 +360,7 @@ sap.ui.define([
                     if (oData.results && oData.results.length > 0) {
                         // If records exist, show a warning messages  
                         this.getView().getModel("saveButtonModel").setProperty("/isSaveEnabled", true);
-                        MessageBox.warning("The DC number " + sDcno + " with date " + sDcdate + " already exists.");
+                        MessageBox.warning("The DC number " + sDcno + " already exists."); //" with date " + sDcdate +
                     } else {
                         // If no records are found, you can proceed with further logic here
                         // Example: Proceed with saving the new DC number

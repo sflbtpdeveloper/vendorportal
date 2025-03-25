@@ -139,6 +139,62 @@ sap.ui.define([
             var oBinding = oTable.getBinding("items");
             oBinding.filter(aFilters, "Application");
         },
+
+        onFromAsnDateChange: function (oEvent) {
+            this.applyFilters1(); // Call the filter function
+        },
+
+        onToAsnDateChange: function (oEvent) {
+            this.applyFilters1(); // Call the filter function
+        },
+
+        applyFilters1: function () {
+            var oTable = this.byId("idasnStat");
+            if (!oTable) {
+                console.warn("Table not found!");
+                return;
+            }
+
+            var oBinding = oTable.getBinding("items");
+            if (!oBinding) {
+                console.warn("Table binding not found!");
+                return;
+            }
+
+            var fromDate = this.byId("fromAsnDate").getDateValue(); // Gets Date object
+            var toDate = this.byId("toAsnDate").getDateValue(); // Gets Date object
+
+            var aFilters = [];
+
+            if (fromDate && !toDate) {
+                // Case 1: Only From Date is selected → Use EQ (Equals)
+                var formattedFromDate = this.formatDateToYYYYMMDD(fromDate);
+                aFilters.push(new sap.ui.model.Filter("Asndate1", sap.ui.model.FilterOperator.EQ, formattedFromDate));
+            }
+            else if (fromDate && toDate) {
+                // Case 2: Both From Date & To Date selected → Use BT (Between)
+                var formattedFromDate = this.formatDateToYYYYMMDD(fromDate);
+                var formattedToDate = this.formatDateToYYYYMMDD(toDate);
+                aFilters.push(new sap.ui.model.Filter("Asndate1", sap.ui.model.FilterOperator.BT, formattedFromDate, formattedToDate));
+            }
+
+            if (aFilters.length > 0) {
+                oBinding.filter(aFilters, "Application"); // Apply the filter
+            } else {
+                oBinding.filter([]); // Clear filter if no dates selected
+            }
+
+            console.log("Applied Filters:", aFilters); // Debugging
+        },
+
+        formatDateToYYYYMMDD: function (date) {
+            if (!date) return null;
+            var year = date.getFullYear();
+            var month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+            var day = String(date.getDate()).padStart(2, '0');
+            return year + month + day; // Returns YYYYMMDD
+        },
+
         _selectedData: function (oEvent) {
             debugger;
             var listitem = oEvent.getParameter("listItem");
@@ -426,12 +482,28 @@ sap.ui.define([
 
         onDownloadExcel: function () {
             var oTable = this.byId("idasnStat");
-            // var aItems = oTable.getBinding("items").getContexts().map(function (oContext) {
-            //     return oContext.getObject();
-            // });
+
+            var fromDate = this.byId("fromAsnDate").getDateValue(); // Gets Date object
+            var toDate = this.byId("toAsnDate").getDateValue(); // Gets Date object
 
             var oModel = this.getView().getModel("asnrepModel");
             var aItems = oModel.getProperty("/");
+
+            if (fromDate && !toDate) {
+                // Case 1: Only From Date is selected → Filter for exact match
+                var formattedFromDate = this.formatDateToYYYYMMDD(fromDate);
+                aItems = aItems.filter(function (item) {
+                    return item.Asndate1 === formattedFromDate;
+                });
+            } else if (fromDate && toDate) {
+                // Case 2: Both From Date & To Date selected → Filter for range
+                var formattedFromDate = this.formatDateToYYYYMMDD(fromDate);
+                var formattedToDate = this.formatDateToYYYYMMDD(toDate);
+                aItems = aItems.filter(function (item) {
+                    return item.Asndate1 >= formattedFromDate && item.Asndate1 <= formattedToDate;
+                });
+            }
+            
             if (!aItems || aItems.length === 0) {
                 sap.m.MessageBox.error("No records found to download.");
                 return;
@@ -458,6 +530,9 @@ sap.ui.define([
                     "IR Number": item.Irno,
                     "Payment Status": item.Paystat,
                     "Payment Reference": item.Payref,
+                    "Job Done Received": item.Accqty,
+                    "Job Not Done Received": item.Accqtyjnd,
+                    "Rejected": item.Rejqty,
                     // Add other fields as necessary
                 };
             });

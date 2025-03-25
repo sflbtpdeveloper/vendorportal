@@ -856,8 +856,62 @@ body {
   text-overflow: ellipsis;
 }
 
-.highlightText {
-  background-color: yellow !important;
-  font-weight: bold !important;
-  color: red !important;
+.animated-bg {
+  background: linear-gradient(270deg, #ff6a00, #ff6a00, #ff6a00);
+  background-size: 400% 400%;
+  animation: gradientAnimation 3s infinite alternate;
+  padding: 10px;
+  border-radius: 8px;
+  color: white; /* Ensure text is readable */
+  font-weight: bold;
+}
+
+@keyframes gradientAnimation {
+  0% {
+      background-position: 0% 50%;
+  }
+  100% {
+      background-position: 100% 50%;
+  }
+}
+
+.pulse-text {
+  animation: pulseEffect 1.5s infinite;
+}
+
+@keyframes pulseEffect {
+  0% {
+      transform: scale(1);
+      opacity: 1;
+  }
+  50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+  }
+  100% {
+      transform: scale(1);
+      opacity: 1;
+  }
+}
+
+.no-wrap-text {
+  white-space: nowrap;  /* Prevents wrapping */
+  overflow: visible;    /* Ensures text is fully visible */
+  text-overflow: clip;  /* No ellipsis, just show the full text */
+}
+
+.customButton {
+  transition: background-color 0.3s, transform 0.3s;
+  color: white !important;  /* Ensures text is white */
+  fill: white !important;   /* Ensures icon color is white */
+}
+
+.customButton:hover {
+  background-color: #e0e0e0;
+  cursor: pointer;
+  transform: scale(1.05);
+  border: 1px solid #170679;
+  border-radius: 4px;
+  color: white !important;  /* Keeps text white on hover */
+  fill: white !important;   /* Keeps icon white on hover */
 }

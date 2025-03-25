@@ -333,6 +333,9 @@ sap.ui.define([
         //   this.oRouter.navTo("RegASN");
         // }                 
       }
+      else if (selectedRecord === 'ASSEMBLY ASN') {
+        this.oRouter.navTo("AsseASN")
+      }
       else if (selectedRecord === 'ASN Report') {
         this.oRouter.navTo("asnrep");
         // if (!userData.scopes || !userData.scopes.includes("getuserinfo!t10709.read")) {

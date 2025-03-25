@@ -243,59 +243,28 @@ sap.ui.define([
         onPreviewPDF: function (oEvent) {
             // Get the selected item
             var oSelectedItem = oEvent.getSource();
-
             // Get the binding context of the selected item
             var oContext = oSelectedItem.getBindingContext("default");
-
             // Get the data from the context
             var oData = oContext.getObject();
-            //access pdf data using odata service
-            var oView1 = this.getView();
-            var oModel1 = oView1.getModel();
-            var opdfViewer = new PDFViewer();
-            this.getView().addDependent(opdfViewer);
+            if (oData.Pdfchk === 'X') {
+                // Display an error message
+                sap.m.MessageBox.error("Preview not available for this Challan !!!");
+            } else {
+                //access pdf data using odata service
+                var oView1 = this.getView();
+                var oModel1 = oView1.getModel();
+                var opdfViewer = new PDFViewer();
+                this.getView().addDependent(opdfViewer);
 
-            // var sServiceURL = oModel1.sServiceUrl;
-            // var sSourceR = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
-            // var sSource = sServiceURL + "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
-// Define the OData request parameters
-            var sPath = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
-            //********DO NOT TOUCH - IMPORTANT****************** */
+                var sPath = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+                var sSource = oModel1.sServiceUrl + sPath;
 
-            // opdfViewer.setSource(sSource);
-            // opdfViewer.setTitle("DA PDF");
-            // opdfViewer.open();
-
-            //********DO NOT TOUCH - IMPORTANT****************** */
-
-            oModel1.read(sPath, {
-                success: function (oResponse) {
-                    // Construct the PDF source URL
-                    var sSource = oModel1.sServiceUrl + sPath;
-        
-                    // Configure and open the PDF Viewer
-                    opdfViewer.setSource(sSource);
-                    opdfViewer.setTitle("DA PDF");
-                    opdfViewer.open();
-                },
-                error: function (oError) {
-                    // Parse and display the error message
-                    var sErrorMessage = "Preview not available for this Challan !!!";
-                    // if (oError && oError.responseText) {
-                    //     try {
-                    //         var oErrorResponse = JSON.parse(oError.responseText);
-                    //         if (oErrorResponse.error && oErrorResponse.error.message) {
-                    //             sErrorMessage = oErrorResponse.error.message.value || sErrorMessage;
-                    //         }
-                    //     } catch (e) {
-                    //         // Ignore JSON parsing errors
-                    //     }
-                    // }
-        
-                    // Display the error message using a MessageToast or MessageBox
-                    sap.m.MessageBox.error(sErrorMessage);
-                }
-            });
+                // Configure and open the PDF Viewer
+                opdfViewer.setSource(sSource);
+                opdfViewer.setTitle("DA PDF");
+                opdfViewer.open();
+            }
 
         },
         onMat: function (oEvent) {
@@ -516,11 +485,11 @@ sap.ui.define([
             dataobject.Ebelp = sModel.oData[0].Ebelp;
 
             const v_ebeln = sModel.oData[0].Ebeln;
-            const v_ebelp = sModel.oData[0].Ebelp;        
-            const v_Ip_Matnr = sModel.oData[0].Ip_Matnr;      
+            const v_ebelp = sModel.oData[0].Ebelp;
+            const v_Ip_Matnr = sModel.oData[0].Ip_Matnr;
             const v_vendor = sModel.oData[0].Lifnr;
             const v_plant = sModel.oData[0].Werks;
-            const v_Op_Matnr = sModel.oData[0].Op_Matnr;  
+            const v_Op_Matnr = sModel.oData[0].Op_Matnr;
             this._vMenge = sModel.oData[0].Menge - sModel.oData[0].Menga;
 
             // MessageBox.success("Selected Record" + " " + vendor + " " );
@@ -551,31 +520,31 @@ sap.ui.define([
                 });
                 // Success handling
                 sap.ui.core.BusyIndicator.hide();  // Hide the busy indicator on success
-                 debugger;
+                debugger;
                 // Process the response to get the tokens and DA list                
                 const filteredData = response;        // Extract DA list data                         
-                        
-            // Get the DA list from the model
-            // const daList = this.getView().getModel("default").getData();
-            // Filter the DA list by `Ebeln`
-            // const filteredData = daList.filter(item => item.Ebeln === v_ebeln && item.Ebelp !== v_ebelp && item.Ip_Matnr === v_Ip_Matnr);
-            if (filteredData.length === 0) {
-                sap.m.MessageBox.error("No records found for the selected PO");
-                return;
+
+                // Get the DA list from the model
+                // const daList = this.getView().getModel("default").getData();
+                // Filter the DA list by `Ebeln`
+                // const filteredData = daList.filter(item => item.Ebeln === v_ebeln && item.Ebelp !== v_ebelp && item.Ip_Matnr === v_Ip_Matnr);
+                if (filteredData.length === 0) {
+                    sap.m.MessageBox.error("No records found for the selected PO");
+                    return;
+                }
+                //********FOR DISPLAYING Change Material List*****/
+
+                this._displaySelectMatRatio(filteredData, v_ebeln, v_ebelp);
+
+            } catch (oErr) {
+                sap.ui.core.BusyIndicator.hide();
+                console.error("Error fetching Change Mat:", oErr);
+                // If the error response contains a message, display it in the MessageBox
+                const errorMessage = oErr.responseJSON?.error?.innererror?.errordetails?.[0]?.message || "Unknown error occurred";
+
+                // Show error message
+                // MessageBox.error(errorMessage);
             }
-            //********FOR DISPLAYING Change Material List*****/
-
-            this._displaySelectMatRatio(filteredData, v_ebeln, v_ebelp);
-
-        } catch (oErr) {
-            sap.ui.core.BusyIndicator.hide();
-            console.error("Error fetching Change Mat:", oErr);
-            // If the error response contains a message, display it in the MessageBox
-            const errorMessage = oErr.responseJSON?.error?.innererror?.errordetails?.[0]?.message || "Unknown error occurred";
-
-            // Show error message
-            // MessageBox.error(errorMessage);
-        }            
 
         },
 
@@ -628,30 +597,30 @@ sap.ui.define([
             var sData = sModel.getData();
             var cData = cModel.getData();
             var asnData = asnModel.getData();
-            
+
             var ratio = cData[0].Ratio;
             var balanceQty = v_menge / ratio;
             balanceQty = parseFloat(balanceQty.toFixed(3));
             if (sData && sData.length > 0) {
                 sData[0].Balqty = balanceQty; // Replace "BalanceQty" with the actual field name
                 sData[0].Op_matnr = cData[0].Op_matnr;
-                sModel.setData(sData);        
+                sModel.setData(sData);
                 // Update the view to reflect the changes
                 this.getView().getModel("selectedRecords").refresh(true);
-                
+
                 asnData.Ebelp = cData[0].Ebelp;
                 asnModel.setData(asnData);
                 this.getView().getModel("ASNMODEL").refresh(true);
 
             } else {
                 MessageBox.error("No data found in the selected records model.");
-            }            
+            }
 
             this._displayCrtAsnEH();
             // Update the model or proceed with further logic
             this._oSelectMaterialDialog.close();
         },
-        selectedchangedMaterial:function(oEvent){
+        selectedchangedMaterial: function (oEvent) {
             var cModel = this.getOwnerComponent().getModel("changedRecords");
             // var oFragment = this.byId("idSelectMaterialDialog");
             // if (!oFragment) {

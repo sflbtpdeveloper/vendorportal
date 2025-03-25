@@ -226,7 +226,7 @@ sap.ui.define([
             //     var oFilter = new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.EQ, oData.Werks);
             //     aFilters.push(oFilter);
             // }
-            
+
             //     var oFilter = new sap.ui.model.Filter("Cat", sap.ui.model.FilterOperator.EQ, 'SC');
             //     aFilters.push(oFilter);            
 
@@ -235,33 +235,33 @@ sap.ui.define([
             if (oData.Pdfchk === 'X') {
                 // Display an error message
                 sap.m.MessageBox.error("Selected PO has No print Preview");
-            } else {              
-                    // Perform validation on the response                    
-                        debugger;
-                        var oView1 = this.getView();
-                        var oModel1 = oView1.getModel();
-                        var opdfViewer = new PDFViewer();
-                        this.getView().addDependent(opdfViewer);
-                        var sServiceURL = oModel1.sServiceUrl;
-                        var sSourceR = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
-                        var sSource = sServiceURL + "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
-                        // var sPath = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
-                        // var sServiceURL = oModel1.sServiceUrl + sPath;
-                        // Trigger the OData service call to check if the PDF can be fetched
-                        //********DO NOT TOUCH - IMPORTANT****************** */
-            
-                        opdfViewer.setSource(sSource);
-                        opdfViewer.setTitle("DA PDF");
-                        opdfViewer.open();
-                    
-            }                     
+            } else {
+                // Perform validation on the response                    
+                debugger;
+                var oView1 = this.getView();
+                var oModel1 = oView1.getModel();
+                var opdfViewer = new PDFViewer();
+                this.getView().addDependent(opdfViewer);
+                var sServiceURL = oModel1.sServiceUrl;
+                var sSourceR = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+                var sSource = sServiceURL + "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+                // var sPath = "/zdapdfSet(Werks='" + oData.Werks + "',Lifnr='" + oData.Lifnr + "',Exnum='" + oData.Exnum + "',Exdat='" + oData.Exdat + "')/$value";
+                // var sServiceURL = oModel1.sServiceUrl + sPath;
+                // Trigger the OData service call to check if the PDF can be fetched
+                //********DO NOT TOUCH - IMPORTANT****************** */
+
+                opdfViewer.setSource(sSource);
+                opdfViewer.setTitle("DA PDF");
+                opdfViewer.open();
+
+            }
 
             //access pdf data using odata service
-            
+
 
             //********DO NOT TOUCH - IMPORTANT****************** */
 
-            
+
         },
         onMat: function (oEvent) {
             // Get the search query
@@ -366,7 +366,7 @@ sap.ui.define([
             if (!aItems || aItems.length === 0) {
                 sap.m.MessageBox.error("No records found to download.");
                 return;
-            }            
+            }
             // Prepare the data for the Excel file
             var aData = aItems.map(function (item) {
                 return {
@@ -415,7 +415,7 @@ sap.ui.define([
             return csv;
         },
         fetchDAList: async function (email) {
-           debugger;
+            debugger;
             const that = this; // Preserve the reference to the controller
 
             sap.ui.core.BusyIndicator.show();
@@ -429,23 +429,23 @@ sap.ui.define([
                 });
                 // Success handling
                 sap.ui.core.BusyIndicator.hide();  // Hide the busy indicator on success
-                       
+
                 const daList = response;        // Extract DA list data
-                
+
                 // const today = new Date();
                 // debugger;
                 // daList.forEach((item) => {
                 //     if (item.Exdat) {
                 //         // Parse the Exdat field into a Date object
                 //         const exDate = new Date(item.Exdat);
-            
+
                 //         // Calculate the difference in milliseconds and convert to days
                 //         const diffInMs = exDate - today; // Difference in milliseconds
                 //         const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24)); // Convert to days
-            
+
                 //         // Add the calculated difference to the item object (or log it)
                 //         item.noOfDays = diffInDays; // Add a new field to the item with the calculated days
-            
+
                 //         console.log(`Item: ${item}, Days Until Expiry: ${diffInDays}`);
                 //     }
                 // });

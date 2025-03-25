@@ -30,10 +30,17 @@ sap.ui.define([
                     });
             }
             this._loadUserInfo();
+
+            var oTable = this.getView().byId("myCustomTable");
+            if (oTable) {
+                oTable.attachUpdateFinished(() => {
+                    console.log("Table updated, applying highlighting again...");
+                    this._applyHighlighting();
+                });
+            }
         },
 
         _applyHighlighting: function () {
-            // var oView = this.getView();
             var oTable = this.getView().byId("myCustomTable"); // Get the table
 
             if (!oTable) {
@@ -54,19 +61,29 @@ sap.ui.define([
                 var sPopValue = oContext.getProperty("POP");
                 console.log(`Row ${index} POP Value:`, sPopValue);
 
-                var oVBox = oItem.getCells()[2]; // Assuming VBox is the 3rd cell
+                var oVBox = oItem.getCells()[10]; // Assuming VBox is the 3rd cell
 
-                if (oVBox && sPopValue === "X") {
-                    oVBox.addStyleClass("highlightText");
-                } else if (oVBox) {
-                    oVBox.addStyleClass("boldtext");
+                if (oVBox) {
+                    var aTextControls = oVBox.getItems(); // Get the Text controls inside the VBox
+
+                    aTextControls.forEach((oText) => {
+                        oText.removeStyleClass("boldtext");
+                        oText.removeStyleClass("animated-bg pulse-text");
+
+                        if (sPopValue && sPopValue.trim() !== "" ) {
+                            // oText.removeStyleClass("boldtext"); // Remove previous style
+                            oText.addStyleClass("animated-bg pulse-text"); // Apply highlight
+                            console.log(`Row ${index} animated-bg pulse-text.`);
+                        } else {
+                            // oText.removeStyleClass("highlightText"); // Remove highlight if needed
+                            oText.addStyleClass("boldtext"); // Apply default bold text
+                            console.log(`Row ${index} set to bold.`);
+                        }
+                    });
                 }
             });
         },
 
-
-
-        //07012025
         _loadUserInfo: function () {
             var oModel = this.getView().getModel("userInfo");
             var sUrl = "/userapi/currentUser"; // or /user-api/attributes
@@ -87,7 +104,6 @@ sap.ui.define([
                 }
             });
         },
-        //07012025
 
         _onObjectMatched: function (oEvent) {
             // Perform the refresh logic here
@@ -187,40 +203,11 @@ sap.ui.define([
 
         onButtonPress: function (oEvent) {
             debugger;
-
-            // this._refreshView();
-
             var oButton = oEvent.getSource();
             var oItem = oButton.getParent(); // Get the parent ColumnListItem
             var oContext = oItem.getBindingContext("listModel");
             var data = oContext.getObject();
 
-            //
-            // var aFilters = [];
-            // if (data.Werks) {
-            //     var oFilter = new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.EQ, data.Werks);
-            //     aFilters.push(oFilter);
-            // }
-
-            // var oFilter = new sap.ui.model.Filter("Cat", sap.ui.model.FilterOperator.EQ, 'SU');
-            // aFilters.push(oFilter);   
-
-            // // Read data from the OData service
-            // // var oModel = this.getOwnerComponent().getModel();
-            // var oModel = this.getOwnerComponent().getModel("poservice");
-            // var that = this;
-
-            // oModel.read("/PdfchkSet", {
-            //     filters: aFilters,
-            //     success:  (oData, response) => {
-            //         // Perform validation on the response
-            //         if (oData.results.length === 1) {
-            //             MessageBox.error("Selected PO has No print Preview");
-            //             return; // Exit if the vehicle number is not valid
-            //         }
-
-            // if (oData.results.length === 0) {
-            // Ensure unique ID for PDFViewer
             if (data.Pdfchk === 'X') {
                 // Display an error message
                 sap.m.MessageBox.error("Selected PO has No print Preview");
@@ -241,12 +228,6 @@ sap.ui.define([
                 opdfViewer.setTitle("My PDF");
                 opdfViewer.open();
             }
-            //     },
-            //     error: function (oError) {
-            //         return;
-            //     }
-            // });
-            //
         },
 
         _fetchPDF: function (sSource, callback) {
@@ -293,16 +274,15 @@ sap.ui.define([
                 // Ensure data is bound to the table
                 that.getView().byId("myCustomTable").setModel(oJsonModel, "listModel");
 
-                // that._applyHighlighting();
+                setTimeout(() => {
+                    that._applyHighlighting();
+                }, 500);
 
             } catch (oErr) {
                 sap.ui.core.BusyIndicator.hide();
                 console.error("Error fetching DA List:", oErr);
                 // If the error response contains a message, display it in the MessageBox
                 const errorMessage = oErr.responseJSON?.error?.innererror?.errordetails?.[0]?.message || "Unknown error occurred";
-
-                // Show error message
-                //  MessageBox.error(errorMessage);
             }
         },
     });

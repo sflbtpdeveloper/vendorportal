@@ -6,10 +6,10 @@
     displayBlock="true"
     xmlns:l="sap.ui.layout"
     xmlns:t="sap.ui.table"
-    controllerName="zmmsubcontract.controller.RegularASN"
+    controllerName="zmmsubcontract.controller.AssemblyAsn"
 >
     <Page
-        id="myPageReg"
+        id="asseASN"
         showFooter="true"
         showHeader="false"
     >
@@ -37,7 +37,7 @@
                     />
 
                     <Title
-                        text="Subcontract ASN Creation"
+                        text="Assembly ASN Creation"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
@@ -100,7 +100,7 @@
                 vertical="true"
             >
                 <Table
-                    id="idRegASN"
+                    id="idasseASN"
                     items="{default>/}"
                     growing="true"
                     mode="MultiSelect"
@@ -190,8 +190,8 @@
                                     text="{default>Exdat}"
                                     visible="false"
                                 />
-                                <Text text="{default>Werks}" class="boldtext" />
-                                <Text text="{default>Lifnr}" class="boldtext" />
+                                <Text text="{default>Werks}" />
+                                <Text text="{default>Lifnr}" />
                                 <VBox>
                                     <Text
                                         text="{default>Op_matnr}"
@@ -199,11 +199,11 @@
                                     />
                                     <Text
                                         text="{default>Maktx}"
-                                        class="smallfont boldtext"
+                                        class="smallfont"
                                     />
                                 </VBox>
-                                <Text text="{default>Ip_Matnr}" class="boldtext" />
-                                <Text text="{default>noOfDays}" class="boldtext" />
+                                <Text text="{default>Ip_Matnr}" />
+                                <Text text="{default>noOfDays}" />
                                 <VBox>
                                     <Text
                                         text="{default>Ebeln}"
@@ -211,13 +211,13 @@
                                     />
                                     <Text
                                         text="{default>Ebelp}"
-                                        class="smallfont boldtext"
+                                        class="smallfont"
                                     />
                                 </VBox>
 
                                 <Button text="{default>Meins}" />
-                                <Text text="{default>Balqty}" class="boldtext" />
-                                <Text text="{default>Weight}"  class="boldtext"/>
+                                <Text text="{default>Balqty}" />
+                                <Text text="{default>Weight}" />
                                 <Button
                                     text="PDF"
                                     press="onPreviewPDF"

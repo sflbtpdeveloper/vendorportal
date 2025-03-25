@@ -115,6 +115,9 @@
                         <Column width="auto">
                             <Text text="PO Pdf" />
                         </Column>
+                        <Column width="auto">
+                            <Text text="Reminder" />
+                        </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Inactive">
@@ -132,7 +135,7 @@
                                     />
                                 </VBox>
 
-                                <VBox id="POP">
+                                <VBox>
                                     <Text
                                         text="{listModel>Matnr}"
                                         class="boldtext"
@@ -164,6 +167,9 @@
                                     text="PDF"
                                     press="onButtonPress"
                                 />
+                                <VBox>
+                                    <Text text="{listModel>POP}" />
+                                </VBox>
                             </cells>
                         </ColumnListItem>
                     </items>

@@ -27,7 +27,13 @@ sap.ui.define([
                         scopes: parsedData.scopes
                     });
             }
-
+            var oTable = this.getView().byId("detailTab");
+            if (oTable) {
+                oTable.attachUpdateFinished(() => {
+                    console.log("Table updated, applying highlighting again...");
+                    this._applyHighlighting();
+                });
+            }
         },
 
         onBeforeRendering: function () {
@@ -240,7 +246,9 @@ sap.ui.define([
                 // Ensure data is bound to the table
                 that.getView().byId("detailTab").setModel(oJsonModel, "detailModel");
 
-                // that._applyHighlighting();
+                setTimeout(() => {
+                    that._applyHighlighting();
+                }, 500);
 
             } catch (oErr) {
                 sap.ui.core.BusyIndicator.hide();
@@ -253,7 +261,6 @@ sap.ui.define([
             }
         },
         _applyHighlighting: function () {
-            // var oView = this.getView();
             var oTable = this.getView().byId("detailTab"); // Get the table
 
             if (!oTable) {
@@ -274,13 +281,48 @@ sap.ui.define([
                 var sPopValue = oContext.getProperty("POP");
                 console.log(`Row ${index} POP Value:`, sPopValue);
 
-                var oMatnrObject = oItem.getCells()[3]; // Assuming VBox is the 3rd cell
+                // var aCells  = oItem.getCells()[3]; // Assuming VBox is the 3rd cell
+                var oVBox = oItem.getCells()[11];
 
-                if (sPopValue === "X") {
-                    oMatnrObject.addStyleClass("highlightText");
-                } else {
-                    oMatnrObject.addStyleClass("boldtext");
+                if (oVBox) {
+                    var aTextControls = oVBox.getItems(); // Get the Text controls inside the VBox
+
+                    aTextControls.forEach((oText) => {
+                        oText.removeStyleClass("boldtext");
+                        oText.removeStyleClass("animated-bg pulse-text");
+
+                        if (sPopValue && sPopValue.trim() !== "" ) {
+                            // oText.removeStyleClass("boldtext"); // Remove previous style
+                            oText.addStyleClass("animated-bg pulse-text"); // Apply highlight
+                            console.log(`Row ${index} animated-bg pulse-text.`);
+                        } else {
+                            // oText.removeStyleClass("highlightText"); // Remove highlight if needed
+                            oText.addStyleClass("boldtext"); // Apply default bold text
+                            console.log(`Row ${index} set to bold.`);
+                        }
+                    });
                 }
+
+                // var oVBox1 = oItem.getCells()[4];
+
+                // if (oVBox1) {
+                //     var aTextControls1 = oVBox1.getItems(); // Get the Text controls inside the VBox
+
+                //     aTextControls1.forEach((oText1) => {
+                //         oText1.removeStyleClass("boldtext");
+                //         oText1.removeStyleClass("highlightText");
+
+                //         if (sPopValue && sPopValue.trim() === "X") {
+                //             // oText.removeStyleClass("boldtext"); // Remove previous style
+                //             oText1.addStyleClass("highlightText"); // Apply highlight
+                //             console.log(`Row ${index} highlighted.`);
+                //         } else {
+                //             // oText.removeStyleClass("highlightText"); // Remove highlight if needed
+                //             oText1.addStyleClass("boldtext"); // Apply default bold text
+                //             console.log(`Row ${index} set to bold.`);
+                //         }
+                //     });
+                // }
             });
         }
     });

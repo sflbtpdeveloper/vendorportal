@@ -148,8 +148,14 @@
                                     text="{default>Exdat}"
                                     visible="false"
                                 />
-                                <Text text="{default>Werks}" />
-                                <Text text="{default>Lifnr}" />
+                                <Text
+                                    text="{default>Werks}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{default>Lifnr}"
+                                    class="boldtext"
+                                />
                                 <VBox>
                                     <Text
                                         text="{default>Op_matnr}"
@@ -157,11 +163,17 @@
                                     />
                                     <Text
                                         text="{default>Maktx}"
-                                        class="smallfont"
+                                        class="smallfont boldtext"
                                     />
                                 </VBox>
-                                <Text text="{default>Ip_Matnr}" />
-                                <Text text="{default>noOfDays}" />
+                                <Text
+                                    text="{default>Ip_Matnr}"
+                                    class="boldtext"
+                                />
+                                <Text
+                                    text="{default>noOfDays}"
+                                    class="boldtext"
+                                />
                                 <!-- <VBox>
                                 <Text
                                     text="{default>Ebeln}"
@@ -173,21 +185,27 @@
                                 />
                             </VBox> -->
 
-                                <ObjectIdentifier
-                                    title="{default>Ebeln}"
-                                    text="{default>Ebelp}"
-                                    class="smallfont"
-                                />
+                                <VBox>
+                                    <Text
+                                        text="{default>Ebeln}"
+                                        class="boldtext"
+                                    />
+                                    <Text
+                                        text="{default>Ebelp}"
+                                        class="smallfont boldtext"
+                                    />
+                                </VBox>
 
                                 <!-- <Button text="{default>Meins}" /> -->
                                 <!-- <Text text="{default>Balqty}" /> -->
                                 <ObjectNumber
                                     number="{default>Balqty}"
                                     unit="{default>Meins}"
+                                    class="boldtext"
                                 />
 
                                 <Button
-                                    text="Preview PDF"
+                                    text="PDF"
                                     press="onPreviewPDF"
                                 />
                             </cells>

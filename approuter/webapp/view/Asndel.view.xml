@@ -36,7 +36,7 @@
                     />
                     <Title
                         id="_IDGenTitle1"
-                        text="Supplier PO Report"
+                        text="ASN Delete"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"

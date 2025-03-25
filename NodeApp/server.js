@@ -132,6 +132,69 @@ app.get("/dalist", async (req, res) => {
   }
 });
 
+//---------------------------------------------------------------------
+//  fetch data for Subcontract DA Report
+//---------------------------------------------------------------------
+
+app.get("/asselist", async (req, res) => {
+  const email = req.query.email;
+  console.log("asselist has been hitted", email);
+
+  try {
+    const response = await axios1({
+      method: "GET",
+      url: "/sap/opu/odata/sap/ZMM_SUBCON_DA_SRV/zet_asse_listSet",
+      params: {
+        $format: "json",
+        $filter: `Email eq '${email}'`,
+        "sap-client": "999"
+      },
+      headers: {
+        "content-type": "application/json"
+      }
+    });
+
+    // Process the fetched data to add the "noOfDays" field
+    const today = new Date(); // Current date
+    const processedData = response.data.d.results.map(item => {
+      if (item.Exdat) {
+        const dcDate = item.Exdat; // Convert `dcdate` to a Date object 20241126
+        const isoDate = convertToISOFormat(dcDate);
+        
+        const timeDifference = today - new Date(isoDate); // Difference in milliseconds
+        const noOfDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24)); // Convert to days
+        item.noOfDays = noOfDays; // Add the calculated field
+        console.error("today", today);
+        console.error("item.dcDate", dcDate);
+        console.error("timeDifference", timeDifference);
+        console.error("item.dcDate", noOfDays);
+      } else {
+        item.noOfDays = null; // Handle missing or invalid `dcdate`
+      }
+      return item; // Return the modified item
+    });
+
+    // res.status(200).send(response.data.d.results);
+    res.status(200).send(processedData);
+
+  } catch (error) {
+    console.error("Error in datest:", error); // Log the error for debugging
+    console.error("Error details:", {
+      message: error.message,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      headers: error.response?.headers,
+      data: error.response?.data, // Body of the error response (may contain more details)
+      config: error.config, // The config for the request made
+    });
+    res.status(error.response?.status || 500).send({
+      message: error.message,
+      errorDetails: error.response?.data || "Unknown error occurred"
+    });
+
+  }
+});
+
 const convertToISOFormat = (dcDate) => {
   // Extract year, month, and day from the yyyymmdd string
   const year = dcDate.substring(0, 4);

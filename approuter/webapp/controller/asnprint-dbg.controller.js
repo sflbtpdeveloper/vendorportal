@@ -97,22 +97,22 @@ sap.ui.define([
             this.getOwnerComponent().setModel(oModel, "defaultModel");
             this.fetchASNPrint(sEmail);
             // Get data from the default entity set                        
-            oModel.read("/ZET_ASN_CRTSet", {
-                filters: aFilters,
-                success: function (oData, response) {
-                    debugger;
-                    sap.ui.core.BusyIndicator.hide();
-                    var oJsonModel = new sap.ui.model.json.JSONModel();
-                    oJsonModel.setData(oData.results);
-                    that.getView().setModel(oJsonModel, "asnrepModel");
-                },
-                error: function (oErr) {
-                    debugger;
-                    console.log(oErr);
-                    sap.ui.core.BusyIndicator.hide();
-                    MessageBox.error(JSON.parse(oErr.responseText).error.innererror.errordetails[0].message);
-                }
-            });
+            // oModel.read("/ZET_ASN_CRTSet", {
+            //     filters: aFilters,
+            //     success: function (oData, response) {
+            //         debugger;
+            //         sap.ui.core.BusyIndicator.hide();
+            //         var oJsonModel = new sap.ui.model.json.JSONModel();
+            //         oJsonModel.setData(oData.results);
+            //         that.getView().setModel(oJsonModel, "asnrepModel");
+            //     },
+            //     error: function (oErr) {
+            //         debugger;
+            //         console.log(oErr);
+            //         sap.ui.core.BusyIndicator.hide();
+            //         MessageBox.error(JSON.parse(oErr.responseText).error.innererror.errordetails[0].message);
+            //     }
+            // });
 
         },
         onRowSelect: function () {
@@ -208,8 +208,9 @@ sap.ui.define([
             var opdfViewer = new PDFViewer();
             this.getView().addDependent(opdfViewer);
             var sServiceURL = oModel1.sServiceUrl;
-            var sSourceR = "/zasnpdfSet(Asnno='" + oData.Asnno + "')/$value";
-            var sSource = sServiceURL + "/zasnpdfSet(Asnno='" + oData.Asnno + "')/$value";
+            var concatenatedValue = [oData.Asnno, oData.EwbNo, oData.EwbDt].join(",");
+            // var sSourceR = "/zasnpdfSet(Asnno='" + oData.Asnno + "')/$value";
+            var sSource = sServiceURL + "/zasnpdfSet(Asnno='" + concatenatedValue + "')/$value";
             // var sSource = sServiceURL + "/zasnpdfSet(Asnno='0002170290')/$value";
 
             //********DO NOT TOUCH - IMPORTANT****************** */

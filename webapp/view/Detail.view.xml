@@ -67,8 +67,9 @@
                 <ToolbarSpacer />
                 <ToggleButton
                     text="Create Asn"
-                    type="Emphasized"
+                    type="Success"
                     press="onToggleButtonPress"
+                    class="pulsatingButton"
                 />
             </Toolbar>
 
@@ -116,10 +117,16 @@
                             <Label text="Balance Qty" />
                         </Column>
                         <Column width="auto">
+                            <Label text="Material Weight" />
+                        </Column>
+                        <Column width="auto">
                             <Label text="Price" />
                         </Column>
                         <Column width="auto">
                             <Label text="Price Unit" />
+                        </Column>
+                        <Column width="auto">
+                            <Text text="Reminder" />
                         </Column>
                     </columns>
                     <items>
@@ -128,13 +135,32 @@
                                 <ObjectIdentifier title="{detailModel>Werks}" />
                                 <ObjectIdentifier title="{detailModel>Ebeln}" />
                                 <ObjectIdentifier title="{detailModel>Ebelp}" />
-                                <ObjectIdentifier title="{detailModel>Matnr}" />
-                                <ObjectIdentifier title="{detailModel>Maktx}" />
+                                <VBox>
+                                    <Text
+                                        text="{detailModel>Matnr}"
+                                        class="boldtext no-wrap-text"
+                                    />
+                                </VBox>
+                                <VBox>
+                                    <Text
+                                        text="{detailModel>Maktx}"
+                                        class="boldtext"
+                                    />
+                                </VBox>
                                 <ObjectIdentifier title="{detailModel>Meins}" />
                                 <ObjectIdentifier title="{detailModel>Eindt}" />
-                                <ObjectIdentifier title="{detailModel>Blqty}" />
-                                <ObjectIdentifier title="{detailModel>Netpr}" />
+                                <ObjectIdentifier title="{detailModel>Blqty}"  class="no-wrap-text" />
+                                <ObjectIdentifier
+                                    title="{detailModel>Weight}"  class="no-wrap-text"
+                                />
+                                <ObjectIdentifier title="{detailModel>Netpr}"  class="no-wrap-text" />
                                 <ObjectIdentifier title="{detailModel>Peinh}" />
+                                <VBox>
+                                    <Text
+                                        text="{detailModel>POP}"
+                                        class="no-wrap-text"
+                                    />
+                                </VBox>
                             </cells>
                         </ColumnListItem>
                     </items>

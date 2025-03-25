@@ -13,8 +13,8 @@
         showFooter="true"
         showHeader="false"
     >
-	<content>
-      <HBox
+        <content>
+            <HBox
                 width="100%"
                 alignItems="Center"
                 justifyContent="SpaceBetween"
@@ -30,22 +30,22 @@
                     width="100%"
                 >
                     <Title
-                        text="Sundram Fasteners Limited"                        
+                        text="Sundram Fasteners Limited"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiMediumMarginTop"
                     />
 
                     <Title
-                        text="Subcontract ASN Creation"                        
+                        text="Subcontract ASN Creation"
                         textAlign="Center"
                         titleStyle="Auto"
                         class="sapUiTinyMarginBegin sapUiTinyMarginTop subTitle"
                     />
                 </VBox>
-                <HBox width="4rem" />                
+                <HBox width="4rem" />
             </HBox>
-        
+
             <Toolbar>
                 <SearchField
                     id="idFilPlant1"
@@ -78,13 +78,13 @@
                     width="20%"
                     placeholder="Search PO"
                     liveChange="onPO"
-                />                
+                />
                 <ToolbarSpacer />
                 <Button
                     text="Change Material"
                     press="onChangeMat"
-                    type="Critical"                    
-                />                
+                    type="Critical"
+                />
                 <Button
                     text="Create ASN"
                     press="onCreateASN"
@@ -92,79 +92,84 @@
                     class="pulsatingButton"
                 />
             </Toolbar>
-        
+
             <ScrollContainer
                 width="100%"
                 height="100%"
                 horizontal="true"
                 vertical="true"
             >
-        
-            <Table
-                id="idRegASN"
-                items="{default>/}"
-                growing="true"                
-                mode="MultiSelect"
-                selectionChange="captureRecordEH"
-                includeItemInSelection="true"
-                fixedLayout="false"
-                class="myTableWithBackground"
-                sticky="ColumnHeaders"
-                width="auto"
-            >
-                <columns>
-                    <Column>
-                        <Label text="DA Number" />
-                    </Column>
-                    <Column>
-                        <Label
-                            text="DA Date"
-                            visible="false"
-                        />
-                    </Column>
-                    <Column>
-                        <Label text="Plant" />
-                    </Column>
-                    <Column>
-                        <Label text="Vendor" />
-                    </Column>
-                    <Column>
-                        <Label text="Output Part Number" />
-                    </Column>
-                    <Column>
-                        <Label text="Input Part Number" />
-                    </Column>
-                    <Column>
-                        <Label text="PO Number" />
-                    </Column>
-                    <Column>
-                        <Label text="Unit of Measure" />
-                    </Column>
-                    <Column>
-                        <Label text="Balance Quanity" />
-                    </Column>
-                    <Column>
-                        <Label text="Preview PDF" />
-                    </Column>
-                    <Column>
-                        <Label
-                            text="Invoice Number"
-                            visible="false"
-                        />
-                    </Column>
-                    <Column>
-                        <Label
-                            text="Invoice Item"
-                            visible="false"
-                        />
-                    </Column>
-                    <Column>
-                        <Label
-                            text="Ex Year"
-                            visible="false"
-                        />
-                    </Column>                    
-                    <!-- <Column>
+                <Table
+                    id="idRegASN"
+                    items="{default>/}"
+                    growing="true"
+                    mode="MultiSelect"
+                    selectionChange="captureRecordEH"
+                    includeItemInSelection="true"
+                    fixedLayout="false"
+                    class="myTableWithBackground"
+                    sticky="ColumnHeaders"
+                    width="auto"
+                >
+                    <columns>
+                        <Column>
+                            <Label text="DA Number" />
+                        </Column>
+                        <Column>
+                            <Label
+                                text="DA Date"
+                                visible="false"
+                            />
+                        </Column>
+                        <Column>
+                            <Label text="Plant" />
+                        </Column>
+                        <Column>
+                            <Label text="Vendor" />
+                        </Column>
+                        <Column>
+                            <Label text="Output Part Number" />
+                        </Column>
+                        <Column>
+                            <Label text="Input Part Number" />
+                        </Column>
+                        <Column>
+                            <Label text="No of Days" />
+                        </Column>
+                        <Column>
+                            <Label text="PO Number" />
+                        </Column>
+                        <Column>
+                            <Label text="Unit of Measure" />
+                        </Column>
+                        <Column>
+                            <Label text="Balance Quanity" />
+                        </Column>
+                        <Column>
+                            <Label text="Material Weight" />
+                        </Column>
+                        <Column>
+                            <Label text="Preview PDF" />
+                        </Column>
+                        <Column>
+                            <Label
+                                text="Invoice Number"
+                                visible="false"
+                            />
+                        </Column>
+                        <Column>
+                            <Label
+                                text="Invoice Item"
+                                visible="false"
+                            />
+                        </Column>
+                        <Column>
+                            <Label
+                                text="Ex Year"
+                                visible="false"
+                            />
+                        </Column>
+                        <!-- <Column>
 									<Label text="Order Price Unit(Purchasing)"/>
 								</Column>
 								<Column>
@@ -173,54 +178,59 @@
 								<Column>
 									<Label text="PO Item"/>
 								</Column>																								                      -->
-                </columns>
-                <items>
-                    <ColumnListItem id="idRegTemp">
-                        <cells>
-                            <Text
-                                text="{default>Exnum}"
-                                class="boldtext"
-                            />
-                            <Text
-                                text="{default>Exdat}"
-                                visible="false"
-                            />
-                            <Text text="{default>Werks}" />
-                            <Text text="{default>Lifnr}" />
-                            <VBox>
+                    </columns>
+                    <items>
+                        <ColumnListItem id="idRegTemp">
+                            <cells>
                                 <Text
-                                    text="{default>Op_matnr}"
+                                    text="{default>Exnum}"
                                     class="boldtext"
                                 />
                                 <Text
-                                    text="{default>Maktx}"
-                                    class="smallfont"
+                                    text="{default>Exdat}"
+                                    visible="false"
                                 />
-                            </VBox>
-                            <Text text="{default>Ip_Matnr}" />
-                            <VBox>
-                                <Text
-                                    text="{default>Ebeln}"
-                                    class="boldtext"
-                                />
-                                <Text
-                                    text="{default>Ebelp}"
-                                    class="smallfont"
-                                />
-                            </VBox>
+                                <Text text="{default>Werks}" class="boldtext" />
+                                <Text text="{default>Lifnr}" class="boldtext" />
+                                <VBox>
+                                    <Text
+                                        text="{default>Op_matnr}"
+                                        class="boldtext"
+                                    />
+                                    <Text
+                                        text="{default>Maktx}"
+                                        class="smallfont boldtext"
+                                    />
+                                </VBox>
+                                <Text text="{default>Ip_Matnr}" class="boldtext" />
+                                <Text text="{default>noOfDays}" class="boldtext" />
+                                <VBox>
+                                    <Text
+                                        text="{default>Ebeln}"
+                                        class="boldtext"
+                                    />
+                                    <Text
+                                        text="{default>Ebelp}"
+                                        class="smallfont boldtext"
+                                    />
+                                </VBox>
 
-                            <Button text="{default>Meins}" />
-                            <Text text="{default>Balqty}" />
-                            <Button
-                                text="Preview PDF"
-                                press="onPreviewPDF"
-                            />
-                            <Text text="{default>Exyear}" visible="false" />
-                            <!-- <Text text="{bprme}" />   -->
-                        </cells>
-                    </ColumnListItem>
-                </items>
-            </Table>
+                                <Button text="{default>Meins}" />
+                                <Text text="{default>Balqty}" class="boldtext" />
+                                <Text text="{default>Weight}"  class="boldtext"/>
+                                <Button
+                                    text="PDF"
+                                    press="onPreviewPDF"
+                                />
+                                <Text
+                                    text="{default>Exyear}"
+                                    visible="false"
+                                />
+                                <!-- <Text text="{bprme}" />   -->
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
             </ScrollContainer>
         </content>
     </Page>

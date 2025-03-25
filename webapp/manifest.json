@@ -297,6 +297,13 @@
           ]
         },
         {
+          "name": "assyASNcr",
+          "pattern": "assyASNcr",
+          "target": [
+            "assyasncr"
+          ]
+        },
+        {
           "name": "RegASN",
           "pattern": "RegASN",
           "target": [
@@ -329,6 +336,13 @@
           "pattern": "asnprint",
           "target": [
             "asnPRN"
+          ]
+        },
+        {
+          "name": "AsseASN",
+          "pattern": "AsseASN",
+          "target": [
+            "AsseASN"
           ]
         },
         {
@@ -387,6 +401,12 @@
           "viewId": "idasncr",
           "viewName": "asncrt"
         },
+        "assyasncr": {
+          "viewType": "XML",
+          "controlAggregation": "pages",
+          "viewId": "idassyasncr",
+          "viewName": "assyasncrt"
+        },
         "subhead": {
           "viewType": "XML",
           "controlAggregation": "pages",
@@ -421,6 +441,11 @@
         "asnPRN": {
           "viewName": "asnprint",
           "viewId": "idasnPrn",
+          "controlAggregation": "pages"
+        },
+        "AsseASN": {
+          "viewName": "AssemblyAsn",
+          "viewId": "idasseAsn",
           "controlAggregation": "pages"
         },
         "unauthorized": {

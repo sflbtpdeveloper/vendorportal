@@ -53,7 +53,7 @@
                     id="btnColumnSelect"
                     text="Column Selection"
                     icon="sap-icon://table-column"
-                    class="excel"
+                    class="customButton"
                     press="onSelectColumnsPress"
                 />
                 <m:Button
@@ -67,27 +67,43 @@
             <m:Toolbar class="customToolbar">
                 <m:SearchField
                     id="searchFieldAsnno"
-                    width="17.5rem"
+                    width="15rem"
                     placeholder="Search by ASN Number"
                     liveChange="onAsnno"
                 />
                 <m:SearchField
                     id="searchFieldEbeln"
-                    width="17.5rem"
+                    width="15rem"
                     placeholder="Search by PO Number"
                     liveChange="onEbeln"
                 />
                 <m:SearchField
                     id="searchFieldMatnr"
-                    width="17.5rem"
+                    width="15rem"
                     placeholder="Search by Material"
                     liveChange="onMatnr"
                 />
                 <m:SearchField
                     id="searchFieldMaktx"
-                    width="17.5rem"
+                    width="15rem"
                     placeholder="Search by Description"
                     liveChange="onMaktx"
+                />
+                <m:DatePicker
+                    id="fromAsnDate"
+                    width="10rem"
+                    valueFormat="dd/MM/yyyy"
+                    displayFormat="dd/MM/yyyy"
+                    placeholder="From ASN Date"
+                    change="onFromAsnDateChange"
+                />
+                <m:DatePicker
+                    id="toAsnDate"
+                    width="10rem"
+                    valueFormat="dd/MM/yyyy"
+                    displayFormat="dd/MM/yyyy"
+                    placeholder="To ASN Date"
+                    change="onToAsnDateChange"
                 />
                 <m:ToolbarSpacer />
             </m:Toolbar>
@@ -210,6 +226,19 @@
                             </template>
                         </Column>
                         <Column
+                            id="_IDGenColumn19"
+                            width="7rem"
+                            sortProperty="Asndate"
+                        >
+                            <m:Label text="ASN Date" />
+                            <template>
+                                <m:Text
+                                    text="{asnRep>Asndate}"
+                                    wrapping="false"
+                                />
+                            </template>
+                        </Column>
+                        <Column
                             id="_IDGenColumn9"
                             width="7rem"
                             sortProperty="Asnqty"
@@ -325,6 +354,34 @@
                             <template>
                                 <m:Text
                                     text="{asnRep>Pcomplete}"
+                                    wrapping="false"
+                                />
+                            </template>
+                        </Column>
+
+                        <Column
+                            id="_IDGenColumn17"
+                            width="10rem"
+                            sortProperty="Accqty"
+                        >
+                            <m:Label text="Accepted Quantity" />
+                            <template>
+                                <m:Text
+                                    text="{asnRep>Accqty}"
+                                    wrapping="false"
+                                />
+                            </template>
+                        </Column>
+
+                        <Column
+                            id="_IDGenColumn18"
+                            width="10rem"
+                            sortProperty="Rejqty"
+                        >
+                            <m:Label text="Rejected Quantity" />
+                            <template>
+                                <m:Text
+                                    text="{asnRep>Rejqty}"
                                     wrapping="false"
                                 />
                             </template>

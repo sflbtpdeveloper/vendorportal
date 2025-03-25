@@ -649,5 +649,44 @@ sap.ui.define([
             var oTextControl = this.byId("tsFileName");
             oTextControl.setText(sFileName);
         },
+
+        onAsnQtyChange: function (oEvent) {
+            var oInput = oEvent.getSource();
+            var sPath = oInput.getBindingContext("asnItems").getPath();
+            var oModel = this.getView().getModel("asnItems");
+
+            // Get the entered ASN Quantity
+            var iAsnQty = parseFloat(oInput.getValue()) || 0;
+
+            // Fetch additional required values from the same line item
+            var sMaterialType = oModel.getProperty(sPath + "/Mtart");  // Material Type
+            var sUoM = oModel.getProperty(sPath + "/Meins");  // Material Type
+            var iNetWeight = parseFloat(oModel.getProperty(sPath + "/Ntgew")) || 0; // Net Weight per unit
+            var iNetGewei = oModel.getProperty(sPath + "/Gewei");
+
+            // Perform Calculation (Modify logic based on actual business rules)
+            var iAsnWeight = 0;
+            // Apply the weight calculation logic based on Material Type and Unit of Measure
+            if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "KG") {
+                iAsnWeight = iNetWeight * iAsnQty;
+            } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "PC" && iNetGewei !== "G") {
+                iAsnWeight = (iNetWeight / 100) * iAsnQty;
+            } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "PC" && iNetGewei === "G") {
+                iAsnWeight = (iNetWeight / 1000) * iAsnQty;
+            } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "TO") {
+                iAsnWeight = (iNetWeight * 1000) * iAsnQty;
+            } else if ((sMaterialType === "ROH" || sMaterialType === "HALB") && sUoM === "G") {
+                iAsnWeight = (iNetWeight / 1000) * iAsnQty;
+            } else if (sMaterialType === "FERT" && sUoM === "PC") {
+                iAsnWeight = (iNetWeight / 1000) * iAsnQty;
+            } else if (sMaterialType === "FERT" && sUoM === "G") {
+                iAsnWeight = (iNetWeight / 1000) * iAsnQty;
+            } else {
+                iAsnWeight = iNetWeight * iAsnQty; // Default case
+            }
+
+            // Update the ASN Weight in the model
+            oModel.setProperty(sPath + "/Asnweight", iAsnWeight.toFixed(4));
+        }
     });
 });
