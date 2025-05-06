@@ -1,3 +1,4 @@
 {
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "SAP HANA Database Explorer.UseObjectsDefinitionForSqlGeneration.RetentionTime": 7
 }

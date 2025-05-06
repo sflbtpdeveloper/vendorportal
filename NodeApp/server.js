@@ -1090,8 +1090,7 @@ app.post("/custom/asnpost", passport.authenticate("JWT", { session: false }), as
       withCredentials: true
     });
     res.status(200).json(response.data);
-    console.log("response data :", response.data);
-
+    console.log("response data :", response.data);    
   } catch (error) {
     // console.error("CSRF token expired, refreshing token and retrying...");      
     const detailedErrorMessage = {

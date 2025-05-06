@@ -509,6 +509,7 @@ sap.ui.define([
             oPayload.Lrdate = sDate_lr;
             oPayload.Magrv = this.sSelectedKey;
             oPayload.Arbpl = this.sSelectedMachine;
+            oPayload.Assy = "X";     //02052025
 
             var oTable = this.byId("idSelASN");
             var aItems = oTable.getItems();

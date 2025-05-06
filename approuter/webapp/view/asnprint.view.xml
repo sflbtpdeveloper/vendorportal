@@ -109,7 +109,7 @@
                             <Label text="Plant" />
                         </Column>
                         <Column width="120px">
-                            <Label text="Invoice No / Item" />
+                            <Label text="PO Number / Item" />
                         </Column>
                         <Column width="120px">
                             <Label text="DC No/Dc Date" />

@@ -126,7 +126,7 @@
                             <Label text="ASN Number/Item" />
                         </Column>
                         <Column width="7rem">
-                            <Label text="Invoice No / Item" />
+                            <Label text="PO Number / Item" />
                         </Column>
                         <Column width="25rem">
                             <Label text="Material Code/Desc" />
